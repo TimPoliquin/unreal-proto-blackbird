@@ -3,13 +3,13 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class SpaceFighterEditorTarget : TargetRules
+public class BlackbirdTarget : TargetRules
 {
-	public SpaceFighterEditorTarget( TargetInfo Target) : base(Target)
+	public BlackbirdTarget(TargetInfo Target) : base(Target)
 	{
-		Type = TargetType.Editor;
+		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_5;
-		ExtraModuleNames.Add("SpaceFighter");
+		ExtraModuleNames.Add("Blackbird");
 	}
 }

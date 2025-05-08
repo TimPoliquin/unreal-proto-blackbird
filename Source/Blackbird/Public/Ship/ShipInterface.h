@@ -1,0 +1,27 @@
+﻿// Copyright Alien Shores 2025
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "UObject/Interface.h"
+#include "ShipInterface.generated.h"
+
+// This class does not need to be modified.
+UINTERFACE()
+class UShipInterface : public UInterface
+{
+	GENERATED_BODY()
+};
+
+/**
+ * 
+ */
+class BLACKBIRD_API IShipInterface
+{
+	GENERATED_BODY()
+
+	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
+public:
+	virtual void SetRollAmount(const float RollAmount) = 0;
+	virtual void SetFacingDirection(const FVector& Direction) = 0;
+};

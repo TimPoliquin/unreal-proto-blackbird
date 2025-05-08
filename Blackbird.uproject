@@ -5,7 +5,7 @@
 	"Description": "",
 	"Modules": [
 		{
-			"Name": "SpaceFighter",
+			"Name": "Blackbird",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
@@ -21,6 +21,10 @@
 		{
 			"Name": "GameplayAbilities",
 			"Enabled": true
+		},
+		{
+			"Name": "UdpMessaging",
+			"Enabled": false
 		}
 	]
 }
