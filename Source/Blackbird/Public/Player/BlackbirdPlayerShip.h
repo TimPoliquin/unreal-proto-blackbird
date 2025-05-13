@@ -6,6 +6,7 @@
 #include "Ship/BlackbirdShip.h"
 #include "BlackbirdPlayerShip.generated.h"
 
+class ABlackbirdPlayerState;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -18,6 +19,10 @@ public:
 	ABlackbirdPlayerShip();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void OnRep_PlayerState() override;
+	virtual void PossessedBy(AController* NewController) override;
+	virtual UBlackbirdAbilitySystemComponent* GetBlackbirdAbilitySystemComponent() override;
+	ABlackbirdPlayerState* GetBlackbirdPlayerState() const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -26,4 +31,7 @@ protected:
 	TObjectPtr<USpringArmComponent> SpringArm;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UCameraComponent> Camera;
+
+private:
+	void InitAbilityActorInfo();
 };

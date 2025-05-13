@@ -3,7 +3,8 @@
 
 #include "Player/BlackbirdPlayerController.h"
 #include "EnhancedInputSubsystems.h"
-#include "Camera/CameraComponent.h"
+#include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
+#include "Player/BlackbirdPlayerState.h"
 #include "Ship/ShipInterface.h"
 
 
@@ -58,7 +59,6 @@ void ABlackbirdPlayerController::Move(const FInputActionValue& Value)
 
 void ABlackbirdPlayerController::EndMove(const FInputActionValue& InputActionValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("EndMove"));
 	if (IShipInterface* ShipInterface = GetPawn<IShipInterface>())
 	{
 		ShipInterface->SetRollAmount(0.f);
@@ -67,12 +67,24 @@ void ABlackbirdPlayerController::EndMove(const FInputActionValue& InputActionVal
 
 void ABlackbirdPlayerController::AbilityInputTagPressed(const FGameplayTag InputTag)
 {
+	if (UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->GetBlackbirdAbilitySystemComponent())
+	{
+		BlackbirdAbilitySystemComponent->AbilityInputTagPressed(InputTag);
+	}
 }
 
 void ABlackbirdPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 {
+	if (UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->GetBlackbirdAbilitySystemComponent())
+	{
+		BlackbirdAbilitySystemComponent->AbilityInputTagHeld(InputTag);
+	}
 }
 
 void ABlackbirdPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 {
+	if (UBlackbirdAbilitySystemComponent* LocalAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->GetBlackbirdAbilitySystemComponent())
+	{
+		LocalAbilitySystemComponent->AbilityInputTagReleased(InputTag);
+	}
 }

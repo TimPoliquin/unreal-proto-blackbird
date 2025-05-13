@@ -3,8 +3,11 @@
 
 #include "Ship/BlackbirdShip.h"
 
+#include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
+#include "AbilitySystem/Ability/BlackbirdAbilityAssignment.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "Ship/BlackbirdShipMovementComponent.h"
 
 
 ABlackbirdShip::ABlackbirdShip()
@@ -14,23 +17,44 @@ ABlackbirdShip::ABlackbirdShip()
 	SetRootComponent(Collision);
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
 	Mesh->SetupAttachment(GetRootComponent());
-	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Floating Pawn Movement"));
-	FloatingPawnMovement->UpdatedComponent = GetRootComponent();
+	ShipMovementComponent = CreateDefaultSubobject<UBlackbirdShipMovementComponent>(TEXT("Ship Movement"));
+	ShipMovementComponent->UpdatedComponent = GetRootComponent();
 }
 
 void ABlackbirdShip::BeginPlay()
 {
 	Super::BeginPlay();
+	OnAbilitySystemReadyDelegate.AddDynamic(this, &ABlackbirdShip::OnAbilitySystemReady);
+}
+
+void ABlackbirdShip::InitAbilitySystem(
+	AActor* OwnerActor,
+	UBlackbirdAbilitySystemComponent* InAbilitySystemComponent
+)
+{
+	AbilitySystemComponent = Cast<UAbilitySystemComponent>(InAbilitySystemComponent);
+	AbilitySystemComponent->InitAbilityActorInfo(OwnerActor, this);
+	OnAbilitySystemReadyDelegate.Broadcast(InAbilitySystemComponent);
+}
+
+void ABlackbirdShip::InitDefaultAbilities()
+{
+	if (StartingAbilities == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Starting Abilities is null"));
+		return;
+	} 
+	GetBlackbirdAbilitySystemComponent()->AddAbilities(StartingAbilities->GetAbilityAssignments());
+}
+
+void ABlackbirdShip::OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent)
+{
+	InitDefaultAbilities();
 }
 
 void ABlackbirdShip::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (!FMath::IsNearlyEqual(GetActorRotation().Roll, IntendedRollAmount, 0.01f))
-	{
-		CurrentRollTime += DeltaTime;
-		SetActorRotation(FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw, FMath::Lerp(InitialRollAmount, IntendedRollAmount, CurrentRollTime/RollTime)));
-	}
 }
 
 void ABlackbirdShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -38,14 +62,19 @@ void ABlackbirdShip::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+UAbilitySystemComponent* ABlackbirdShip::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+UBlackbirdAbilitySystemComponent* ABlackbirdShip::GetBlackbirdAbilitySystemComponent()
+{
+	return Cast<UBlackbirdAbilitySystemComponent>(AbilitySystemComponent);
+}
+
 void ABlackbirdShip::SetRollAmount(const float InRollDirection)
 {
-	if (!FMath::IsNearlyEqual(InRollDirection * RollAmount, IntendedRollAmount, 0.01f))
-	{
-		InitialRollAmount = GetActorRotation().Roll;
-		IntendedRollAmount = InRollDirection * RollAmount;
-		CurrentRollTime = 0.f;
-	}
+	ShipMovementComponent->SetRollAmount(InRollDirection);
 }
 
 void ABlackbirdShip::SetFacingDirection(const FVector& Direction)

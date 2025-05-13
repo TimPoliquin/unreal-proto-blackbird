@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "GameplayTagContainer.h"
 
-
 struct FBlackbirdInputTags
 {
 	FGameplayTag InputTag;

@@ -3,8 +3,11 @@
 
 #include "Player/BlackbirdPlayerShip.h"
 
+#include "AbilitySystemComponent.h"
+#include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Player/BlackbirdPlayerState.h"
 
 
 // Sets default values
@@ -27,6 +30,7 @@ void ABlackbirdPlayerShip::BeginPlay()
 	Super::BeginPlay();
 }
 
+
 void ABlackbirdPlayerShip::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -35,4 +39,37 @@ void ABlackbirdPlayerShip::Tick(float DeltaTime)
 void ABlackbirdPlayerShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ABlackbirdPlayerShip::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	InitAbilityActorInfo();
+}
+
+void ABlackbirdPlayerShip::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	InitAbilityActorInfo();
+}
+
+UBlackbirdAbilitySystemComponent* ABlackbirdPlayerShip::GetBlackbirdAbilitySystemComponent()
+{
+	return Cast<UBlackbirdAbilitySystemComponent>(AbilitySystemComponent);
+}
+
+ABlackbirdPlayerState* ABlackbirdPlayerShip::GetBlackbirdPlayerState() const
+{
+	return Cast<ABlackbirdPlayerState>(GetPlayerState());
+}
+
+void ABlackbirdPlayerShip::InitAbilityActorInfo()
+{
+	if (ABlackbirdPlayerState* BlackbirdPlayerState = Cast<ABlackbirdPlayerState>(GetPlayerState()))
+	{
+		InitAbilitySystem(BlackbirdPlayerState, BlackbirdPlayerState->GetBlackbirdAbilitySystemComponent());
+	} else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BlackbirdPlayerState is null"));
+	}
 }
