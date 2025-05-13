@@ -22,6 +22,5 @@ class BLACKBIRD_API IShipInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void SetRollAmount(const float RollAmount) = 0;
 	virtual void SetFacingDirection(const FVector& Direction) = 0;
 };

@@ -6,7 +6,7 @@
 #include "ShipInterface.h"
 #include "AbilitySystemInterface.h"
 #include "AbilitySystem/BlackbirdAbilitySystemDelegates.h"
-#include "GameFramework/Pawn.h"
+#include "GameFramework/Character.h"
 #include "BlackbirdShip.generated.h"
 
 class UBlackbirdAbilitySystemComponent;
@@ -18,7 +18,7 @@ class UBoxComponent;
 struct FBlackbirdAbilityAssignmentRow;
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdShip : public APawn, public IShipInterface, public IAbilitySystemInterface
+class BLACKBIRD_API ABlackbirdShip : public ACharacter, public IShipInterface, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -30,7 +30,6 @@ public:
 	virtual UBlackbirdAbilitySystemComponent* GetBlackbirdAbilitySystemComponent();
 
 	/** Start ShipInterface **/
-	virtual void SetRollAmount(const float InRollDirection) override;
 	virtual void SetFacingDirection(const FVector& Direction) override;
 	/** End ShipInterface **/
 
@@ -43,12 +42,6 @@ protected:
 	UFUNCTION()
 	virtual void OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent);
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<UStaticMeshComponent> Mesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<UBoxComponent> Collision;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Movement")
-	TObjectPtr<UBlackbirdShipMovementComponent> ShipMovementComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilities")
 	TObjectPtr<UBlackbirdAbilityAssignment> StartingAbilities;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Abilities")

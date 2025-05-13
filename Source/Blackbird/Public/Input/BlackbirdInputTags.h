@@ -6,6 +6,7 @@ struct FBlackbirdInputTags
 	FGameplayTag InputTag;
 	FGameplayTag InputTag_Move;
 	FGameplayTag InputTag_Attack_Basic;
+	FGameplayTag InputTag_Support_Shield;
 
 	static FBlackbirdInputTags& Get()
 	{

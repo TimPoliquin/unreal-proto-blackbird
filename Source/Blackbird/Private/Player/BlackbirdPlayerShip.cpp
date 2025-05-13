@@ -68,6 +68,7 @@ void ABlackbirdPlayerShip::InitAbilityActorInfo()
 	if (ABlackbirdPlayerState* BlackbirdPlayerState = Cast<ABlackbirdPlayerState>(GetPlayerState()))
 	{
 		InitAbilitySystem(BlackbirdPlayerState, BlackbirdPlayerState->GetBlackbirdAbilitySystemComponent());
+		UE_LOG(LogTemp, Warning, TEXT("BlackbirdAbilitySystemInitialized"));
 	} else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("BlackbirdPlayerState is null"));

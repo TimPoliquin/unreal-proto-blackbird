@@ -21,6 +21,7 @@ void FBlackbirdInputTags::Initialize()
 	Instance.InputTag = TagManager.AddNativeGameplayTag(FName("InputTag"));
 	Instance.InputTag_Move = TagManager.AddNativeGameplayTag(FName("InputTag.Move"));
 	Instance.InputTag_Attack_Basic = TagManager.AddNativeGameplayTag(FName("InputTag.Attack.Basic"));
+	Instance.InputTag_Support_Shield = TagManager.AddNativeGameplayTag(FName("InputTag.Support.Shield"));
 
 	Instance.bInitialized = true;
 }

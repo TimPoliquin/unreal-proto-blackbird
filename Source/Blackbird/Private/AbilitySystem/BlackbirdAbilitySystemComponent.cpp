@@ -114,6 +114,7 @@ void UBlackbirdAbilitySystemComponent::AddAbility(const FBlackbirdAbilityAssignm
 	FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityAssignmentRow.AbilityClass, AbilityAssignmentRow.Level);
 	AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilityAssignmentRow.AbilityStateTag);
 	AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilityAssignmentRow.InputTag);
+	UE_LOG(LogTemp, Warning, TEXT("[%s] Adding ability: %s"), GetOwner()->HasAuthority() ? TEXT("Server") : TEXT("Client"), *AbilityAssignmentRow.AbilityClass->GetName());
 	if (UBlackbirdGameplayAbility::IsPassiveAbilityType(AbilitySpec.Ability))
 	{
 		GiveAbilityAndActivateOnce(AbilitySpec);

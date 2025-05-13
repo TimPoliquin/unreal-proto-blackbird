@@ -5,7 +5,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 #include "Player/BlackbirdPlayerState.h"
-#include "Ship/ShipInterface.h"
 
 
 ABlackbirdPlayerController::ABlackbirdPlayerController()
@@ -51,18 +50,11 @@ void ABlackbirdPlayerController::Move(const FInputActionValue& Value)
 		ControlledPawn->AddMovementInput(FVector::ForwardVector, InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(FVector::RightVector, InputAxisVector.X);
 	}
-	if (IShipInterface* ShipInterface = GetPawn<IShipInterface>())
-	{
-		ShipInterface->SetRollAmount(InputAxisVector.X);
-	}
 }
 
 void ABlackbirdPlayerController::EndMove(const FInputActionValue& InputActionValue)
 {
-	if (IShipInterface* ShipInterface = GetPawn<IShipInterface>())
-	{
-		ShipInterface->SetRollAmount(0.f);
-	}
+	// Maybe nothing to do here!
 }
 
 void ABlackbirdPlayerController::AbilityInputTagPressed(const FGameplayTag InputTag)

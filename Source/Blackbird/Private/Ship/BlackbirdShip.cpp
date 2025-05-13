@@ -5,26 +5,16 @@
 
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 #include "AbilitySystem/Ability/BlackbirdAbilityAssignment.h"
-#include "Components/BoxComponent.h"
-#include "GameFramework/FloatingPawnMovement.h"
-#include "Ship/BlackbirdShipMovementComponent.h"
 
 
 ABlackbirdShip::ABlackbirdShip()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Component"));
-	SetRootComponent(Collision);
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
-	Mesh->SetupAttachment(GetRootComponent());
-	ShipMovementComponent = CreateDefaultSubobject<UBlackbirdShipMovementComponent>(TEXT("Ship Movement"));
-	ShipMovementComponent->UpdatedComponent = GetRootComponent();
 }
 
 void ABlackbirdShip::BeginPlay()
 {
 	Super::BeginPlay();
-	OnAbilitySystemReadyDelegate.AddDynamic(this, &ABlackbirdShip::OnAbilitySystemReady);
 }
 
 void ABlackbirdShip::InitAbilitySystem(
@@ -34,6 +24,7 @@ void ABlackbirdShip::InitAbilitySystem(
 {
 	AbilitySystemComponent = Cast<UAbilitySystemComponent>(InAbilitySystemComponent);
 	AbilitySystemComponent->InitAbilityActorInfo(OwnerActor, this);
+	OnAbilitySystemReady(InAbilitySystemComponent);
 	OnAbilitySystemReadyDelegate.Broadcast(InAbilitySystemComponent);
 }
 
@@ -43,7 +34,8 @@ void ABlackbirdShip::InitDefaultAbilities()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Starting Abilities is null"));
 		return;
-	} 
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Adding Starting Abilities"));
 	GetBlackbirdAbilitySystemComponent()->AddAbilities(StartingAbilities->GetAbilityAssignments());
 }
 
@@ -70,11 +62,6 @@ UAbilitySystemComponent* ABlackbirdShip::GetAbilitySystemComponent() const
 UBlackbirdAbilitySystemComponent* ABlackbirdShip::GetBlackbirdAbilitySystemComponent()
 {
 	return Cast<UBlackbirdAbilitySystemComponent>(AbilitySystemComponent);
-}
-
-void ABlackbirdShip::SetRollAmount(const float InRollDirection)
-{
-	ShipMovementComponent->SetRollAmount(InRollDirection);
 }
 
 void ABlackbirdShip::SetFacingDirection(const FVector& Direction)
