@@ -5,11 +5,15 @@
 
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 #include "AbilitySystem/Ability/BlackbirdAbilityAssignment.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 ABlackbirdShip::ABlackbirdShip()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	Cast<UCharacterMovementComponent>(GetMovementComponent())->GravityScale = 0.f;
 }
 
 void ABlackbirdShip::BeginPlay()
