@@ -4,6 +4,7 @@
 #include "Ship/BlackbirdShip.h"
 
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
+#include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
 #include "AbilitySystem/Ability/BlackbirdAbilityAssignment.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -43,9 +44,16 @@ void ABlackbirdShip::InitDefaultAbilities()
 	GetBlackbirdAbilitySystemComponent()->AddAbilities(StartingAbilities->GetAbilityAssignments());
 }
 
+void ABlackbirdShip::InitDefaultAttributes()
+{
+	UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, DefaultPrimaryAttributes);
+	UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, DefaultVitalAttributes);
+}
+
 void ABlackbirdShip::OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent)
 {
 	InitDefaultAbilities();
+	InitDefaultAttributes();
 }
 
 void ABlackbirdShip::Tick(float DeltaTime)
@@ -63,13 +71,16 @@ UAbilitySystemComponent* ABlackbirdShip::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-UBlackbirdAbilitySystemComponent* ABlackbirdShip::GetBlackbirdAbilitySystemComponent()
+UBlackbirdAbilitySystemComponent* ABlackbirdShip::GetBlackbirdAbilitySystemComponent() const
 {
 	return Cast<UBlackbirdAbilitySystemComponent>(AbilitySystemComponent);
+}
+
+UBlackbirdAttributeSet* ABlackbirdShip::GetBlackbirdAttributeSet() const
+{
+	return AttributeSet;
 }
 
 void ABlackbirdShip::SetFacingDirection(const FVector& Direction)
 {
 }
-
-

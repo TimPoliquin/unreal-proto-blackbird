@@ -1,7 +1,7 @@
 ﻿// Copyright Alien Shores 2025
 
 
-#include "BlackbirdAbilityAssignment.h"
+#include "AbilitySystem/Ability/BlackbirdAbilityAssignment.h"
 
 TArray<FBlackbirdAbilityAssignmentRow> UBlackbirdAbilityAssignment::GetAbilityAssignments() const
 {

@@ -4,6 +4,7 @@
 #include "Player/BlackbirdPlayerState.h"
 
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
+#include "AbilitySystem/Attribute/BlackbirdAttributeSet.h"
 
 ABlackbirdPlayerState::ABlackbirdPlayerState()
 {
@@ -11,11 +12,17 @@ ABlackbirdPlayerState::ABlackbirdPlayerState()
 	BlackbirdAbilitySystemComponent = CreateDefaultSubobject<UBlackbirdAbilitySystemComponent>(TEXT("Ability System Component"));
 	BlackbirdAbilitySystemComponent->SetIsReplicated(true);
 	BlackbirdAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	BlackbirdAttributeSet = CreateDefaultSubobject<UBlackbirdAttributeSet>(TEXT("Attribute Set"));
 }
 
 UBlackbirdAbilitySystemComponent* ABlackbirdPlayerState::GetBlackbirdAbilitySystemComponent()
 {
 	return BlackbirdAbilitySystemComponent;
+}
+
+UBlackbirdAttributeSet* ABlackbirdPlayerState::GetBlackbirdAttributeSet()
+{
+	return BlackbirdAttributeSet;
 }
 
 void ABlackbirdPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const

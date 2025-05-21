@@ -9,6 +9,8 @@
 #include "GameFramework/Character.h"
 #include "BlackbirdShip.generated.h"
 
+class UGameplayEffect;
+class UBlackbirdAttributeSet;
 class UBlackbirdAbilitySystemComponent;
 class UAbilitySystemComponent;
 class UBlackbirdShipMovementComponent;
@@ -26,8 +28,12 @@ public:
 	ABlackbirdShip();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	virtual UBlackbirdAbilitySystemComponent* GetBlackbirdAbilitySystemComponent();
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	virtual UBlackbirdAbilitySystemComponent* GetBlackbirdAbilitySystemComponent() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	virtual UBlackbirdAttributeSet* GetBlackbirdAttributeSet() const;
 
 	/** Start ShipInterface **/
 	virtual void SetFacingDirection(const FVector& Direction) override;
@@ -39,11 +45,18 @@ protected:
 	virtual void BeginPlay() override;
 	void InitAbilitySystem(AActor* OwnerActor, UBlackbirdAbilitySystemComponent* InAbilitySystemComponent);
 	void InitDefaultAbilities();
+	void InitDefaultAttributes();
 	UFUNCTION()
 	virtual void OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent);
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilities")
 	TObjectPtr<UBlackbirdAbilityAssignment> StartingAbilities;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Abilities")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	UPROPERTY(BlueprintReadOnly, Category="Attributes")
+	TObjectPtr<UBlackbirdAttributeSet> AttributeSet;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 };

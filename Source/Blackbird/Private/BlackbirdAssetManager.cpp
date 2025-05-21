@@ -4,6 +4,7 @@
 #include "BlackbirdAssetManager.h"
 
 #include "AbilitySystem/Ability/BlackbirdAbilitySystemTags.h"
+#include "AbilitySystem/Attribute/BlackbirdAttributeTags.h"
 #include "Input/BlackbirdInputTags.h"
 
 UBlackbirdAssetManager& UBlackbirdAssetManager::Get()
@@ -16,4 +17,5 @@ void UBlackbirdAssetManager::StartInitialLoading()
 	Super::StartInitialLoading();
 	FBlackbirdInputTags::Initialize();
 	FBlackbirdAbilitySystemTags::Initialize();
+	FBlackbirdAttributeTags::Initialize();
 }

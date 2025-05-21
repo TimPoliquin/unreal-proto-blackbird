@@ -16,7 +16,7 @@ ABlackbirdPlayerShip::ABlackbirdPlayerShip()
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm Component"));
 	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->bUsePawnControlRotation =false;
+	SpringArm->bUsePawnControlRotation = false;
 	SpringArm->bInheritPitch = false;
 	SpringArm->bInheritYaw = false;
 	SpringArm->bInheritRoll = false;
@@ -53,7 +53,7 @@ void ABlackbirdPlayerShip::PossessedBy(AController* NewController)
 	InitAbilityActorInfo();
 }
 
-UBlackbirdAbilitySystemComponent* ABlackbirdPlayerShip::GetBlackbirdAbilitySystemComponent()
+UBlackbirdAbilitySystemComponent* ABlackbirdPlayerShip::GetBlackbirdAbilitySystemComponent() const
 {
 	return Cast<UBlackbirdAbilitySystemComponent>(AbilitySystemComponent);
 }
@@ -67,9 +67,11 @@ void ABlackbirdPlayerShip::InitAbilityActorInfo()
 {
 	if (ABlackbirdPlayerState* BlackbirdPlayerState = Cast<ABlackbirdPlayerState>(GetPlayerState()))
 	{
+		AttributeSet = BlackbirdPlayerState->GetBlackbirdAttributeSet();
 		InitAbilitySystem(BlackbirdPlayerState, BlackbirdPlayerState->GetBlackbirdAbilitySystemComponent());
 		UE_LOG(LogTemp, Warning, TEXT("BlackbirdAbilitySystemInitialized"));
-	} else
+	}
+	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("BlackbirdPlayerState is null"));
 	}

@@ -3,7 +3,7 @@
 
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 
-#include "Ability/BlackbirdAbilityAssignment.h"
+#include "AbilitySystem/Ability/BlackbirdAbilityAssignment.h"
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
 #include "AbilitySystem/Ability/BlackbirdGameplayAbility.h"
 
@@ -22,6 +22,10 @@ void UBlackbirdAbilitySystemComponent::ForEachAbility(const FForEachAbility& For
 
 void UBlackbirdAbilitySystemComponent::AddAbilities(TArray<FBlackbirdAbilityAssignmentRow> AbilityAssignments)
 {
+	if (!GetOwner()->HasAuthority())
+	{
+		return;
+	}
 	for (const FBlackbirdAbilityAssignmentRow& AbilityAssignment : AbilityAssignments)
 	{
 		AddAbility(AbilityAssignment);
@@ -37,17 +41,23 @@ void UBlackbirdAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag
 		return;
 	}
 	FForEachAbility ForEachAbilityDelegate;
-	ForEachAbilityDelegate.BindLambda([this, InputTag](FGameplayAbilitySpec& AbilitySpec)
-	{
-		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
+	ForEachAbilityDelegate.BindLambda(
+		[this, InputTag](FGameplayAbilitySpec& AbilitySpec)
 		{
-			AbilitySpecInputPressed(AbilitySpec);
-			if (AbilitySpec.IsActive())
+			if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
 			{
-				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, UBlackbirdAbilitySystemLibrary::GetPredictionKeyFromAbilitySpec(AbilitySpec));
+				AbilitySpecInputPressed(AbilitySpec);
+				if (AbilitySpec.IsActive())
+				{
+					InvokeReplicatedEvent(
+						EAbilityGenericReplicatedEvent::InputPressed,
+						AbilitySpec.Handle,
+						UBlackbirdAbilitySystemLibrary::GetPredictionKeyFromAbilitySpec(AbilitySpec)
+					);
+				}
 			}
 		}
-	});
+	);
 	ForEachAbility(ForEachAbilityDelegate);
 }
 
@@ -111,14 +121,24 @@ void UBlackbirdAbilitySystemComponent::OnRep_ActivateAbilities()
 
 void UBlackbirdAbilitySystemComponent::AddAbility(const FBlackbirdAbilityAssignmentRow& AbilityAssignmentRow)
 {
-	FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityAssignmentRow.AbilityClass, AbilityAssignmentRow.Level);
+	FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(
+		AbilityAssignmentRow.AbilityClass,
+		AbilityAssignmentRow.Level
+	);
 	AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilityAssignmentRow.AbilityStateTag);
 	AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilityAssignmentRow.InputTag);
-	UE_LOG(LogTemp, Warning, TEXT("[%s] Adding ability: %s"), GetOwner()->HasAuthority() ? TEXT("Server") : TEXT("Client"), *AbilityAssignmentRow.AbilityClass->GetName());
+	UE_LOG(
+		LogTemp,
+		Warning,
+		TEXT("[%s] Adding ability: %s"),
+		GetOwner()->HasAuthority() ? TEXT("Server") : TEXT("Client"),
+		*AbilityAssignmentRow.AbilityClass->GetName()
+	);
 	if (UBlackbirdGameplayAbility::IsPassiveAbilityType(AbilitySpec.Ability))
 	{
 		GiveAbilityAndActivateOnce(AbilitySpec);
-	} else
+	}
+	else
 	{
 		GiveAbility(AbilitySpec);
 	}
