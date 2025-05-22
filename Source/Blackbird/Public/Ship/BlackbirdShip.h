@@ -9,6 +9,7 @@
 #include "GameFramework/Character.h"
 #include "BlackbirdShip.generated.h"
 
+class UMVVM_ShipAttributes;
 class UGameplayEffect;
 class UBlackbirdAttributeSet;
 class UBlackbirdAbilitySystemComponent;
@@ -39,6 +40,7 @@ public:
 	virtual void SetFacingDirection(const FVector& Direction) override;
 	/** End ShipInterface **/
 
+	UPROPERTY(BlueprintAssignable)
 	FBlackbirdAbilitySystemReadySignature OnAbilitySystemReadyDelegate;
 
 protected:

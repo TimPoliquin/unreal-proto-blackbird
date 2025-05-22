@@ -9,7 +9,10 @@ public class Blackbird : ModuleRules
 		this.PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		this.PublicDependencyModuleNames.AddRange(new[]
-			{ "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities" });
+		{
+			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "UMG",
+			"ModelViewViewModel"
+		});
 
 		this.PrivateDependencyModuleNames.AddRange(new[] { "GameplayTags" });
 

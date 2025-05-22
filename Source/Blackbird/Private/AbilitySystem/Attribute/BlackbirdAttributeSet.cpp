@@ -12,17 +12,17 @@
 UBlackbirdAttributeSet::UBlackbirdAttributeSet()
 {
 	FBlackbirdAttributeTags AttributeTags = FBlackbirdAttributeTags::Get();
-	AttributesByTag.Add(AttributeTags.Attributes_Meta_IncomingDamage, GetMeta_IncomingDamageAttribute);
-	AttributesByTag.Add(AttributeTags.Attributes_Meta_IncomingXP, GetMeta_IncomingXPAttribute);
-	AttributesByTag.Add(AttributeTags.Attributes_Primary_CriticalChance, GetCriticalChanceAttribute);
-	AttributesByTag.Add(AttributeTags.Attributes_Primary_Defense, GetDefenseAttribute);
-	AttributesByTag.Add(AttributeTags.Attributes_Primary_MaxEnergy, GetMaxEnergyAttribute);
-	AttributesByTag.Add(AttributeTags.Attributes_Primary_MaxHealth, GetMaxHealthAttribute);
-	AttributesByTag.Add(AttributeTags.Attributes_Primary_MaxHeat, GetMaxHeatAttribute);
-	AttributesByTag.Add(AttributeTags.Attributes_Primary_Strength, GetStrengthAttribute);
-	AttributesByTag.Add(AttributeTags.Attributes_Vital_Energy, GetEnergyAttribute);
-	AttributesByTag.Add(AttributeTags.Attributes_Vital_Health, GetHealthAttribute);
-	AttributesByTag.Add(AttributeTags.Attributes_Vital_Heat, GetHeatAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Meta_IncomingDamage, GetMeta_IncomingDamageAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Meta_IncomingXP, GetMeta_IncomingXPAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Primary_CriticalChance, GetCriticalChanceAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Primary_Defense, GetDefenseAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Primary_MaxEnergy, GetMaxEnergyAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Primary_MaxHealth, GetMaxHealthAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Primary_MaxHeat, GetMaxHeatAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Primary_Strength, GetStrengthAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Vital_Energy, GetEnergyAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Vital_Health, GetHealthAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Vital_Heat, GetHeatAttribute);
 }
 
 void UBlackbirdAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -106,6 +106,11 @@ void UBlackbirdAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	{
 		HandleIncomingXP(Data);
 	}
+	OnAttributeChanged.Broadcast(
+		Data.EvaluatedData.Attribute,
+		TagsByAttribute[Data.EvaluatedData.Attribute],
+		Data.EvaluatedData.Magnitude
+	);
 }
 
 bool UBlackbirdAttributeSet::IsAlive() const
@@ -148,4 +153,13 @@ void UBlackbirdAttributeSet::HandleIncomingXP(const FGameplayEffectModCallbackDa
 	const float IncomingXP = GetMeta_IncomingXP();
 	SetMeta_IncomingXP(0);
 	OnReceivedXP.Broadcast(IncomingXP);
+}
+
+void UBlackbirdAttributeSet::InitializeMapsForAttributeAndTag(
+	const FGameplayTag& AttributeTag,
+	const TStaticFuncPtr<FGameplayAttribute()> AttributeGetter
+)
+{
+	AttributesByTag.Add(AttributeTag, AttributeGetter);
+	TagsByAttribute.Add(AttributeGetter(), AttributeTag);
 }
