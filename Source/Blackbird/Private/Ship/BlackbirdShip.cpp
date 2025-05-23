@@ -8,7 +8,6 @@
 #include "AbilitySystem/Ability/BlackbirdAbilityAssignment.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "UI/MVVM_ShipAttributes.h"
 
 
 ABlackbirdShip::ABlackbirdShip()

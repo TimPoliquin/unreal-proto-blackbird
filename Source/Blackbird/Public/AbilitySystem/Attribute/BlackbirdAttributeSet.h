@@ -50,7 +50,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, CriticalChance);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Energy);
-	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Heat);
+	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, AvailableHeat);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Meta_IncomingDamage);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Meta_IncomingXP);
 
@@ -145,12 +145,12 @@ protected:
 	}
 
 	//  Heat - accumulated by attacking and using shields. dissipated by dodging and using melee attacks
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Heat, Category = "Dynamic Attributes")
-	FGameplayAttributeData Heat;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AvailableHeat, Category = "Dynamic Attributes")
+	FGameplayAttributeData AvailableHeat;
 	UFUNCTION()
-	FORCEINLINE void OnRep_Heat(const FGameplayAttributeData& OldValue) const
+	FORCEINLINE void OnRep_AvailableHeat(const FGameplayAttributeData& OldValue) const
 	{
-		GAMEPLAYATTRIBUTE_REPNOTIFY(UBlackbirdAttributeSet, Heat, OldValue);
+		GAMEPLAYATTRIBUTE_REPNOTIFY(UBlackbirdAttributeSet, AvailableHeat, OldValue);
 	}
 
 	/**
@@ -176,5 +176,5 @@ private:
 
 	bool bResetHealth = false;
 	bool bResetEnergy = false;
-	bool bResetHeat = false;
+	bool bResetAvailableHeat = false;
 };

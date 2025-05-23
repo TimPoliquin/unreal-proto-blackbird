@@ -33,7 +33,7 @@ void FBlackbirdAttributeTags::Initialize()
 	Instance.Attributes_Vital = TagManager.AddNativeGameplayTag(FName("Attributes.Vital"));
 	Instance.Attributes_Vital_Energy = TagManager.AddNativeGameplayTag(FName("Attributes.Vital.Energy"));
 	Instance.Attributes_Vital_Health = TagManager.AddNativeGameplayTag(FName("Attributes.Vital.Health"));
-	Instance.Attributes_Vital_Heat = TagManager.AddNativeGameplayTag(FName("Attributes.Vital.Heat"));
+	Instance.Attributes_Vital_AvailableHeat = TagManager.AddNativeGameplayTag(FName("Attributes.Vital.AvailableHeat"));
 	Instance.bInitialized = true;
 }
 

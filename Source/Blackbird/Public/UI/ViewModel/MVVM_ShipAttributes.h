@@ -25,17 +25,25 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void BindDependencies(const ABlackbirdShip* Owner);
 	float GetHealth() const;
-	void SetHealth(const float Health);
+	void SetHealth(const float InHealth);
 	float GetMaxHealth() const;
 	void SetMaxHealth(const float InMaxHealth);
 	float GetEnergy() const;
 	void SetEnergy(const float InEnergy);
 	float GetMaxEnergy() const;
 	void SetMaxEnergy(const float InMaxEnergy);
-	float GetHeat() const;
-	void SetHeat(const float Heat);
+	float GetAvailableHeat() const;
+	void SetAvailableHeat(const float InHeat);
 	float GetMaxHeat() const;
-	void SetMaxHeat(const float MaxHeat);
+	void SetMaxHeat(const float InMaxHeat);
+	UFUNCTION(BlueprintCallable, BlueprintPure, FieldNotify)
+	float GetHealthPercentage() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, FieldNotify)
+	float GetEnergyPercentage() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, FieldNotify)
+	float GetHeatPercentage() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, FieldNotify)
+	float GetHeatAmount() const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Getter, Setter, FieldNotify)
@@ -47,7 +55,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Getter, Setter, FieldNotify)
 	float MaxEnergy;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Getter, Setter, FieldNotify)
-	float Heat;
+	float AvailableHeat;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Getter, Setter, FieldNotify)
 	float MaxHeat;
 

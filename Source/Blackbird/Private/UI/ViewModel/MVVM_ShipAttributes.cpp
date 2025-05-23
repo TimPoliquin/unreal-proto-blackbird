@@ -1,10 +1,11 @@
 ﻿// Copyright Alien Shores 2025
 
 
-#include "UI/MVVM_ShipAttributes.h"
+#include "UI/ViewModel/MVVM_ShipAttributes.h"
 
 #include "AbilitySystem/Attribute/BlackbirdAttributeSet.h"
 #include "AbilitySystem/Attribute/BlackbirdAttributeTags.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Ship/BlackbirdShip.h"
 
 UMVVM_ShipAttributes::UMVVM_ShipAttributes()
@@ -15,7 +16,7 @@ UMVVM_ShipAttributes::UMVVM_ShipAttributes()
 	AddTagToAttributeSetterMap(AttributeTags.Attributes_Primary_MaxHeat, &UMVVM_ShipAttributes::SetMaxHeat);
 	AddTagToAttributeSetterMap(AttributeTags.Attributes_Vital_Health, &UMVVM_ShipAttributes::SetHealth);
 	AddTagToAttributeSetterMap(AttributeTags.Attributes_Vital_Energy, &UMVVM_ShipAttributes::SetEnergy);
-	AddTagToAttributeSetterMap(AttributeTags.Attributes_Vital_Heat, &UMVVM_ShipAttributes::SetHeat);
+	AddTagToAttributeSetterMap(AttributeTags.Attributes_Vital_AvailableHeat, &UMVVM_ShipAttributes::SetAvailableHeat);
 }
 
 void UMVVM_ShipAttributes::BindDependencies(const ABlackbirdShip* Owner)
@@ -24,6 +25,13 @@ void UMVVM_ShipAttributes::BindDependencies(const ABlackbirdShip* Owner)
 	{
 		if (UBlackbirdAttributeSet* AttributeSet = Owner->GetBlackbirdAttributeSet())
 		{
+			UE_LOG(
+				LogTemp,
+				Warning,
+				TEXT("[%s] Initializing Attribute ViewModel for [%s]"),
+				*GetName(),
+				*Owner->GetName()
+			)
 			AttributeSet->OnAttributeChanged.AddDynamic(this, &UMVVM_ShipAttributes::OnAttributeChanged);
 			AttributeSet->OnReceivedDamage.AddDynamic(this, &UMVVM_ShipAttributes::OnReceivedDamage);
 			InitializeValues(Owner, AttributeSet);
@@ -39,6 +47,7 @@ float UMVVM_ShipAttributes::GetHealth() const
 void UMVVM_ShipAttributes::SetHealth(const float InHealth)
 {
 	UE_MVVM_SET_PROPERTY_VALUE(Health, InHealth);
+	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(GetHealthPercentage);
 }
 
 float UMVVM_ShipAttributes::GetMaxHealth() const
@@ -49,6 +58,7 @@ float UMVVM_ShipAttributes::GetMaxHealth() const
 void UMVVM_ShipAttributes::SetMaxHealth(const float InMaxHealth)
 {
 	UE_MVVM_SET_PROPERTY_VALUE(MaxHealth, InMaxHealth);
+	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(GetHealthPercentage);
 }
 
 float UMVVM_ShipAttributes::GetEnergy() const
@@ -59,6 +69,7 @@ float UMVVM_ShipAttributes::GetEnergy() const
 void UMVVM_ShipAttributes::SetEnergy(const float InEnergy)
 {
 	UE_MVVM_SET_PROPERTY_VALUE(Energy, InEnergy);
+	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(GetEnergyPercentage);
 }
 
 float UMVVM_ShipAttributes::GetMaxEnergy() const
@@ -69,16 +80,19 @@ float UMVVM_ShipAttributes::GetMaxEnergy() const
 void UMVVM_ShipAttributes::SetMaxEnergy(const float InMaxEnergy)
 {
 	UE_MVVM_SET_PROPERTY_VALUE(MaxEnergy, InMaxEnergy);
+	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(GetEnergyPercentage);
 }
 
-float UMVVM_ShipAttributes::GetHeat() const
+float UMVVM_ShipAttributes::GetAvailableHeat() const
 {
-	return Heat;
+	return AvailableHeat;
 }
 
-void UMVVM_ShipAttributes::SetHeat(const float InHeat)
+void UMVVM_ShipAttributes::SetAvailableHeat(const float InHeat)
 {
-	UE_MVVM_SET_PROPERTY_VALUE(Heat, InHeat);
+	UE_MVVM_SET_PROPERTY_VALUE(AvailableHeat, InHeat);
+	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(GetHeatPercentage);
+	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(GetHeatAmount);
 }
 
 float UMVVM_ShipAttributes::GetMaxHeat() const
@@ -89,7 +103,30 @@ float UMVVM_ShipAttributes::GetMaxHeat() const
 void UMVVM_ShipAttributes::SetMaxHeat(const float InMaxHeat)
 {
 	UE_MVVM_SET_PROPERTY_VALUE(MaxHeat, InMaxHeat);
+	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(GetHeatPercentage);
+	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(GetHeatAmount);
 }
+
+float UMVVM_ShipAttributes::GetHealthPercentage() const
+{
+	return UKismetMathLibrary::SafeDivide(Health, MaxHealth);
+}
+
+float UMVVM_ShipAttributes::GetEnergyPercentage() const
+{
+	return UKismetMathLibrary::SafeDivide(Energy, MaxEnergy);
+}
+
+float UMVVM_ShipAttributes::GetHeatPercentage() const
+{
+	return UKismetMathLibrary::SafeDivide(MaxHeat - AvailableHeat, MaxHeat);
+}
+
+float UMVVM_ShipAttributes::GetHeatAmount() const
+{
+	return MaxHeat - AvailableHeat;
+}
+
 
 void UMVVM_ShipAttributes::OnAttributeChanged(
 	const FGameplayAttribute& Attribute,
@@ -132,5 +169,5 @@ void UMVVM_ShipAttributes::InitializeValues(const ABlackbirdShip* Owner, const U
 	SetMaxEnergy(AttributeSet->GetMaxEnergy());
 	SetEnergy(AttributeSet->GetEnergy());
 	SetMaxHeat(AttributeSet->GetMaxHeat());
-	SetHeat(AttributeSet->GetHeat());
+	SetAvailableHeat(AttributeSet->GetAvailableHeat());
 }

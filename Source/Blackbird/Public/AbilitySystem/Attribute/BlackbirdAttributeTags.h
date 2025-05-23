@@ -14,7 +14,7 @@ struct FBlackbirdAttributeTags
 	FGameplayTag Attributes_Vital;
 	FGameplayTag Attributes_Vital_Health;
 	FGameplayTag Attributes_Vital_Energy;
-	FGameplayTag Attributes_Vital_Heat;
+	FGameplayTag Attributes_Vital_AvailableHeat;
 	FGameplayTag Attributes_Meta;
 	FGameplayTag Attributes_Meta_IncomingDamage;
 	FGameplayTag Attributes_Meta_IncomingXP;

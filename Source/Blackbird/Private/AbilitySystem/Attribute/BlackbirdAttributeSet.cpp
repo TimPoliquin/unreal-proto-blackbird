@@ -22,7 +22,7 @@ UBlackbirdAttributeSet::UBlackbirdAttributeSet()
 	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Primary_Strength, GetStrengthAttribute);
 	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Vital_Energy, GetEnergyAttribute);
 	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Vital_Health, GetHealthAttribute);
-	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Vital_Heat, GetHeatAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Vital_AvailableHeat, GetAvailableHeatAttribute);
 }
 
 void UBlackbirdAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -37,7 +37,7 @@ void UBlackbirdAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, CriticalChance, COND_None, REPNOTIFY_Always);
 	// vital attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, Health, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, Heat, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, AvailableHeat, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, Energy, COND_None, REPNOTIFY_Always);
 }
 
@@ -52,7 +52,7 @@ void UBlackbirdAttributeSet::PreAttributeChange(const FGameplayAttribute& Attrib
 	{
 		NewValue = FMath::Clamp(NewValue, 0, GetMaxEnergy());
 	}
-	else if (Attribute == GetMaxHeatAttribute())
+	else if (Attribute == GetAvailableHeatAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0, GetMaxHeat());
 	}
@@ -71,10 +71,10 @@ void UBlackbirdAttributeSet::PostAttributeChange(const FGameplayAttribute& Attri
 		SetEnergy(GetMaxEnergy());
 		bResetEnergy = false;
 	}
-	if (Attribute == GetMaxHeatAttribute() && bResetHeat)
+	if (Attribute == GetMaxHeatAttribute() && bResetAvailableHeat)
 	{
-		SetHeat(0);
-		bResetHeat = false;
+		SetAvailableHeat(GetMaxHeat());
+		bResetAvailableHeat = false;
 	}
 }
 
@@ -94,9 +94,9 @@ void UBlackbirdAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	{
 		SetEnergy(FMath::Clamp(GetEnergy(), 0.f, GetMaxEnergy()));
 	}
-	else if (Data.EvaluatedData.Attribute == GetHeatAttribute())
+	else if (Data.EvaluatedData.Attribute == GetAvailableHeatAttribute())
 	{
-		SetHeat(FMath::Clamp(GetHeat(), 0.f, GetMaxHeat()));
+		SetAvailableHeat(FMath::Clamp(GetAvailableHeat(), 0.f, GetMaxHeat()));
 	}
 	else if (Data.EvaluatedData.Attribute == GetMeta_IncomingDamageAttribute())
 	{
@@ -109,7 +109,7 @@ void UBlackbirdAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	OnAttributeChanged.Broadcast(
 		Data.EvaluatedData.Attribute,
 		TagsByAttribute[Data.EvaluatedData.Attribute],
-		Data.EvaluatedData.Magnitude
+		Data.EvaluatedData.Attribute.GetNumericValue(this)
 	);
 }
 
@@ -127,7 +127,7 @@ void UBlackbirdAttributeSet::LevelUp(TArray<FBlackbirdLevelUpAttributeValue> Lev
 {
 	bResetHealth = true;
 	bResetEnergy = true;
-	bResetHeat = true;
+	bResetAvailableHeat = true;
 	for (const FBlackbirdLevelUpAttributeValue& AttributeValue : LevelUpAttributeValues)
 	{
 		float NewValue = AttributeValue.Value;
