@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "AbilityHeatCostInterface.generated.h"
+#include "DamageableInterface.generated.h"
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDamageSignature, float /* Damage Amount */);
 
 // This class does not need to be modified.
-UINTERFACE(BlueprintType)
-class UAbilityHeatCostInterface : public UInterface
+UINTERFACE()
+class UDamageableInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,12 +18,11 @@ class UAbilityHeatCostInterface : public UInterface
 /**
  * 
  */
-class BLACKBIRD_API IAbilityHeatCostInterface
+class BLACKBIRD_API IDamageableInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	float GetHeatCost() const;
+	virtual FOnDamageSignature& GetOnDamageDelegate() = 0;
 };

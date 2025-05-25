@@ -136,15 +136,16 @@ void UMVVM_ShipAttributes::OnAttributeChanged(
 {
 	if (TagToAttributeSetterMap.Contains(AttributeTag))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("[%s] Attribute changed: %s"), *GetName(), *AttributeTag.ToString())
 		TagToAttributeSetterMap[AttributeTag](NewValue);
 	}
 }
 
 void UMVVM_ShipAttributes::OnReceivedDamage(const float DamageAmount, const bool bFatal)
 {
+	UE_LOG(LogTemp, Warning, TEXT("[%s] Received damage!"), *GetName())
 	if (bFatal)
 	{
-		// TODO - do we need to do anything to the view to trigger death?
 	}
 }
 

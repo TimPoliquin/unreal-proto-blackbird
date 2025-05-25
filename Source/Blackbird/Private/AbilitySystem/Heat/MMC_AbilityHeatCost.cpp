@@ -1,17 +1,17 @@
 ﻿// Copyright Alien Shores 2025
 
 
-#include "AbilitySystem/Ability/MMC_AbilityHeatCost.h"
+#include "AbilitySystem/Heat/MMC_AbilityHeatCost.h"
 
 #include "Abilities/GameplayAbility.h"
-#include "AbilitySystem/Ability/AbilityHeatCostInterface.h"
+#include "AbilitySystem/Heat/AbilityHeatCostInterface.h"
 
 float UMMC_AbilityHeatCost::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
 {
 	const UGameplayAbility* Ability = Spec.GetContext().GetAbilityInstance_NotReplicated();
 	if (Ability && Ability->Implements<UAbilityHeatCostInterface>())
 	{
-		return -1 * IAbilityHeatCostInterface::Execute_GetHeatCost(Ability);
+		return -1 * IAbilityHeatCostInterface::Execute_GetHeatCost(Ability, Ability->GetAbilityLevel());
 	}
 	UE_LOG(
 		LogTemp,

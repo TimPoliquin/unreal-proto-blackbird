@@ -66,6 +66,13 @@ void ABlackbirdShip::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+float ABlackbirdShip::TakeDamage(float DamageAmount, const struct FDamageEvent& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	OnDamageDelegate.Broadcast(Damage);
+	return Damage;
+}
+
 UAbilitySystemComponent* ABlackbirdShip::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -83,4 +90,9 @@ UBlackbirdAttributeSet* ABlackbirdShip::GetBlackbirdAttributeSet() const
 
 void ABlackbirdShip::SetFacingDirection(const FVector& Direction)
 {
+}
+
+FOnDamageSignature& ABlackbirdShip::GetOnDamageDelegate()
+{
+	return OnDamageDelegate;
 }

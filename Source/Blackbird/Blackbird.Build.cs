@@ -14,7 +14,7 @@ public class Blackbird : ModuleRules
 			"ModelViewViewModel"
 		});
 
-		this.PrivateDependencyModuleNames.AddRange(new[] { "GameplayTags" });
+		this.PrivateDependencyModuleNames.AddRange(new[] { "GameplayTags", "Niagara" });
 
 		this.PublicIncludePaths.Add("Blackbird/Public");
 		this.PrivateIncludePaths.Add("Blackbird/Private");

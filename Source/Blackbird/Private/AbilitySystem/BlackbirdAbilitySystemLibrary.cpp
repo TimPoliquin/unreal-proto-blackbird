@@ -9,7 +9,9 @@
 #include "GameplayAbilitySpec.h"
 #include "GameplayEffectExtension.h"
 #include "Abilities/GameplayAbility.h"
+#include "AbilitySystem/BlackbirdGameplayEffectContext.h"
 #include "AbilitySystem/Attribute/BlackbirdAttributeSet.h"
+#include "AbilitySystem/Attribute/BlackbirdAttributeTags.h"
 
 void UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(
 	AActor* Actor,
@@ -162,4 +164,275 @@ bool UBlackbirdAbilitySystemLibrary::IsDead(AActor* Actor)
 		}
 	}
 	return true;
+}
+
+bool UBlackbirdAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return BlackbirdEffectContext->IsBlockedHit();
+	}
+	return false;
+}
+
+void UBlackbirdAbilitySystemLibrary::SetIsBlockedHit(
+	FGameplayEffectContextHandle& Context,
+	const bool InIsBlocked
+)
+{
+	if (FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(Context.Get()))
+	{
+		BlackbirdEffectContext->SetIsBlockedHit(InIsBlocked);
+	}
+}
+
+bool UBlackbirdAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return BlackbirdEffectContext->IsCriticalHit();
+	}
+	return false;
+}
+
+void UBlackbirdAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& Context, bool InIsCriticalHit)
+{
+	if (FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(Context.Get()))
+	{
+		BlackbirdEffectContext->SetIsCriticalHit(InIsCriticalHit);
+	}
+}
+
+bool UBlackbirdAbilitySystemLibrary::IsRadialDamage(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		return BlackbirdEffectContext->IsRadialDamage();
+	}
+	return false;
+}
+
+float UBlackbirdAbilitySystemLibrary::GetRadialDamageInnerRadius(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		return BlackbirdEffectContext->GetRadialDamageInnerRadius();
+	}
+	return 0.f;
+}
+
+float UBlackbirdAbilitySystemLibrary::GetRadialDamageOuterRadius(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		return BlackbirdEffectContext->GetRadialDamageOuterRadius();
+	}
+	return 0.f;
+}
+
+FVector UBlackbirdAbilitySystemLibrary::GetRadialDamageOrigin(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		return BlackbirdEffectContext->GetRadialDamageOrigin();
+	}
+	return FVector::ZeroVector;
+}
+
+void UBlackbirdAbilitySystemLibrary::SetIsRadialDamage(
+	FGameplayEffectContextHandle& EffectContextHandle,
+	const bool InIsRadialDamage
+)
+{
+	if (FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		return BlackbirdEffectContext->SetIsRadialDamage(InIsRadialDamage);
+	}
+}
+
+void UBlackbirdAbilitySystemLibrary::SetRadialDamageInnerRadius(
+	FGameplayEffectContextHandle& EffectContextHandle,
+	const float InRadialDamageInnerRadius
+)
+{
+	if (FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		return BlackbirdEffectContext->SetRadialDamageInnerRadius(InRadialDamageInnerRadius);
+	}
+}
+
+void UBlackbirdAbilitySystemLibrary::SetRadialDamageOuterRadius(
+	FGameplayEffectContextHandle& EffectContextHandle,
+	const float InRadialDamageOuterRadius
+)
+{
+	if (FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		return BlackbirdEffectContext->SetRadialDamageOuterRadius(InRadialDamageOuterRadius);
+	}
+}
+
+void UBlackbirdAbilitySystemLibrary::SetRadialDamageOrigin(
+	FGameplayEffectContextHandle& EffectContextHandle,
+	const FVector& InRadialDamageOrigin
+)
+{
+	if (FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		return BlackbirdEffectContext->SetRadialDamageOrigin(InRadialDamageOrigin);
+	}
+}
+
+FVector UBlackbirdAbilitySystemLibrary::GetDeathImpulse(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBlackbirdGameplayEffectContext* AuraEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		return AuraEffectContext->GetDeathImpulse();
+	}
+	return FVector::ZeroVector;
+}
+
+void UBlackbirdAbilitySystemLibrary::SetDeathImpulse(FGameplayEffectContextHandle& EffectContextHandle, const FVector& InDeathImpulse)
+{
+	if (FBlackbirdGameplayEffectContext* AuraEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		AuraEffectContext->SetDeathImpulse(InDeathImpulse);
+	}
+}
+
+FVector UBlackbirdAbilitySystemLibrary::GetKnockbackVector(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBlackbirdGameplayEffectContext* AuraEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		return AuraEffectContext->GetKnockbackVector();
+	}
+	return FVector::ZeroVector;
+}
+
+void UBlackbirdAbilitySystemLibrary::SetKnockbackVector(FGameplayEffectContextHandle& EffectContextHandle, const FVector& InKnockbackVector)
+{
+	if (FBlackbirdGameplayEffectContext* AuraEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(
+		EffectContextHandle.Get()))
+	{
+		AuraEffectContext->SetKnockbackVector(InKnockbackVector);
+	}
+}
+
+
+FGameplayEffectContextHandle UBlackbirdAbilitySystemLibrary::ApplyDamageEffect(const FBlackbirdDamageEffectParams& DamageEffectParams)
+{
+	const FBlackbirdAttributeTags& GameplayTags = FBlackbirdAttributeTags::Get();
+	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	FGameplayEffectContextHandle EffectContextHandle = DamageEffectParams.SourceAbilitySystemComponent->
+	                                                                      MakeEffectContext();
+	EffectContextHandle.AddSourceObject(SourceAvatarActor);
+	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(
+		DamageEffectParams.DamageGameplayEffectClass,
+		DamageEffectParams.AbilityLevel,
+		EffectContextHandle
+	);
+	SetDeathImpulse(EffectContextHandle, DamageEffectParams.DeathImpulse);
+	SetKnockbackVector(EffectContextHandle, DamageEffectParams.KnockbackForce);
+	if (DamageEffectParams.bIsRadialDamage)
+	{
+		SetIsRadialDamage(EffectContextHandle, DamageEffectParams.bIsRadialDamage);
+		SetRadialDamageOrigin(EffectContextHandle, DamageEffectParams.RadialDamageOrigin);
+		SetRadialDamageInnerRadius(EffectContextHandle, DamageEffectParams.RadialDamageInnerRadius);
+		SetRadialDamageOuterRadius(EffectContextHandle, DamageEffectParams.RadialDamageOuterRadius);
+	}
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+		SpecHandle,
+		GameplayTags.Attributes_Meta_IncomingDamage,
+		DamageEffectParams.BaseDamage
+	);
+	DamageEffectParams.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+	return EffectContextHandle;
+}
+
+FBlackbirdDamageEffectParams UBlackbirdAbilitySystemLibrary::MakeCustomDamageEffectParams(
+	AActor* SourceActor,
+	AActor* TargetActor,
+	TSubclassOf<UGameplayEffect> DamageEffectClass,
+	const FBlackbirdDamageConfig& InDamageConfig,
+	int32 AbilityLevel,
+	FVector RadialDamageOrigin,
+	bool bOverrideKnockbackDirection,
+	FVector InKnockbackDirectionOverride,
+	bool bOverrideDeathImpulse,
+	FVector InDeathImpulseDirectionOverride,
+	bool bOverridePitch,
+	float PitchOverride
+)
+{
+	FBlackbirdDamageEffectParams DamageEffectParams;
+	DamageEffectParams.RadialDamageOrigin = RadialDamageOrigin;
+	DamageEffectParams.FillFromDamageConfig(InDamageConfig);
+	DamageEffectParams.WorldContextObject = SourceActor;
+	DamageEffectParams.DamageGameplayEffectClass = DamageEffectClass;
+	DamageEffectParams.SourceAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(
+		SourceActor
+	);
+	DamageEffectParams.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(
+		TargetActor
+	);
+	DamageEffectParams.AbilityLevel = AbilityLevel;
+	DamageEffectParams.BaseDamage = InDamageConfig.GetDamageAtLevel(AbilityLevel);
+	if (IsValid(TargetActor))
+	{
+		FRotator Rotation = (TargetActor->GetActorLocation() - SourceActor->GetActorLocation())
+			.Rotation();
+		if (bOverridePitch)
+		{
+			Rotation.Pitch = PitchOverride;
+		}
+		else if (IsValid(TargetActor))
+		{
+			Rotation.Pitch = 25.f;
+		}
+		if (!bOverrideKnockbackDirection)
+		{
+			if (DamageEffectParams.RollForKnockbackChance())
+			{
+				DamageEffectParams.KnockbackForce = Rotation.Vector() * DamageEffectParams.KnockbackForceMagnitude;
+			}
+		}
+		if (!bOverrideDeathImpulse)
+		{
+			DamageEffectParams.DeathImpulse = Rotation.Vector() * DamageEffectParams.DeathImpulseMagnitude;
+		}
+	}
+	if (bOverrideKnockbackDirection)
+	{
+		InKnockbackDirectionOverride.Normalize();
+		DamageEffectParams.KnockbackForce = InKnockbackDirectionOverride * InDamageConfig.KnockbackForceMagnitude;
+		if (bOverridePitch)
+		{
+			FRotator KnockbackRotation = InKnockbackDirectionOverride.Rotation();
+			KnockbackRotation.Pitch = PitchOverride;
+			DamageEffectParams.KnockbackForce = KnockbackRotation.Vector() * InDamageConfig.KnockbackForceMagnitude;
+		}
+	}
+	if (bOverrideDeathImpulse)
+	{
+		InDeathImpulseDirectionOverride.Normalize();
+		DamageEffectParams.DeathImpulse = InDeathImpulseDirectionOverride * InDamageConfig.DeathImpulseMagnitude;
+		if (bOverridePitch)
+		{
+			FRotator DeathImpulseRotation = InDeathImpulseDirectionOverride.Rotation();
+			DeathImpulseRotation.Pitch = PitchOverride;
+			DamageEffectParams.DeathImpulse = DeathImpulseRotation.Vector() * InDamageConfig.DeathImpulseMagnitude;
+		}
+	}
+	return DamageEffectParams;
 }

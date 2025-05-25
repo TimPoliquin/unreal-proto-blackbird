@@ -6,6 +6,7 @@
 #include "ShipInterface.h"
 #include "AbilitySystemInterface.h"
 #include "AbilitySystem/BlackbirdAbilitySystemDelegates.h"
+#include "AbilitySystem/Damage/DamageableInterface.h"
 #include "GameFramework/Character.h"
 #include "BlackbirdShip.generated.h"
 
@@ -21,7 +22,7 @@ class UBoxComponent;
 struct FBlackbirdAbilityAssignmentRow;
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdShip : public ACharacter, public IShipInterface, public IAbilitySystemInterface
+class BLACKBIRD_API ABlackbirdShip : public ACharacter, public IShipInterface, public IAbilitySystemInterface, public IDamageableInterface
 {
 	GENERATED_BODY()
 
@@ -29,6 +30,13 @@ public:
 	ABlackbirdShip();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual float TakeDamage(
+		float DamageAmount,
+		const struct FDamageEvent& DamageEvent,
+		class AController* EventInstigator,
+		AActor* DamageCauser
+	) override;
+
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UFUNCTION(BlueprintCallable, BlueprintPure)
@@ -40,6 +48,9 @@ public:
 	virtual void SetFacingDirection(const FVector& Direction) override;
 	/** End ShipInterface **/
 
+	/** Start DamageableInterface **/
+	virtual FOnDamageSignature& GetOnDamageDelegate() override;
+	/** End DamageableInterface **/
 	UPROPERTY(BlueprintAssignable)
 	FBlackbirdAbilitySystemReadySignature OnAbilitySystemReadyDelegate;
 
@@ -61,4 +72,7 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+private:
+	FOnDamageSignature OnDamageDelegate;
 };

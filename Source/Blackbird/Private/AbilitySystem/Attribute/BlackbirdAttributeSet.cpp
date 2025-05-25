@@ -76,6 +76,11 @@ void UBlackbirdAttributeSet::PostAttributeChange(const FGameplayAttribute& Attri
 		SetAvailableHeat(GetMaxHeat());
 		bResetAvailableHeat = false;
 	}
+	OnAttributeChanged.Broadcast(
+		Attribute,
+		TagsByAttribute[Attribute],
+		NewValue
+	);
 }
 
 void UBlackbirdAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -106,11 +111,6 @@ void UBlackbirdAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	{
 		HandleIncomingXP(Data);
 	}
-	OnAttributeChanged.Broadcast(
-		Data.EvaluatedData.Attribute,
-		TagsByAttribute[Data.EvaluatedData.Attribute],
-		Data.EvaluatedData.Attribute.GetNumericValue(this)
-	);
 }
 
 bool UBlackbirdAttributeSet::IsAlive() const
@@ -144,6 +144,8 @@ void UBlackbirdAttributeSet::HandleIncomingDamage(const FGameplayEffectModCallba
 	{
 		const float NewHealth = GetHealth() - IncomingDamage;
 		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+		UE_LOG(LogTemp, Warning, TEXT("[%s] Receiving damage: [%f]"), *GetName(), IncomingDamage);
+		UE_LOG(LogTemp, Warning, TEXT("[%s] Health changed: [%f]"), *GetName(), GetHealth());
 		OnReceivedDamage.Broadcast(IncomingDamage, NewHealth <= 0);
 	}
 }

@@ -64,11 +64,13 @@ public:
 
 	void LevelUp(TArray<FBlackbirdLevelUpAttributeValue> LevelUpAttributeValues);
 
+	UPROPERTY(BlueprintAssignable)
 	FOnReceivedDamageSignature OnReceivedDamage;
+	UPROPERTY(BlueprintAssignable)
 	FOnReceivedXPSignature OnReceivedXP;
+	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnAttributeChanged;
 
-protected:
 	/** Primary Attributes **/
 	// Max Health
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Vital Attributes")
