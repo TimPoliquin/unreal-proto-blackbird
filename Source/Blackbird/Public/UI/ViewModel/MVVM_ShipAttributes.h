@@ -61,12 +61,6 @@ protected:
 
 private:
 	UFUNCTION()
-	void OnAttributeChanged(
-		const FGameplayAttribute& Attribute,
-		const FGameplayTag& AttributeTag,
-		const float NewValue
-	);
-	UFUNCTION()
 	void OnReceivedDamage(const float DamageAmount, const bool bFatal);
 	void AddTagToAttributeSetterMap(
 		const FGameplayTag& Tag,

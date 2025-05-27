@@ -58,6 +58,7 @@ public:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	FGameplayAttribute GetAttributeByTag(const FGameplayTag& AttributeTag) const;
 
 	bool IsAlive() const;
 	bool IsDead() const;
@@ -68,8 +69,6 @@ public:
 	FOnReceivedDamageSignature OnReceivedDamage;
 	UPROPERTY(BlueprintAssignable)
 	FOnReceivedXPSignature OnReceivedXP;
-	UPROPERTY(BlueprintAssignable)
-	FOnAttributeChangedSignature OnAttributeChanged;
 
 	/** Primary Attributes **/
 	// Max Health

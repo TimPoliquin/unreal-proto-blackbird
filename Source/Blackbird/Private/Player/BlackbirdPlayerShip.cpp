@@ -69,7 +69,13 @@ void ABlackbirdPlayerShip::InitAbilityActorInfo()
 	{
 		AttributeSet = BlackbirdPlayerState->GetBlackbirdAttributeSet();
 		InitAbilitySystem(BlackbirdPlayerState, BlackbirdPlayerState->GetBlackbirdAbilitySystemComponent());
-		UE_LOG(LogTemp, Warning, TEXT("BlackbirdAbilitySystemInitialized"));
+		UE_LOG(
+			LogTemp,
+			Warning,
+			TEXT("[%s %s] BlackbirdAbilitySystemInitialized"),
+			*(HasAuthority() ? FString("Server") : FString("Client")),
+			*GetName()
+		);
 	}
 	else
 	{

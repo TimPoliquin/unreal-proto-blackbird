@@ -3,6 +3,7 @@
 
 #include "UI/ViewModel/MVVM_ShipAttributes.h"
 
+#include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 #include "AbilitySystem/Attribute/BlackbirdAttributeSet.h"
 #include "AbilitySystem/Attribute/BlackbirdAttributeTags.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -23,18 +24,29 @@ void UMVVM_ShipAttributes::BindDependencies(const ABlackbirdShip* Owner)
 {
 	if (IsValid(Owner))
 	{
-		if (UBlackbirdAttributeSet* AttributeSet = Owner->GetBlackbirdAttributeSet())
+		if (const UBlackbirdAttributeSet* AttributeSet = Owner->GetBlackbirdAttributeSet())
 		{
 			UE_LOG(
 				LogTemp,
 				Warning,
-				TEXT("[%s] Initializing Attribute ViewModel for [%s]"),
+				TEXT("[%s %s] Initializing Attribute ViewModel for [%s]"),
+				*(Owner->HasAuthority() ? FString("Server") : FString("Client")),
 				*GetName(),
 				*Owner->GetName()
 			)
-			AttributeSet->OnAttributeChanged.AddDynamic(this, &UMVVM_ShipAttributes::OnAttributeChanged);
-			AttributeSet->OnReceivedDamage.AddDynamic(this, &UMVVM_ShipAttributes::OnReceivedDamage);
 			InitializeValues(Owner, AttributeSet);
+			if (UBlackbirdAbilitySystemComponent* AbilitySystemComponent = Owner->GetBlackbirdAbilitySystemComponent())
+			{
+				for (TPair Pair : TagToAttributeSetterMap)
+				{
+					AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetAttributeByTag(Pair.Key)).AddLambda(
+						[Pair](const FOnAttributeChangeData& Data)
+						{
+							Pair.Value(Data.NewValue);
+						}
+					);
+				}
+			}
 		}
 	}
 }
@@ -125,20 +137,6 @@ float UMVVM_ShipAttributes::GetHeatPercentage() const
 float UMVVM_ShipAttributes::GetHeatAmount() const
 {
 	return MaxHeat - AvailableHeat;
-}
-
-
-void UMVVM_ShipAttributes::OnAttributeChanged(
-	const FGameplayAttribute& Attribute,
-	const FGameplayTag& AttributeTag,
-	const float NewValue
-)
-{
-	if (TagToAttributeSetterMap.Contains(AttributeTag))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[%s] Attribute changed: %s"), *GetName(), *AttributeTag.ToString())
-		TagToAttributeSetterMap[AttributeTag](NewValue);
-	}
 }
 
 void UMVVM_ShipAttributes::OnReceivedDamage(const float DamageAmount, const bool bFatal)
