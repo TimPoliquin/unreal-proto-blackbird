@@ -8,7 +8,7 @@
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
 #include "Ship/SocketInterface.h"
 
-void UBlackbirdProjectileAbility::SpawnProjectile(const FGameplayTag& SocketTag)
+void UBlackbirdProjectileAbility::SpawnProjectile(const FGameplayTag& SocketTag, const FVector& ImpactPoint, const AActor* HitActor)
 {
 	AActor* OwningActor = GetAvatarActorFromActorInfo();
 	if (!OwningActor->HasAuthority())
@@ -18,7 +18,7 @@ void UBlackbirdProjectileAbility::SpawnProjectile(const FGameplayTag& SocketTag)
 	}
 	check(ProjectileClass);
 	const FVector SpawnLocation = GetProjectileSpawnLocation(SocketTag);
-	const FRotator Rotation = GetProjectileSpawnRotation(SocketTag);
+	const FRotator Rotation = GetProjectileSpawnRotation(SpawnLocation, ImpactPoint, HitActor);
 	SpawnProjectile(SpawnLocation, Rotation);
 }
 
@@ -32,12 +32,13 @@ FVector UBlackbirdProjectileAbility::GetProjectileSpawnLocation(const FGameplayT
 	return GetAvatarActorFromActorInfo()->GetActorLocation();
 }
 
-FRotator UBlackbirdProjectileAbility::GetProjectileSpawnRotation(const FGameplayTag& SocketTag) const
+FRotator UBlackbirdProjectileAbility::GetProjectileSpawnRotation(const FVector& SpawnLocation, const FVector& ImpactPoint, const AActor* HitActor) const
 {
-	if (const ISocketInterface* SocketInterface = Cast<ISocketInterface>(GetAvatarActorFromActorInfo()))
+	if (IsValid(HitActor))
 	{
-		return SocketInterface->GetSocketRotation(SocketTag);
+		return (ImpactPoint - SpawnLocation).Rotation();
 	}
+	// TODO - this isn't quite right - we probably want to project to some fake impact point in the distance based on the cursor position.
 	return GetAvatarActorFromActorInfo()->GetActorForwardVector().Rotation();
 }
 

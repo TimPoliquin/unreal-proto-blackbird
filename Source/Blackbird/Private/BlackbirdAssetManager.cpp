@@ -3,6 +3,7 @@
 
 #include "BlackbirdAssetManager.h"
 
+#include "AbilitySystemGlobals.h"
 #include "AbilitySystem/Ability/BlackbirdAbilitySystemTags.h"
 #include "AbilitySystem/Attribute/BlackbirdAttributeTags.h"
 #include "Input/BlackbirdInputTags.h"
@@ -18,4 +19,6 @@ void UBlackbirdAssetManager::StartInitialLoading()
 	FBlackbirdInputTags::Initialize();
 	FBlackbirdAbilitySystemTags::Initialize();
 	FBlackbirdAttributeTags::Initialize();
+	// DEVNOTE: Required to use TargetData (TargetDataUnderMouse)
+	UAbilitySystemGlobals::Get().InitGlobalData();
 }
