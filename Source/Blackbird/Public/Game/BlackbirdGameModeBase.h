@@ -13,4 +13,7 @@ UCLASS()
 class BLACKBIRD_API ABlackbirdGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+	virtual void InitStartSpot_Implementation(AActor* StartSpot, AController* NewPlayer) override;
 };

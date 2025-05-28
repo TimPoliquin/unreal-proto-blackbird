@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "BlackbirdHUD.generated.h"
 
+class UMVVM_PlayerTargeting;
 class UBlackbirdAbilitySystemComponent;
 class UPlayerShipAttributesWidget;
 class UMVVM_ShipAttributes;
@@ -18,7 +19,7 @@ class BLACKBIRD_API ABlackbirdHUD : public AHUD
 	GENERATED_BODY()
 
 public:
-	UMVVM_ShipAttributes* GetShipAttributesViewModel();
+	UMVVM_ShipAttributes* GetShipAttributesViewModel() const;
 
 protected:
 	virtual void BeginPlay() override;

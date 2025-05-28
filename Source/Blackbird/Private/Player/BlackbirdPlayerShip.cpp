@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Player/BlackbirdPlayerState.h"
+#include "Player/PlayerTargetingComponent.h"
 
 
 // Sets default values
@@ -18,11 +19,12 @@ ABlackbirdPlayerShip::ABlackbirdPlayerShip()
 	SpringArm->SetupAttachment(RootComponent);
 	SpringArm->bUsePawnControlRotation = false;
 	SpringArm->bInheritPitch = false;
-	SpringArm->bInheritYaw = false;
+	SpringArm->bInheritYaw = true;
 	SpringArm->bInheritRoll = false;
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
 	Camera->SetupAttachment(SpringArm);
 	Camera->bUsePawnControlRotation = false;
+	TargetingComponent = CreateDefaultSubobject<UPlayerTargetingComponent>(TEXT("Targeting Component"));
 }
 
 void ABlackbirdPlayerShip::BeginPlay()
@@ -61,6 +63,11 @@ UBlackbirdAbilitySystemComponent* ABlackbirdPlayerShip::GetBlackbirdAbilitySyste
 ABlackbirdPlayerState* ABlackbirdPlayerShip::GetBlackbirdPlayerState() const
 {
 	return Cast<ABlackbirdPlayerState>(GetPlayerState());
+}
+
+UPlayerTargetingComponent* ABlackbirdPlayerShip::GetTargetingComponent() const
+{
+	return TargetingComponent;
 }
 
 void ABlackbirdPlayerShip::InitAbilityActorInfo()

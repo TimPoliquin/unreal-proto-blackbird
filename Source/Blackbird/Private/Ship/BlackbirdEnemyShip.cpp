@@ -29,3 +29,10 @@ void ABlackbirdEnemyShip::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ABlackbirdEnemyShip::Mark_Implementation()
+{
+}
+
+void ABlackbirdEnemyShip::Unmark_Implementation()
+{
+}
