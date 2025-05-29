@@ -6,19 +6,19 @@
 #include "FormationCircleProps.h"
 #include "FormationShapeProps.h"
 #include "GameFramework/Actor.h"
-#include "BlackbirdFormation.generated.h"
+#include "BlackbirdFormationComponent.generated.h"
 
 class ABlackbirdEnemyShip;
 
-UCLASS()
-class BLACKBIRD_API ABlackbirdFormation : public AActor
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+class BLACKBIRD_API UBlackbirdFormationComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	ABlackbirdFormation();
-	virtual void Tick(float DeltaTime) override;
-	void CreateEnemies(TArray<ABlackbirdEnemyShip*>& Enemies);
+	UBlackbirdFormationComponent();
+	void CreateEnemies(TArray<ABlackbirdEnemyShip*>& Enemies) const;
+	void GetSpawnTransforms(TArray<FTransform>& OutSpawnTransforms) const;
 
 protected:
 	virtual void BeginPlay() override;

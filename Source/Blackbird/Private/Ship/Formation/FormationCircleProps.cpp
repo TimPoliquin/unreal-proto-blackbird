@@ -3,27 +3,9 @@
 
 #include "Ship/Formation/FormationCircleProps.h"
 
-#include "Ship/BlackbirdEnemyShip.h"
-#include "Ship/Formation/BlackbirdFormation.h"
-
-void FFormationCircleProps::SpawnEnemies(ABlackbirdFormation* Formation)
+void FFormationCircleProps::GetSpawnTransforms(const int32 SpawnCount, TArray<FTransform>& OutSpawnTransforms) const
 {
-	TArray<ABlackbirdEnemyShip*> Enemies;
-	Formation->CreateEnemies(Enemies);
-	TArray<FVector> SpawnPoints = GetPositionsInACircle(Formation->GetActorLocation(), ForwardVector, Radius, Enemies.Num());
-	for (int32 EnemyIdx = 0; EnemyIdx < Enemies.Num(); EnemyIdx++)
-	{
-		FTransform SpawnTransform;
-		SpawnTransform.SetLocation(SpawnPoints[EnemyIdx]);
-		SpawnTransform.SetRotation(ForwardVector.ToOrientationQuat());
-		Enemies[EnemyIdx]->SetActorRelativeTransform(SpawnTransform);
-		Enemies[EnemyIdx]->FinishSpawning(SpawnTransform);
-	}
-}
-
-TArray<FVector> FFormationCircleProps::GetPositionsInACircle(const FVector& Center, const FVector& ForwardVector, const float Radius, const int32 NumPoints)
-{
-	TArray<FVector> Positions;
+	const FVector& Center = FVector::ZeroVector;
 
 	// Ensure the forward vector is normalized
 	const FVector& NormalizedForward = ForwardVector.GetSafeNormal();
@@ -33,12 +15,13 @@ TArray<FVector> FFormationCircleProps::GetPositionsInACircle(const FVector& Cent
 	const FVector& UpVector = FVector::CrossProduct(RightVector, NormalizedForward).GetSafeNormal();
 
 	// Calculate positions around the circle
-	for (int32 i = 0; i < NumPoints; ++i)
+	for (int32 i = 0; i < SpawnCount; ++i)
 	{
-		const float Angle = (2.0f * PI / NumPoints) * i; // Angle in radians
+		FTransform SpawnTransform;
+		const float Angle = (2.0f * PI / SpawnCount) * i; // Angle in radians
 		FVector Offset = (FMath::Cos(Angle) * RightVector + FMath::Sin(Angle) * UpVector) * Radius;
-		Positions.Add(Center + Offset);
+		SpawnTransform.SetLocation(Center + Offset);
+		SpawnTransform.SetRotation(ForwardVector.ToOrientationQuat());
+		OutSpawnTransforms.Add(SpawnTransform);
 	}
-
-	return Positions;
 }

@@ -3,10 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Object.h"
 #include "FormationShapeProps.generated.h"
 
-class ABlackbirdFormation;
+class UBlackbirdFormationComponent;
 
 UENUM(BlueprintType)
 enum class EFormationShape : uint8
@@ -23,7 +22,7 @@ struct BLACKBIRD_API FFormationShapeProps
 	GENERATED_BODY()
 	virtual ~FFormationShapeProps() = default;
 
-	virtual void SpawnEnemies(ABlackbirdFormation* Formation)
+	virtual void GetSpawnTransforms(const int32 SpawnCount, TArray<FTransform>& OutSpawnTransforms) const
 	{
 	};
 };

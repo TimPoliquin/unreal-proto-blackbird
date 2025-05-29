@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "FormationShapeProps.h"
-#include "UObject/Object.h"
 #include "FormationCircleProps.generated.h"
+
+class UBlackbirdFormationComponent;
 
 /**
  * 
@@ -21,7 +22,5 @@ struct FFormationCircleProps : public FFormationShapeProps
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Rotation = 0.f;
 
-	virtual void SpawnEnemies(ABlackbirdFormation* Formation) override;
-
-	static TArray<FVector> GetPositionsInACircle(const FVector& Center, const FVector& ForwardVector, float Radius, int32 NumPoints);
+	virtual void GetSpawnTransforms(const int32 SpawnCount, TArray<FTransform>& OutSpawnTransforms) const override;
 };
