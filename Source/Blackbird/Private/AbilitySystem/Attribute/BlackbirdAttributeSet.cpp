@@ -23,6 +23,7 @@ UBlackbirdAttributeSet::UBlackbirdAttributeSet()
 	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Vital_Energy, GetEnergyAttribute);
 	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Vital_Health, GetHealthAttribute);
 	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Vital_AvailableHeat, GetAvailableHeatAttribute);
+	InitializeMapsForAttributeAndTag(AttributeTags.Attributes_Primary_HeatCooldown, GetHeatCooldownAttribute);
 }
 
 void UBlackbirdAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -35,6 +36,7 @@ void UBlackbirdAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, Defense, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, CriticalChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, HeatCooldown, COND_None, REPNOTIFY_Always);
 	// vital attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBlackbirdAttributeSet, AvailableHeat, COND_None, REPNOTIFY_Always);

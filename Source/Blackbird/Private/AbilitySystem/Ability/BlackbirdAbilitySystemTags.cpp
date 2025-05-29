@@ -1,4 +1,3 @@
-
 #include "AbilitySystem/Ability/BlackbirdAbilitySystemTags.h"
 
 #include "GameplayTagsManager.h"
@@ -17,12 +16,13 @@ void FBlackbirdAbilitySystemTags::Initialize()
 	Instance.Abilities_Ability_BasicAttack = TagManager.AddNativeGameplayTag(FName("Abilities.Ability.BasicAttack"));
 	Instance.Abilities_Ability_Shield = TagManager.AddNativeGameplayTag(FName("Abilities.Ability.Shield"));
 	Instance.Abilities_Status = TagManager.AddNativeGameplayTag(FName("Abilities.Status"));
-	Instance.Abilities_Status_Unavailable= TagManager.AddNativeGameplayTag(FName("Abilities.Status.Unavailable"));
+	Instance.Abilities_Status_Unavailable = TagManager.AddNativeGameplayTag(FName("Abilities.Status.Unavailable"));
 	Instance.Abilities_Status_Available = TagManager.AddNativeGameplayTag(FName("Abilities.Status.Available"));
 	Instance.Abilities_Status_Equipped = TagManager.AddNativeGameplayTag(FName("Abilities.Status.Equipped"));
 	Instance.Abilities_Type = TagManager.AddNativeGameplayTag(FName("Abilities.Type"));
 	Instance.Abilities_Type_Active = TagManager.AddNativeGameplayTag(FName("Abilities.Type.Active"));
 	Instance.Abilities_Type_Passive = TagManager.AddNativeGameplayTag(FName("Abilities.Type.Passive"));
+	Instance.Abilities_Effect = TagManager.AddNativeGameplayTag(FName("Abilities.Effect"));
 
 	Instance.bInitialized = true;
 }

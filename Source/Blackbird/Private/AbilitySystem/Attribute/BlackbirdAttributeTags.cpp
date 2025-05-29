@@ -26,6 +26,7 @@ void FBlackbirdAttributeTags::Initialize()
 		FName("Attributes.Primary.CriticalChance")
 	);
 	Instance.Attributes_Primary_Defense = TagManager.AddNativeGameplayTag(FName("Attributes.Primary.Defense"));
+	Instance.Attributes_Primary_HeatCooldown = TagManager.AddNativeGameplayTag(FName("Attributes.Primary.HeatCooldown"));
 	Instance.Attributes_Primary_MaxEnergy = TagManager.AddNativeGameplayTag(FName("Attributes.Primary.MaxEnergy"));
 	Instance.Attributes_Primary_MaxHealth = TagManager.AddNativeGameplayTag(FName("Attributes.Primary.MaxHealth"));
 	Instance.Attributes_Primary_MaxHeat = TagManager.AddNativeGameplayTag(FName("Attributes.Primary.MaxHeat"));

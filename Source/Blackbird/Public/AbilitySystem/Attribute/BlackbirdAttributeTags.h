@@ -10,6 +10,7 @@ struct FBlackbirdAttributeTags
 	FGameplayTag Attributes_Primary_MaxHeat;
 	FGameplayTag Attributes_Primary_Strength;
 	FGameplayTag Attributes_Primary_Defense;
+	FGameplayTag Attributes_Primary_HeatCooldown;
 	FGameplayTag Attributes_Primary_CriticalChance;
 	FGameplayTag Attributes_Vital;
 	FGameplayTag Attributes_Vital_Health;

@@ -72,6 +72,8 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	TArray<TSubclassOf<UGameplayEffect>> PassiveEffects;
 
 private:
 	FOnDamageSignature OnDamageDelegate;

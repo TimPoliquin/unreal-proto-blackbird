@@ -47,6 +47,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, MaxHeat);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Strength);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Defense);
+	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, HeatCooldown);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, CriticalChance);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Energy);
@@ -115,6 +116,15 @@ public:
 	FORCEINLINE void OnRep_Defense(const FGameplayAttributeData& OldValue) const
 	{
 		GAMEPLAYATTRIBUTE_REPNOTIFY(UBlackbirdAttributeSet, Defense, OldValue);
+	}
+
+	// Heat Cooldown - amount of available heat to restore every cooldown cycle.
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HeatCooldown, Category = "Vital Attributes")
+	FGameplayAttributeData HeatCooldown;
+	UFUNCTION()
+	FORCEINLINE void OnRep_HeatCooldown(const FGameplayAttributeData& OldValue) const
+	{
+		GAMEPLAYATTRIBUTE_REPNOTIFY(UBlackbirdAttributeSet, HeatCooldown, OldValue);
 	}
 
 	// Critical Chance - multiplier for chance to deal double damage

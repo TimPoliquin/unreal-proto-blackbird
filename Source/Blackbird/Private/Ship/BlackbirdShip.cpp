@@ -48,6 +48,10 @@ void ABlackbirdShip::InitDefaultAttributes()
 {
 	UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, DefaultPrimaryAttributes);
 	UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, DefaultVitalAttributes);
+	for (TSubclassOf<UGameplayEffect> PassiveEffect : PassiveEffects)
+	{
+		UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, PassiveEffect);
+	}
 }
 
 void ABlackbirdShip::OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent)
