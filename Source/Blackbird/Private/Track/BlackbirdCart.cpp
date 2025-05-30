@@ -33,6 +33,16 @@ void ABlackbirdCart::StopCart()
 	TrackComponent->Deactivate();
 }
 
+void ABlackbirdCart::SwitchToTrack(USplineComponent* NewTrack)
+{
+	TrackComponent->SwitchToTrack(NewTrack);
+}
+
+void ABlackbirdCart::ChangeSpeed(const float NewSpeed)
+{
+	TrackComponent->ChangeSpeed(NewSpeed);
+}
+
 void ABlackbirdCart::BeginPlay()
 {
 	Super::BeginPlay();

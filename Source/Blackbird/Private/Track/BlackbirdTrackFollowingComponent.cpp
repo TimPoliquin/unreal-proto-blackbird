@@ -3,6 +3,7 @@
 
 #include "Track/BlackbirdTrackFollowingComponent.h"
 
+#include "Components/SplineComponent.h"
 #include "Track/BlackbirdTrackFunctionLibrary.h"
 
 
@@ -24,10 +25,19 @@ void UBlackbirdTrackFollowingComponent::BeginPlay()
 
 void UBlackbirdTrackFollowingComponent::MoveAlongTrack() const
 {
-	if (Track)
+	if (!Track)
 	{
-		GetOwner()->SetActorLocation(UBlackbirdTrackFunctionLibrary::GetLocationOnTrack(Track, Time * Speed));
-		GetOwner()->SetActorRotation(UBlackbirdTrackFunctionLibrary::GetRotationOnTrack(Track, Time * Speed));
+		return;
+	}
+	const float Progress = Time * Speed;
+	if (!UBlackbirdTrackFunctionLibrary::HasMoreTrack(Track, Progress))
+	{
+		OnTrackCompleted.Broadcast(GetOwner(), Track, Track->GetSplineLength() - Progress);
+	}
+	else
+	{
+		GetOwner()->SetActorLocation(UBlackbirdTrackFunctionLibrary::GetLocationOnTrack(Track, Progress));
+		GetOwner()->SetActorRotation(UBlackbirdTrackFunctionLibrary::GetRotationOnTrack(Track, Progress));
 	}
 }
 
@@ -67,4 +77,19 @@ void UBlackbirdTrackFollowingComponent::Deactivate()
 {
 	Super::Deactivate();
 	bActive = false;
+}
+
+void UBlackbirdTrackFollowingComponent::SwitchToTrack(USplineComponent* NewTrack)
+{
+	const float NewDistance = UBlackbirdTrackFunctionLibrary::GetClosestDistanceOnTrack(NewTrack, GetOwner()->GetActorLocation());
+	Time = NewDistance / Speed;
+	SetTrack(NewTrack);
+	MoveAlongTrack();
+}
+
+void UBlackbirdTrackFollowingComponent::ChangeSpeed(const float NewSpeed)
+{
+	const float Distance = Time * Speed;
+	Speed = NewSpeed;
+	Time = Distance / NewSpeed;
 }

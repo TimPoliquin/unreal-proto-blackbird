@@ -17,7 +17,11 @@ class BLACKBIRD_API UBlackbirdTrackFunctionLibrary : public UBlueprintFunctionLi
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Blackbird|Track")
-	static FVector GetLocationOnTrack(const USplineComponent* Spline, float Progress);
+	static FVector GetLocationOnTrack(const USplineComponent* Spline, const float Progress);
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Blackbird|Track")
-	static FRotator GetRotationOnTrack(const USplineComponent* Spline, float Progress);
+	static FRotator GetRotationOnTrack(const USplineComponent* Spline, const float Progress);
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Blackbird|Track")
+	static bool HasMoreTrack(const USplineComponent* Spline, const float Progress);
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Blackbird|Track")
+	static float GetClosestDistanceOnTrack(const USplineComponent* Spline, const FVector& Location);
 };

@@ -11,6 +11,8 @@ class USplineComponent;
 class UTimelineComponent;
 class ABlackbirdTrack;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnTrackCompleted, AActor*, Cart, const USplineComponent*, Track, const float, Overflow);
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BLACKBIRD_API UBlackbirdTrackFollowingComponent : public UActorComponent
 {
@@ -25,6 +27,13 @@ public:
 	void SetTrack(USplineComponent* InTrack);
 	virtual void Activate(bool bReset = false) override;
 	virtual void Deactivate() override;
+	UFUNCTION(BlueprintCallable)
+	void SwitchToTrack(USplineComponent* NewTrack);
+	UFUNCTION(BlueprintCallable)
+	void ChangeSpeed(const float NewSpeed);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnTrackCompleted OnTrackCompleted;
 
 protected:
 	virtual void BeginPlay() override;

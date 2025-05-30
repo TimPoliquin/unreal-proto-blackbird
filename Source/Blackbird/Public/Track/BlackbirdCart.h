@@ -28,6 +28,10 @@ public:
 	void StartCart();
 	UFUNCTION(BlueprintCallable)
 	void StopCart();
+	UFUNCTION(BlueprintCallable)
+	void SwitchToTrack(USplineComponent* NewTrack);
+	UFUNCTION(BlueprintCallable)
+	void ChangeSpeed(const float NewSpeed);
 
 protected:
 	// Called when the game starts or when spawned

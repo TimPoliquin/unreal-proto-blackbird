@@ -14,3 +14,13 @@ FRotator UBlackbirdTrackFunctionLibrary::GetRotationOnTrack(const USplineCompone
 {
 	return Spline->GetRotationAtDistanceAlongSpline(Progress, ESplineCoordinateSpace::World);
 }
+
+bool UBlackbirdTrackFunctionLibrary::HasMoreTrack(const USplineComponent* Spline, const float Progress)
+{
+	return Spline->GetSplineLength() > Progress;
+}
+
+float UBlackbirdTrackFunctionLibrary::GetClosestDistanceOnTrack(const USplineComponent* Spline, const FVector& Location)
+{
+	return Spline->GetDistanceAlongSplineAtLocation(Location, ESplineCoordinateSpace::World);
+}
