@@ -13,12 +13,12 @@ ABlackbirdCart::ABlackbirdCart()
 	TrackComponent->Deactivate();
 }
 
-ABlackbirdTrack* ABlackbirdCart::GetTrack() const
+USplineComponent* ABlackbirdCart::GetTrack() const
 {
 	return TrackComponent->GetTrack();
 }
 
-void ABlackbirdCart::SetTrack(ABlackbirdTrack* Track)
+void ABlackbirdCart::SetTrack(USplineComponent* Track)
 {
 	TrackComponent->SetTrack(Track);
 }

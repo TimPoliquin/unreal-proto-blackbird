@@ -7,6 +7,7 @@
 #include "BlackbirdTrackFollowingComponent.generated.h"
 
 
+class USplineComponent;
 class UTimelineComponent;
 class ABlackbirdTrack;
 
@@ -18,21 +19,23 @@ class BLACKBIRD_API UBlackbirdTrackFollowingComponent : public UActorComponent
 public:
 	UBlackbirdTrackFollowingComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	ABlackbirdTrack* GetTrack();
-	void SetTrack(ABlackbirdTrack* InTrack);
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	USplineComponent* GetTrack() const;
+	UFUNCTION(BlueprintCallable)
+	void SetTrack(USplineComponent* InTrack);
 	virtual void Activate(bool bReset = false) override;
 	virtual void Deactivate() override;
 
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Track")
-	TObjectPtr<ABlackbirdTrack> Track;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Track")
-	float Speed = 120.f;
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Track", meta=(ExposeOnSpawn))
+	TObjectPtr<USplineComponent> Track;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Track", meta=(ExposeOnSpawn))
+	float Speed = 1000.f;
 
 private:
 	bool bActive = false;
 	float Time = 0.f;
-	void MoveAlongTrack();
+	void MoveAlongTrack() const;
 };

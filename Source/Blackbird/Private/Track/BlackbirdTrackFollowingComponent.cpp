@@ -3,7 +3,7 @@
 
 #include "Track/BlackbirdTrackFollowingComponent.h"
 
-#include "Track/BlackbirdTrack.h"
+#include "Track/BlackbirdTrackFunctionLibrary.h"
 
 
 // Sets default values for this component's properties
@@ -22,12 +22,12 @@ void UBlackbirdTrackFollowingComponent::BeginPlay()
 	MoveAlongTrack();
 }
 
-void UBlackbirdTrackFollowingComponent::MoveAlongTrack()
+void UBlackbirdTrackFollowingComponent::MoveAlongTrack() const
 {
 	if (Track)
 	{
-		GetOwner()->SetActorLocation(Track->GetLocationOnTrack(Time / Speed));
-		GetOwner()->SetActorRotation(Track->GetRotationOnTrack(Time / Speed));
+		GetOwner()->SetActorLocation(UBlackbirdTrackFunctionLibrary::GetLocationOnTrack(Track, Time * Speed));
+		GetOwner()->SetActorRotation(UBlackbirdTrackFunctionLibrary::GetRotationOnTrack(Track, Time * Speed));
 	}
 }
 
@@ -43,12 +43,12 @@ void UBlackbirdTrackFollowingComponent::TickComponent(float DeltaTime, ELevelTic
 	}
 }
 
-ABlackbirdTrack* UBlackbirdTrackFollowingComponent::GetTrack()
+USplineComponent* UBlackbirdTrackFollowingComponent::GetTrack() const
 {
 	return Track;
 }
 
-void UBlackbirdTrackFollowingComponent::SetTrack(ABlackbirdTrack* InTrack)
+void UBlackbirdTrackFollowingComponent::SetTrack(USplineComponent* InTrack)
 {
 	Track = InTrack;
 }

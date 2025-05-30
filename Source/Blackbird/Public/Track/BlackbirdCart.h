@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BlackbirdCart.generated.h"
 
+class USplineComponent;
 class USpringArmComponent;
 class UBlackbirdTrackFollowingComponent;
 class ABlackbirdTrack;
@@ -20,9 +21,9 @@ public:
 	ABlackbirdCart();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	ABlackbirdTrack* GetTrack() const;
+	USplineComponent* GetTrack() const;
 	UFUNCTION(BlueprintCallable)
-	void SetTrack(ABlackbirdTrack* Track);
+	void SetTrack(USplineComponent* Track);
 	UFUNCTION(BlueprintCallable)
 	void StartCart();
 	UFUNCTION(BlueprintCallable)
@@ -32,9 +33,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Track")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Track")
 	TObjectPtr<UBlackbirdTrackFollowingComponent> TrackComponent;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Track")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Track", meta=(ExposeOnSpawn))
 	bool bAutoStart = true;
 
 public:

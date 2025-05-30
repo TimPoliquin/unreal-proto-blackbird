@@ -26,6 +26,7 @@ void UBlackbirdFormationComponent::SpawnEnemies()
 	GetSpawnTransforms(SpawnTransforms);
 	for (int32 EnemyIdx = 0; EnemyIdx < Enemies.Num(); EnemyIdx++)
 	{
+		Enemies[EnemyIdx]->AttachToActor(GetOwner(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		Enemies[EnemyIdx]->FinishSpawning(SpawnTransforms[EnemyIdx]);
 	}
 }

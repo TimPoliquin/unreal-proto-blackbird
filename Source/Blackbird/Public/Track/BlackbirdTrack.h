@@ -20,9 +20,7 @@ public:
 	ABlackbirdTrack();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Track")
-	FVector GetLocationOnTrack(const float Progress) const;
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Track")
-	FRotator GetRotationOnTrack(const float Progress) const;
+	USplineComponent* GetTrack();
 
 	UFUNCTION(CallInEditor, Category="Track|Events")
 	void GenerateEvents();

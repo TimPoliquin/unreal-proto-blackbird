@@ -5,6 +5,7 @@
 
 #include "Components/SplineComponent.h"
 #include "Track/BlackbirdCart.h"
+#include "Track/BlackbirdTrackFunctionLibrary.h"
 #include "Track/Event/BlackbirdTrackEvent.h"
 #include "Track/Event/BlackbirdTrackEventConfig.h"
 
@@ -17,6 +18,11 @@ ABlackbirdTrack::ABlackbirdTrack()
 	TrackSpline = CreateDefaultSubobject<USplineComponent>("TrackSpline");
 }
 
+USplineComponent* ABlackbirdTrack::GetTrack()
+{
+	return TrackSpline;
+}
+
 // Called when the game starts or when spawned
 void ABlackbirdTrack::BeginPlay()
 {
@@ -26,8 +32,8 @@ void ABlackbirdTrack::BeginPlay()
 ABlackbirdCart* ABlackbirdTrack::SpawnCart()
 {
 	FTransform SpawnTransform;
-	SpawnTransform.SetLocation(GetLocationOnTrack(0.f));
-	SpawnTransform.SetRotation(GetRotationOnTrack(0.f).Quaternion());
+	SpawnTransform.SetLocation(UBlackbirdTrackFunctionLibrary::GetLocationOnTrack(TrackSpline, 0.f));
+	SpawnTransform.SetRotation(UBlackbirdTrackFunctionLibrary::GetRotationOnTrack(TrackSpline, 0.f).Quaternion());
 	ABlackbirdCart* Cart = GetWorld()->SpawnActorDeferred<ABlackbirdCart>(
 		TrackCartClass,
 		SpawnTransform,
@@ -35,20 +41,10 @@ ABlackbirdCart* ABlackbirdTrack::SpawnCart()
 		nullptr,
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 	);
-	Cart->SetTrack(this);
+	Cart->SetTrack(GetTrack());
 	Cart->SetAutoStart(bAutoStartCart);
 	Cart->FinishSpawning(SpawnTransform);
 	return Cart;
-}
-
-FVector ABlackbirdTrack::GetLocationOnTrack(const float Progress) const
-{
-	return TrackSpline->GetLocationAtDistanceAlongSpline(FMath::Lerp(0.f, TrackSpline->GetSplineLength(), Progress), ESplineCoordinateSpace::World);
-}
-
-FRotator ABlackbirdTrack::GetRotationOnTrack(const float Progress) const
-{
-	return TrackSpline->GetRotationAtDistanceAlongSpline(FMath::Lerp(0.f, TrackSpline->GetSplineLength(), Progress), ESplineCoordinateSpace::World);
 }
 
 void ABlackbirdTrack::GenerateEvents()

@@ -17,6 +17,14 @@ ABlackbirdTrackEvent::ABlackbirdTrackEvent()
 void ABlackbirdTrackEvent::BeginPlay()
 {
 	Super::BeginPlay();
+	if (IsValid(StartKeyFrame))
+	{
+		StartKeyFrame->OnTrackEventKeyFrameTriggeredDelegate.AddDynamic(this, &ABlackbirdTrackEvent::OnTrackEventTriggered);
+	}
+	if (IsValid(EndKeyFrame))
+	{
+		EndKeyFrame->OnTrackEventKeyFrameTriggeredDelegate.AddDynamic(this, &ABlackbirdTrackEvent::OnTrackEventTriggered);
+	}
 	for (ABlackbirdTrackEventKeyFrame* KeyFrame : KeyFrames)
 	{
 		KeyFrame->OnTrackEventKeyFrameTriggeredDelegate.AddDynamic(this, &ABlackbirdTrackEvent::OnTrackEventTriggered);

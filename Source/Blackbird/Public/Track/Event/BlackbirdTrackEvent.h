@@ -9,7 +9,7 @@
 
 class ABlackbirdTrackEventKeyFrame;
 
-UCLASS()
+UCLASS(Blueprintable)
 class BLACKBIRD_API ABlackbirdTrackEvent : public AActor
 {
 	GENERATED_BODY()
