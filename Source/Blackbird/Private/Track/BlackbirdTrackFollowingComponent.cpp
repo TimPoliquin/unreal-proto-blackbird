@@ -1,9 +1,9 @@
 ﻿// Copyright Alien Shores 2025
 
 
-#include "Level/BlackbirdTrackFollowingComponent.h"
+#include "Track/BlackbirdTrackFollowingComponent.h"
 
-#include "Level/BlackbirdLevelTrack.h"
+#include "Track/BlackbirdTrack.h"
 
 
 // Sets default values for this component's properties
@@ -43,12 +43,12 @@ void UBlackbirdTrackFollowingComponent::TickComponent(float DeltaTime, ELevelTic
 	}
 }
 
-ABlackbirdLevelTrack* UBlackbirdTrackFollowingComponent::GetTrack()
+ABlackbirdTrack* UBlackbirdTrackFollowingComponent::GetTrack()
 {
 	return Track;
 }
 
-void UBlackbirdTrackFollowingComponent::SetTrack(ABlackbirdLevelTrack* InTrack)
+void UBlackbirdTrackFollowingComponent::SetTrack(ABlackbirdTrack* InTrack)
 {
 	Track = InTrack;
 }

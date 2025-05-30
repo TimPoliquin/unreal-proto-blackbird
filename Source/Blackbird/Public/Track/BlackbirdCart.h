@@ -4,25 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BlackbirdLevelCart.generated.h"
+#include "BlackbirdCart.generated.h"
 
 class USpringArmComponent;
 class UBlackbirdTrackFollowingComponent;
-class ABlackbirdLevelTrack;
+class ABlackbirdTrack;
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdLevelCart : public AActor
+class BLACKBIRD_API ABlackbirdCart : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	ABlackbirdLevelCart();
+	ABlackbirdCart();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	ABlackbirdLevelTrack* GetTrack() const;
+	ABlackbirdTrack* GetTrack() const;
 	UFUNCTION(BlueprintCallable)
-	void SetTrack(ABlackbirdLevelTrack* LevelTrack);
+	void SetTrack(ABlackbirdTrack* Track);
 	UFUNCTION(BlueprintCallable)
 	void StartCart();
 	UFUNCTION(BlueprintCallable)

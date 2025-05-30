@@ -4,25 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BlackbirdLevelTrack.generated.h"
+#include "BlackbirdTrack.generated.h"
 
-class ABlackbirdLevelCart;
+class ABlackbirdTrackEvent;
+struct FBlackbirdTrackEventConfig;
+class ABlackbirdCart;
 class USplineComponent;
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdLevelTrack : public AActor
+class BLACKBIRD_API ABlackbirdTrack : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	ABlackbirdLevelTrack();
+	ABlackbirdTrack();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Track")
 	FVector GetLocationOnTrack(const float Progress) const;
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Track")
 	FRotator GetRotationOnTrack(const float Progress) const;
 
-	ABlackbirdLevelCart* SpawnCart();
+	UFUNCTION(CallInEditor, Category="Track|Events")
+	void GenerateEvents();
+
+	ABlackbirdCart* SpawnCart();
 
 protected:
 	virtual void BeginPlay() override;
@@ -32,7 +37,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Track|Cart")
 	bool bAutoStartCart = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Track|Cart")
-	TSubclassOf<ABlackbirdLevelCart> TrackCartClass;
+	TSubclassOf<ABlackbirdCart> TrackCartClass;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Track|Cart")
-	TObjectPtr<ABlackbirdLevelCart> TrackCart;
+	TObjectPtr<ABlackbirdCart> TrackCart;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Track|Events")
+	TArray<FBlackbirdTrackEventConfig> TrackEventConfigs;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Track|Events")
+	TArray<ABlackbirdTrackEvent*> TrackEvents;
 };

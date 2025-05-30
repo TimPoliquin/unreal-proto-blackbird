@@ -4,8 +4,8 @@
 #include "Player/BlackbirdPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
-#include "Level/BlackbirdLevelCart.h"
-#include "Level/BlackbirdLevelTrack.h"
+#include "Track/BlackbirdCart.h"
+#include "Track/BlackbirdTrack.h"
 #include "Player/BlackbirdPlayerState.h"
 #include "Player/PlayerTargetingComponent.h"
 #include "Ship/MoveTarget.h"
@@ -75,11 +75,11 @@ void ABlackbirdPlayerController::SetupInputComponent()
 void ABlackbirdPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	if (!IsValid(LevelTrack))
+	if (!IsValid(Track))
 	{
 		return;
 	}
-	PlayerCart = LevelTrack->SpawnCart();
+	PlayerCart = Track->SpawnCart();
 	InPawn->AttachToActor(PlayerCart, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	PlayerCart->StartCart();
 	if (ITargetingActorInterface* TargetingActor = Cast<ITargetingActorInterface>(GetPawn()))
@@ -89,14 +89,14 @@ void ABlackbirdPlayerController::OnPossess(APawn* InPawn)
 	}
 }
 
-ABlackbirdLevelTrack* ABlackbirdPlayerController::GetLevelTrack() const
+ABlackbirdTrack* ABlackbirdPlayerController::GetTrack() const
 {
-	return LevelTrack;
+	return Track;
 }
 
-void ABlackbirdPlayerController::SetLevelTrack(ABlackbirdLevelTrack* InLevelTrack)
+void ABlackbirdPlayerController::SetTrack(ABlackbirdTrack* InTrack)
 {
-	LevelTrack = InLevelTrack;
+	Track = InTrack;
 }
 
 void ABlackbirdPlayerController::Move(const FInputActionValue& Value)

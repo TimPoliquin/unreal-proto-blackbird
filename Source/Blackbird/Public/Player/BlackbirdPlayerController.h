@@ -11,8 +11,8 @@
 #include "BlackbirdPlayerController.generated.h"
 
 class UPlayerTargetingComponent;
-class ABlackbirdLevelCart;
-class ABlackbirdLevelTrack;
+class ABlackbirdCart;
+class ABlackbirdTrack;
 struct FInputActionValue;
 struct FGameplayTag;
 class UBlackbirdInputConfiguration;
@@ -32,9 +32,9 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	ABlackbirdLevelTrack* GetLevelTrack() const;
+	ABlackbirdTrack* GetTrack() const;
 	UFUNCTION(BlueprintCallable)
-	void SetLevelTrack(ABlackbirdLevelTrack* InLevelTrack);
+	void SetTrack(ABlackbirdTrack* InTrack);
 
 protected:
 	virtual void BeginPlay() override;
@@ -42,9 +42,9 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Track")
-	TObjectPtr<ABlackbirdLevelTrack> LevelTrack;
+	TObjectPtr<ABlackbirdTrack> Track;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Track|Cart")
-	TObjectPtr<ABlackbirdLevelCart> PlayerCart;
+	TObjectPtr<ABlackbirdCart> PlayerCart;
 
 private:
 	UPROPERTY(EditAnywhere, Category="Input")

@@ -8,7 +8,7 @@
 
 
 class UTimelineComponent;
-class ABlackbirdLevelTrack;
+class ABlackbirdTrack;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BLACKBIRD_API UBlackbirdTrackFollowingComponent : public UActorComponent
@@ -18,8 +18,8 @@ class BLACKBIRD_API UBlackbirdTrackFollowingComponent : public UActorComponent
 public:
 	UBlackbirdTrackFollowingComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	ABlackbirdLevelTrack* GetTrack();
-	void SetTrack(ABlackbirdLevelTrack* InTrack);
+	ABlackbirdTrack* GetTrack();
+	void SetTrack(ABlackbirdTrack* InTrack);
 	virtual void Activate(bool bReset = false) override;
 	virtual void Deactivate() override;
 
@@ -27,7 +27,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Track")
-	TObjectPtr<ABlackbirdLevelTrack> Track;
+	TObjectPtr<ABlackbirdTrack> Track;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Track")
 	float Speed = 120.f;
 
