@@ -61,15 +61,10 @@ void UBlackbirdFormationComponent::GetSpawnTransforms(TArray<FTransform>& OutSpa
 		UE_LOG(LogTemp, Warning, TEXT("[%s] Unknown formation shape: %hhd"), *GetName(), Shape);
 		break;
 	}
-	const FVector& RootLocation = GetOwner()->GetActorLocation();
+	const FTransform& RootTransform = GetOwner()->GetActorTransform();
 	for (FTransform& SpawnTransform : OutSpawnTransforms)
 	{
-		FRotator DeltaRotation = UKismetMathLibrary::MakeRotFromX(GetOwner()->GetActorForwardVector()) - UKismetMathLibrary::MakeRotFromX(
-			SpawnTransform.GetRotation().GetForwardVector()
-		);
-		// Apply the rotation to the original forward vector
-		FVector RotatedForwardVector = DeltaRotation.RotateVector(SpawnTransform.GetRotation().GetForwardVector());
-		SpawnTransform.SetLocation(RootLocation + SpawnTransform.GetLocation());
-		SpawnTransform.SetRotation(RotatedForwardVector.ToOrientationQuat());
+		SpawnTransform.SetLocation(UKismetMathLibrary::TransformLocation(RootTransform, SpawnTransform.GetLocation()));
+		SpawnTransform.SetRotation(UKismetMathLibrary::TransformRotation(RootTransform, SpawnTransform.GetRotation().Rotator()).Quaternion());
 	}
 }
