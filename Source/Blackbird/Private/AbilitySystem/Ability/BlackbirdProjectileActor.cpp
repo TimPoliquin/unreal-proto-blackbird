@@ -18,7 +18,7 @@
 // Sets default values
 ABlackbirdProjectileActor::ABlackbirdProjectileActor()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Component"));
 	CapsuleComponent->SetCollisionObjectType(ECC_Projectile);
@@ -45,6 +45,25 @@ void ABlackbirdProjectileActor::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 void ABlackbirdProjectileActor::SetDamageEffectParams(FBlackbirdDamageEffectParams& Params)
 {
 	DamageEffectParams = Params;
+}
+
+UProjectileMovementComponent* ABlackbirdProjectileActor::GetProjectileMovementComponent() const
+{
+	return ProjectileComponent;
+}
+
+void ABlackbirdProjectileActor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (ProjectileComponent && ProjectileComponent->bIsHomingProjectile)
+	{
+		Lifetime += DeltaTime;
+		if (Lifetime > HomingLifetime)
+		{
+			ProjectileComponent->bIsHomingProjectile = false;
+			SetActorTickEnabled(false);
+		}
+	}
 }
 
 // Called when the game starts or when spawned

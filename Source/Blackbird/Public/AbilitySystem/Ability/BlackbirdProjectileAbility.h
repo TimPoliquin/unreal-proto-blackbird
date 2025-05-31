@@ -33,6 +33,7 @@ private:
 	ABlackbirdProjectileActor* SpawnProjectile(
 		const FVector& SpawnLocation,
 		const FRotator& SpawnRotation,
+		const AActor* HitActor,
 		const FOnSpawnProjectileFinishedSignature* BeforeFinishSpawning = nullptr
 	) const;
 };

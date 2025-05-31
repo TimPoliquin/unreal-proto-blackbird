@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Ship/SocketInterface.h"
 
 void UBlackbirdProjectileAbility::SpawnProjectile(const FGameplayTag& SocketTag, const FVector& ImpactPoint, const AActor* HitActor)
@@ -19,7 +20,7 @@ void UBlackbirdProjectileAbility::SpawnProjectile(const FGameplayTag& SocketTag,
 	check(ProjectileClass);
 	const FVector SpawnLocation = GetProjectileSpawnLocation(SocketTag);
 	const FRotator Rotation = GetProjectileSpawnRotation(SpawnLocation, ImpactPoint, HitActor);
-	SpawnProjectile(SpawnLocation, Rotation);
+	SpawnProjectile(SpawnLocation, Rotation, HitActor);
 }
 
 
@@ -45,6 +46,7 @@ FRotator UBlackbirdProjectileAbility::GetProjectileSpawnRotation(const FVector& 
 ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
 	const FVector& SpawnLocation,
 	const FRotator& SpawnRotation,
+	const AActor* HitActor,
 	const FOnSpawnProjectileFinishedSignature* BeforeFinishSpawning
 ) const
 {
@@ -59,6 +61,10 @@ ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
 		Cast<APawn>(GetAvatarActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 	);
+	if (SpawnedProjectile->GetProjectileMovementComponent()->bIsHomingProjectile && IsValid(HitActor))
+	{
+		SpawnedProjectile->GetProjectileMovementComponent()->HomingTargetComponent = HitActor->GetRootComponent();
+	}
 	FBlackbirdDamageEffectParams DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 	SpawnedProjectile->SetDamageEffectParams(DamageEffectParams);
 	if (BeforeFinishSpawning)

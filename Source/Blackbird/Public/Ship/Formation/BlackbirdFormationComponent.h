@@ -17,8 +17,10 @@ class BLACKBIRD_API UBlackbirdFormationComponent : public UActorComponent
 
 public:
 	UBlackbirdFormationComponent();
-	void CreateEnemies(TArray<ABlackbirdEnemyShip*>& Enemies) const;
+	void CreateEnemies(TArray<ABlackbirdEnemyShip*>& OutEnemies) const;
 	void GetSpawnTransforms(TArray<FTransform>& OutSpawnTransforms) const;
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	TArray<ABlackbirdEnemyShip*> GetEnemies() const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -34,4 +36,6 @@ protected:
 
 private:
 	void SpawnEnemies();
+	UPROPERTY()
+	TArray<ABlackbirdEnemyShip*> Enemies;
 };
