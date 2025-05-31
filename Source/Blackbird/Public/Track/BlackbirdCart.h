@@ -4,37 +4,42 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BlackbirdLevelCart.generated.h"
+#include "BlackbirdCart.generated.h"
 
+class USplineComponent;
 class USpringArmComponent;
 class UBlackbirdTrackFollowingComponent;
-class ABlackbirdLevelTrack;
+class ABlackbirdTrack;
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdLevelCart : public AActor
+class BLACKBIRD_API ABlackbirdCart : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	ABlackbirdLevelCart();
+	ABlackbirdCart();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	ABlackbirdLevelTrack* GetTrack() const;
+	USplineComponent* GetTrack() const;
 	UFUNCTION(BlueprintCallable)
-	void SetTrack(ABlackbirdLevelTrack* LevelTrack);
+	void SetTrack(USplineComponent* Track);
 	UFUNCTION(BlueprintCallable)
 	void StartCart();
 	UFUNCTION(BlueprintCallable)
 	void StopCart();
+	UFUNCTION(BlueprintCallable)
+	void SwitchToTrack(USplineComponent* NewTrack);
+	UFUNCTION(BlueprintCallable)
+	void ChangeSpeed(const float NewSpeed);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Track")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Track")
 	TObjectPtr<UBlackbirdTrackFollowingComponent> TrackComponent;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Track")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Track", meta=(ExposeOnSpawn))
 	bool bAutoStart = true;
 
 public:

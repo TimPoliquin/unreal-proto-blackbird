@@ -13,7 +13,7 @@ void ABlackbirdGameModeBase::InitStartSpot_Implementation(AActor* StartSpot, ACo
 	{
 		if (ABlackbirdPlayerController* PlayerController = Cast<ABlackbirdPlayerController>(NewPlayer))
 		{
-			PlayerController->SetLevelTrack(PlayerStart->GetLevelTrack());
+			PlayerController->SetTrack(PlayerStart->GetTrack());
 		}
 	}
 }

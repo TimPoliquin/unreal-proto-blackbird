@@ -10,7 +10,7 @@ ABlackbirdPlayerStart::ABlackbirdPlayerStart(const FObjectInitializer& ObjectIni
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-ABlackbirdLevelTrack* ABlackbirdPlayerStart::GetLevelTrack() const
+ABlackbirdTrack* ABlackbirdPlayerStart::GetTrack() const
 {
-	return LevelTrack;
+	return Track;
 }
