@@ -1,7 +1,7 @@
 ﻿// Copyright Alien Shores 2025
 
 
-#include "UI/Widget/PlayerShipAttributesWidget.h"
+#include "UI/Widget/Attributes/PlayerShipAttributesWidget.h"
 
 #include "UI/BlackbirdHUD.h"
 

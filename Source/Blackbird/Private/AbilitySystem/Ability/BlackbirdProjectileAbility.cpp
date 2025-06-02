@@ -7,7 +7,11 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Ship/SocketInterface.h"
+#include "Targeting/TargetableInterface.h"
+#include "Targeting/TargetingActorInterface.h"
 
 void UBlackbirdProjectileAbility::SpawnProjectile(const FGameplayTag& SocketTag, const FVector& ImpactPoint, const AActor* HitActor)
 {
@@ -19,7 +23,7 @@ void UBlackbirdProjectileAbility::SpawnProjectile(const FGameplayTag& SocketTag,
 	}
 	check(ProjectileClass);
 	const FVector SpawnLocation = GetProjectileSpawnLocation(SocketTag);
-	const FRotator Rotation = GetProjectileSpawnRotation(SpawnLocation, ImpactPoint, HitActor);
+	const FRotator Rotation = GetProjectileSpawnRotation(SpawnLocation, ImpactPoint);
 	SpawnProjectile(SpawnLocation, Rotation, HitActor);
 }
 
@@ -33,14 +37,9 @@ FVector UBlackbirdProjectileAbility::GetProjectileSpawnLocation(const FGameplayT
 	return GetAvatarActorFromActorInfo()->GetActorLocation();
 }
 
-FRotator UBlackbirdProjectileAbility::GetProjectileSpawnRotation(const FVector& SpawnLocation, const FVector& ImpactPoint, const AActor* HitActor) const
+FRotator UBlackbirdProjectileAbility::GetProjectileSpawnRotation(const FVector& SpawnLocation, const FVector& ImpactPoint) const
 {
-	if (IsValid(HitActor))
-	{
-		return (ImpactPoint - SpawnLocation).Rotation();
-	}
-	// TODO - this isn't quite right - we probably want to project to some fake impact point in the distance based on the cursor position.
-	return GetAvatarActorFromActorInfo()->GetActorForwardVector().Rotation();
+	return UKismetMathLibrary::FindLookAtRotation(SpawnLocation, ImpactPoint);
 }
 
 ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
@@ -61,7 +60,7 @@ ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
 		Cast<APawn>(GetAvatarActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 	);
-	if (SpawnedProjectile->GetProjectileMovementComponent()->bIsHomingProjectile && IsValid(HitActor))
+	if (SpawnedProjectile->GetProjectileMovementComponent()->bIsHomingProjectile && ITargetableInterface::IsTargetable(HitActor))
 	{
 		SpawnedProjectile->GetProjectileMovementComponent()->HomingTargetComponent = HitActor->GetRootComponent();
 	}

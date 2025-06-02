@@ -20,3 +20,8 @@ void ITargetableInterface::Unmark(AActor* ToUnmark)
 		Execute_Unmark(ToUnmark);
 	}
 }
+
+bool ITargetableInterface::IsTargetable(const AActor* ToCheck)
+{
+	return IsValid(ToCheck) && ToCheck->Implements<UTargetableInterface>();
+}

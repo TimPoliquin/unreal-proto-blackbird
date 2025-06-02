@@ -35,7 +35,7 @@ void ABlackbirdPlayerController::Tick(float DeltaSeconds)
 void ABlackbirdPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	InitializeCursor();
+	// InitializeCursor();
 	check(InputContext);
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
 		GetLocalPlayer()
@@ -48,10 +48,19 @@ void ABlackbirdPlayerController::BeginPlay()
 void ABlackbirdPlayerController::InitializeCursor()
 {
 	bShowMouseCursor = true;
-	FInputModeGameAndUI InputModeData;
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	InputModeData.SetHideCursorDuringCapture(false);
+	FInputModeGameOnly InputModeData;
+	InputModeData.SetConsumeCaptureMouseDown(false);
 	SetInputMode(InputModeData);
+	// center the mouse on the screen
+	const UGameViewportClient* GameViewportClient = GEngine->GetWorldFromContextObjectChecked(this)->GetGameViewport();
+	if (!GameViewportClient->Viewport || !GameViewportClient->Viewport->IsForegroundWindow())
+	{
+		return;
+	}
+	FVector2D ViewportSize;
+	GEngine->GameViewport->GetViewportSize(ViewportSize);
+	const FVector2D CenterPosition = ViewportSize / 2;
+	GameViewportClient->Viewport->SetMouse(CenterPosition.X, CenterPosition.Y);
 }
 
 void ABlackbirdPlayerController::SetupInputComponent()
@@ -61,6 +70,7 @@ void ABlackbirdPlayerController::SetupInputComponent()
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABlackbirdPlayerController::Move);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &ABlackbirdPlayerController::EndMove);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABlackbirdPlayerController::Look);
 		BindAbilityActions(
 			InputConfig,
 			EnhancedInputComponent,
@@ -82,7 +92,7 @@ void ABlackbirdPlayerController::OnPossess(APawn* InPawn)
 	PlayerCart = Track->SpawnCart();
 	InPawn->AttachToActor(PlayerCart, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	PlayerCart->StartCart();
-	if (ITargetingActorInterface* TargetingActor = Cast<ITargetingActorInterface>(GetPawn()))
+	if (const ITargetingActorInterface* TargetingActor = Cast<ITargetingActorInterface>(GetPawn()))
 	{
 		PlayerTargetingComponent = TargetingActor->GetTargetingComponent();
 		PlayerTargetingComponent->OnPlayerTargetingChangedDelegate.AddDynamic(this, &ABlackbirdPlayerController::OnPlayerTargetChanged);
@@ -116,6 +126,16 @@ void ABlackbirdPlayerController::EndMove(const FInputActionValue& InputActionVal
 	{
 		MoveTarget = FMoveTarget::GetReturnToRelativeOrigin(GetPawn(), ReturnToOriginDuration, ReturnToOriginDelay);
 	}
+}
+
+void ABlackbirdPlayerController::Look(const FInputActionValue& Value)
+{
+	// input is a Vector2D
+	const FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+	// add yaw and pitch input to controller
+	AddYawInput(LookAxisVector.X);
+	AddPitchInput(LookAxisVector.Y);
 }
 
 void ABlackbirdPlayerController::AbilityInputTagPressed(const FGameplayTag InputTag)

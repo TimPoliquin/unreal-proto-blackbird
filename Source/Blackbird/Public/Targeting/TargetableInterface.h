@@ -29,4 +29,5 @@ public:
 
 	static void Mark(AActor* ToMark);
 	static void Unmark(AActor* ToUnmark);
+	static bool IsTargetable(const AActor* ToCheck);
 };

@@ -53,6 +53,8 @@ private:
 	TObjectPtr<UInputMappingContext> InputContext;
 	UPROPERTY(EditAnywhere, Category="Input|Combat")
 	TObjectPtr<UInputAction> BasicAttackAction;
+	UPROPERTY(EditAnywhere, Category="Input|Camera")
+	TObjectPtr<UInputAction> LookAction;
 	UPROPERTY(EditAnywhere, Category="Input|Movement")
 	TObjectPtr<UInputAction> MoveAction;
 	UPROPERTY(EditDefaultsOnly, Category="Input|Movement")
@@ -67,6 +69,8 @@ private:
 	void Move(const FInputActionValue& Value);
 	UFUNCTION()
 	void EndMove(const FInputActionValue& InputActionValue);
+	UFUNCTION()
+	void Look(const FInputActionValue& Value);
 	UFUNCTION()
 	void AbilityInputTagPressed(const FGameplayTag InputTag);
 	UFUNCTION()
