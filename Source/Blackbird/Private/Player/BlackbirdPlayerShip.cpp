@@ -17,7 +17,7 @@ ABlackbirdPlayerShip::ABlackbirdPlayerShip()
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm Component"));
 	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->bUsePawnControlRotation = false;
+	SpringArm->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	SpringArm->bInheritPitch = false;
 	SpringArm->bInheritYaw = true;
 	SpringArm->bInheritRoll = false;

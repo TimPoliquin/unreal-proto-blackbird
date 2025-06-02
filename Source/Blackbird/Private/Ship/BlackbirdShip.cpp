@@ -30,6 +30,7 @@ void ABlackbirdShip::InitAbilitySystem(
 	AbilitySystemComponent = Cast<UAbilitySystemComponent>(InAbilitySystemComponent);
 	AbilitySystemComponent->InitAbilityActorInfo(OwnerActor, this);
 	OnAbilitySystemReady(InAbilitySystemComponent);
+	bIsAbilitySystemReady = true;
 	OnAbilitySystemReadyDelegate.Broadcast(InAbilitySystemComponent);
 }
 
@@ -90,6 +91,11 @@ UBlackbirdAbilitySystemComponent* ABlackbirdShip::GetBlackbirdAbilitySystemCompo
 UBlackbirdAttributeSet* ABlackbirdShip::GetBlackbirdAttributeSet() const
 {
 	return AttributeSet;
+}
+
+bool ABlackbirdShip::IsAbilitySystemReady() const
+{
+	return bIsAbilitySystemReady;
 }
 
 void ABlackbirdShip::SetFacingDirection(const FVector& Direction)

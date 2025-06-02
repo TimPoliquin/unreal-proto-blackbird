@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "BlackbirdHUD.generated.h"
 
+class UBlackbirdGameHUDWidget;
 class UMVVM_PlayerTargeting;
 class UBlackbirdAbilitySystemComponent;
 class UPlayerShipAttributesWidget;
@@ -20,19 +21,24 @@ class BLACKBIRD_API ABlackbirdHUD : public AHUD
 
 public:
 	UMVVM_ShipAttributes* GetShipAttributesViewModel() const;
+	UMVVM_PlayerTargeting* GetPlayerTargetingViewModel() const;
 
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UMVVM_ShipAttributes> ShipAttributesViewModelClass;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
 	TObjectPtr<UMVVM_ShipAttributes> ShipAttributesViewModel;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UMVVM_PlayerTargeting> PlayerTargetingViewModelClass;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
+	TObjectPtr<UMVVM_PlayerTargeting> PlayerTargetingViewModel;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UPlayerShipAttributesWidget> PlayerShipAttributesWidgetClass;
+	TSubclassOf<UBlackbirdGameHUDWidget> GameHUDWidgetClass;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<UPlayerShipAttributesWidget> PlayerShipAttributesWidget;
+	TObjectPtr<UBlackbirdGameHUDWidget> GameHUDWidget;
 
 private:
 	UFUNCTION()

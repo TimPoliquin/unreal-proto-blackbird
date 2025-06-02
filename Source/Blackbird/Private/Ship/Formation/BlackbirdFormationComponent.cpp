@@ -15,30 +15,32 @@ UBlackbirdFormationComponent::UBlackbirdFormationComponent()
 void UBlackbirdFormationComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	Enemies.Empty();
 	SpawnEnemies();
 }
 
 void UBlackbirdFormationComponent::SpawnEnemies()
 {
-	TArray<ABlackbirdEnemyShip*> Enemies;
+	TArray<ABlackbirdEnemyShip*> EnemySpawns;
 	TArray<FTransform> SpawnTransforms;
-	CreateEnemies(Enemies);
+	CreateEnemies(EnemySpawns);
 	GetSpawnTransforms(SpawnTransforms);
-	for (int32 EnemyIdx = 0; EnemyIdx < Enemies.Num(); EnemyIdx++)
+	for (int32 EnemyIdx = 0; EnemyIdx < EnemySpawns.Num(); EnemyIdx++)
 	{
-		Enemies[EnemyIdx]->AttachToActor(GetOwner(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		Enemies[EnemyIdx]->FinishSpawning(SpawnTransforms[EnemyIdx]);
+		EnemySpawns[EnemyIdx]->AttachToActor(GetOwner(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		EnemySpawns[EnemyIdx]->FinishSpawning(SpawnTransforms[EnemyIdx]);
 	}
+	Enemies.Append(EnemySpawns);
 }
 
-void UBlackbirdFormationComponent::CreateEnemies(TArray<ABlackbirdEnemyShip*>& Enemies) const
+void UBlackbirdFormationComponent::CreateEnemies(TArray<ABlackbirdEnemyShip*>& OutEnemies) const
 {
 	for (int32 EnemyIdx = 0; EnemyIdx < EnemySpawnCount; EnemyIdx++)
 	{
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(GetOwner()->GetActorLocation());
 		SpawnTransform.SetRotation(GetOwner()->GetActorRotation().Quaternion());
-		Enemies.Add(
+		OutEnemies.Add(
 			GetWorld()->SpawnActorDeferred<ABlackbirdEnemyShip>(
 				UArrayUtils::GetRandomElement(EnemyClasses),
 				SpawnTransform,
@@ -67,4 +69,9 @@ void UBlackbirdFormationComponent::GetSpawnTransforms(TArray<FTransform>& OutSpa
 		SpawnTransform.SetLocation(UKismetMathLibrary::TransformLocation(RootTransform, SpawnTransform.GetLocation()));
 		SpawnTransform.SetRotation(UKismetMathLibrary::TransformRotation(RootTransform, SpawnTransform.GetRotation().Rotator()).Quaternion());
 	}
+}
+
+TArray<ABlackbirdEnemyShip*> UBlackbirdFormationComponent::GetEnemies() const
+{
+	return Enemies;
 }

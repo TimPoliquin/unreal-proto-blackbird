@@ -32,10 +32,10 @@ public:
 			DisplayName="TargetDataUnderMouse"
 		)
 	)
-	static UTargetDataUnderMouse* CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility);
+	static UTargetDataUnderMouse* CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility, float TargetingDistance = 10000.f, bool bDebug = false);
 
 	UPROPERTY(BlueprintAssignable)
-	FMouseTargetDataSignature HasMouseTarget;
+	FMouseTargetDataSignature OnTargetAssigned;
 
 protected:
 	void OnTargetDataReplicatedCallback(
@@ -46,4 +46,6 @@ protected:
 
 private:
 	void SendMouseCursorDataToServer() const;
+	float TargetingDistance;
+	bool bDebug;
 };

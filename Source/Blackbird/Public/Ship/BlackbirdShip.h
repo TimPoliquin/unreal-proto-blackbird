@@ -43,6 +43,8 @@ public:
 	virtual UBlackbirdAbilitySystemComponent* GetBlackbirdAbilitySystemComponent() const;
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	virtual UBlackbirdAttributeSet* GetBlackbirdAttributeSet() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsAbilitySystemReady() const;
 
 	/** Start ShipInterface **/
 	virtual void SetFacingDirection(const FVector& Direction) override;
@@ -77,4 +79,5 @@ protected:
 
 private:
 	FOnDamageSignature OnDamageDelegate;
+	bool bIsAbilitySystemReady = false;
 };

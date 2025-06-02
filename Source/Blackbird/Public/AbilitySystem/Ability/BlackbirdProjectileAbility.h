@@ -28,11 +28,12 @@ protected:
 private:
 	FGameplayEffectSpecHandle MakeDamageEffectSpecHandle(AActor* SourceObject, const FVector& TargetLocation) const;
 	FVector GetProjectileSpawnLocation(const FGameplayTag& SocketTag) const;
-	FRotator GetProjectileSpawnRotation(const FVector& SpawnLocation, const FVector& ImpactPoint, const AActor* HitActor) const;
+	FRotator GetProjectileSpawnRotation(const FVector& SpawnLocation, const FVector& ImpactPoint) const;
 
 	ABlackbirdProjectileActor* SpawnProjectile(
 		const FVector& SpawnLocation,
 		const FRotator& SpawnRotation,
+		const AActor* HitActor,
 		const FOnSpawnProjectileFinishedSignature* BeforeFinishSpawning = nullptr
 	) const;
 };

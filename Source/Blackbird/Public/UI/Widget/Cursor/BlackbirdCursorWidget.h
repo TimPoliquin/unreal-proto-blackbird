@@ -19,4 +19,6 @@ class BLACKBIRD_API UBlackbirdCursorWidget : public UUserWidget
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	ABlackbirdHUD* GetHUD() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UMVVM_PlayerTargeting* GetPlayerTargetingViewModel() const;
 };

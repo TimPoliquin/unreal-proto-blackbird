@@ -4,6 +4,7 @@
 #include "Player/PlayerTargetingComponent.h"
 
 #include "Targeting/TargetableInterface.h"
+#include "Targeting/TargetingUtils.h"
 
 
 UPlayerTargetingComponent::UPlayerTargetingComponent()
@@ -36,7 +37,7 @@ void UPlayerTargetingComponent::Deactivate()
 
 void UPlayerTargetingComponent::CursorTrace(const APlayerController* PlayerController)
 {
-	PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, CursorTraceHit);
+	UTargetingUtils::FindActorTarget(PlayerController->GetPawn(), CursorTraceHit);
 	if (CursorTraceHit.bBlockingHit)
 	{
 		TrackTarget(CursorTraceHit.GetActor());

@@ -21,6 +21,9 @@ public:
 	ABlackbirdProjectileActor();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	void SetDamageEffectParams(FBlackbirdDamageEffectParams& Params);
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UProjectileMovementComponent* GetProjectileMovementComponent() const;
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -34,6 +37,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	float MaxLifetime = 10.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
+	float HomingLifetime = 1.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Projectile")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Projectile")
@@ -63,4 +68,5 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> TravelSoundComponent;
 	bool bHit = false;
+	float Lifetime = 0.f;
 };
