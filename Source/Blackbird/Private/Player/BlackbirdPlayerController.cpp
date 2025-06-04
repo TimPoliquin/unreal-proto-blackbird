@@ -4,12 +4,13 @@
 #include "Player/BlackbirdPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
+#include "Components/SplineComponent.h"
 #include "Track/BlackbirdCart.h"
-#include "Track/BlackbirdTrack.h"
 #include "Player/BlackbirdPlayerState.h"
 #include "Player/PlayerTargetingComponent.h"
 #include "Ship/MoveTarget.h"
 #include "Targeting/TargetingActorInterface.h"
+#include "Track/BlackbirdTrackFunctionLibrary.h"
 
 
 ABlackbirdPlayerController::ABlackbirdPlayerController()
@@ -89,7 +90,7 @@ void ABlackbirdPlayerController::OnPossess(APawn* InPawn)
 	{
 		return;
 	}
-	PlayerCart = Track->SpawnCart();
+	PlayerCart = UBlackbirdTrackFunctionLibrary::SpawnCart(GetTrack(), CartClass, false);
 	InPawn->AttachToActor(PlayerCart, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	PlayerCart->StartCart();
 	if (const ITargetingActorInterface* TargetingActor = Cast<ITargetingActorInterface>(GetPawn()))
@@ -99,12 +100,12 @@ void ABlackbirdPlayerController::OnPossess(APawn* InPawn)
 	}
 }
 
-ABlackbirdTrack* ABlackbirdPlayerController::GetTrack() const
+USplineComponent* ABlackbirdPlayerController::GetTrack() const
 {
 	return Track;
 }
 
-void ABlackbirdPlayerController::SetTrack(ABlackbirdTrack* InTrack)
+void ABlackbirdPlayerController::SetTrack(USplineComponent* InTrack)
 {
 	Track = InTrack;
 }

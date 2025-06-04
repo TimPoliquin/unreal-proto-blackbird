@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BlackbirdTrackFunctionLibrary.generated.h"
 
+class ABlackbirdCart;
 class USplineComponent;
 /**
  * 
@@ -24,4 +25,6 @@ public:
 	static bool HasMoreTrack(const USplineComponent* Spline, const float Progress);
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Blackbird|Track")
 	static float GetClosestDistanceOnTrack(const USplineComponent* Spline, const FVector& Location);
+	UFUNCTION(BlueprintCallable, Category="Blackbird|Track|Cart")
+	static ABlackbirdCart* SpawnCart(USplineComponent* Track, TSubclassOf<ABlackbirdCart> CartClass, bool bAutoStart);
 };

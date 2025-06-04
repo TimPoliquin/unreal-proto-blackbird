@@ -10,6 +10,7 @@
 #include "Ship/MoveTarget.h"
 #include "BlackbirdPlayerController.generated.h"
 
+class USplineComponent;
 class UPlayerTargetingComponent;
 class ABlackbirdCart;
 class ABlackbirdTrack;
@@ -32,9 +33,9 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	ABlackbirdTrack* GetTrack() const;
+	USplineComponent* GetTrack() const;
 	UFUNCTION(BlueprintCallable)
-	void SetTrack(ABlackbirdTrack* InTrack);
+	void SetTrack(USplineComponent* InTrack);
 
 protected:
 	virtual void BeginPlay() override;
@@ -42,7 +43,9 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Track")
-	TObjectPtr<ABlackbirdTrack> Track;
+	TObjectPtr<USplineComponent> Track;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Track|Cart")
+	TSubclassOf<ABlackbirdCart> CartClass;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Track|Cart")
 	TObjectPtr<ABlackbirdCart> PlayerCart;
 

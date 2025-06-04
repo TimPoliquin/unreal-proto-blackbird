@@ -3,6 +3,8 @@
 
 #include "Game/BlackbirdPlayerStart.h"
 
+#include "Track/Event/BlackbirdTrackEventSpline.h"
+
 
 // Sets default values
 ABlackbirdPlayerStart::ABlackbirdPlayerStart(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -10,7 +12,7 @@ ABlackbirdPlayerStart::ABlackbirdPlayerStart(const FObjectInitializer& ObjectIni
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-ABlackbirdTrack* ABlackbirdPlayerStart::GetTrack() const
+USplineComponent* ABlackbirdPlayerStart::GetTrack() const
 {
-	return Track;
+	return Track->GetTrack();
 }

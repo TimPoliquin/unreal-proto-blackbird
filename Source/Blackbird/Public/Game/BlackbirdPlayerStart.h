@@ -6,6 +6,9 @@
 #include "GameFramework/PlayerStart.h"
 #include "BlackbirdPlayerStart.generated.h"
 
+class ABlackbirdTrackEventSpline;
+class USplineComponent;
+class ITrackInterface;
 class ABlackbirdTrack;
 
 UCLASS()
@@ -17,9 +20,9 @@ public:
 	ABlackbirdPlayerStart(const FObjectInitializer& ObjectInitializer);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	ABlackbirdTrack* GetTrack() const;
+	USplineComponent* GetTrack() const;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Track")
-	TObjectPtr<ABlackbirdTrack> Track;
+	TObjectPtr<ABlackbirdTrackEventSpline> Track;
 };
