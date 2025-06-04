@@ -21,6 +21,8 @@ public:
 	void GetSpawnTransforms(TArray<FTransform>& OutSpawnTransforms) const;
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TArray<ABlackbirdEnemyShip*> GetEnemies() const;
+	UFUNCTION(BlueprintCallable)
+	void SpawnEnemies();
 
 protected:
 	virtual void BeginPlay() override;
@@ -35,7 +37,6 @@ protected:
 	FFormationCircleProps CircleProps;
 
 private:
-	void SpawnEnemies();
 	UPROPERTY()
 	TArray<ABlackbirdEnemyShip*> Enemies;
 };

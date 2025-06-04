@@ -4,6 +4,8 @@
 #include "Track/BlackbirdTrackFollowingComponent.h"
 
 #include "Components/SplineComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "Track/BlackbirdTrackFunctionLibrary.h"
 
 
@@ -20,24 +22,31 @@ UBlackbirdTrackFollowingComponent::UBlackbirdTrackFollowingComponent()
 void UBlackbirdTrackFollowingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	MoveAlongTrack();
+	OwnerPawn = Cast<APawn>(GetOwner());
+	MoveAlongTrack(0);
 }
 
-void UBlackbirdTrackFollowingComponent::MoveAlongTrack() const
+void UBlackbirdTrackFollowingComponent::MoveAlongTrack(const float DeltaTime) const
 {
 	if (!Track)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("[%s] No track set on track component!"), *GetOwner()->GetName())
 		return;
 	}
-	const float Progress = Time * Speed;
+	if (!OwnerPawn)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[%s] No OwnerPawn set on track component!"), *GetOwner()->GetName())
+		return;
+	}
+	const float Progress = Track->GetDistanceAlongSplineAtLocation(GetOwner()->GetActorLocation(), ESplineCoordinateSpace::World);
 	if (!UBlackbirdTrackFunctionLibrary::HasMoreTrack(Track, Progress))
 	{
 		OnTrackCompleted.Broadcast(GetOwner(), Track, Track->GetSplineLength() - Progress);
 	}
 	else
 	{
-		GetOwner()->SetActorLocation(UBlackbirdTrackFunctionLibrary::GetLocationOnTrack(Track, Progress));
-		GetOwner()->SetActorRotation(UBlackbirdTrackFunctionLibrary::GetRotationOnTrack(Track, Progress));
+		const FVector ForwardVector = UBlackbirdTrackFunctionLibrary::GetRotationOnTrack(Track, Progress).Vector();
+		OwnerPawn->AddMovementInput(ForwardVector, DeltaTime * Speed, true);
 	}
 }
 
@@ -49,7 +58,7 @@ void UBlackbirdTrackFollowingComponent::TickComponent(float DeltaTime, ELevelTic
 	if (bActive)
 	{
 		Time += DeltaTime;
-		MoveAlongTrack();
+		MoveAlongTrack(DeltaTime);
 	}
 }
 
@@ -84,7 +93,7 @@ void UBlackbirdTrackFollowingComponent::SwitchToTrack(USplineComponent* NewTrack
 	const float NewDistance = UBlackbirdTrackFunctionLibrary::GetClosestDistanceOnTrack(NewTrack, GetOwner()->GetActorLocation());
 	Time = NewDistance / Speed;
 	SetTrack(NewTrack);
-	MoveAlongTrack();
+	MoveAlongTrack(0);
 }
 
 void UBlackbirdTrackFollowingComponent::ChangeSpeed(const float NewSpeed)

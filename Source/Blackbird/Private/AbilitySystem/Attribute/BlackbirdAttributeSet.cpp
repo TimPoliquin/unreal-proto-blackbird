@@ -146,8 +146,6 @@ void UBlackbirdAttributeSet::HandleIncomingDamage(const FGameplayEffectModCallba
 	{
 		const float NewHealth = GetHealth() - IncomingDamage;
 		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-		UE_LOG(LogTemp, Warning, TEXT("[%s] Receiving damage: [%f]"), *GetName(), IncomingDamage);
-		UE_LOG(LogTemp, Warning, TEXT("[%s] Health changed: [%f]"), *GetName(), GetHealth());
 		OnReceivedDamage.Broadcast(IncomingDamage, NewHealth <= 0);
 	}
 }

@@ -8,13 +8,17 @@
 #include "AbilitySystem/Ability/BlackbirdAbilityAssignment.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Track/BlackbirdTrackFollowingComponent.h"
 
 
 ABlackbirdShip::ABlackbirdShip()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	Cast<UCharacterMovementComponent>(GetMovementComponent())->GravityScale = 0.f;
+	UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
+	CharacterMovementComponent->GravityScale = 0.f;
+	CharacterMovementComponent->SetMovementMode(MOVE_Flying);
+	TrackFollowingComponent = CreateDefaultSubobject<UBlackbirdTrackFollowingComponent>(TEXT("Track Following Component"));
 }
 
 void ABlackbirdShip::BeginPlay()
@@ -41,7 +45,7 @@ void ABlackbirdShip::InitDefaultAbilities()
 		UE_LOG(LogTemp, Warning, TEXT("Starting Abilities is null"));
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Adding Starting Abilities"));
+	UE_LOG(LogTemp, Display, TEXT("Adding Starting Abilities"));
 	GetBlackbirdAbilitySystemComponent()->AddAbilities(StartingAbilities->GetAbilityAssignments());
 }
 
@@ -71,7 +75,7 @@ void ABlackbirdShip::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-float ABlackbirdShip::TakeDamage(float DamageAmount, const struct FDamageEvent& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+float ABlackbirdShip::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	OnDamageDelegate.Broadcast(Damage);
@@ -105,4 +109,9 @@ void ABlackbirdShip::SetFacingDirection(const FVector& Direction)
 FOnDamageSignature& ABlackbirdShip::GetOnDamageDelegate()
 {
 	return OnDamageDelegate;
+}
+
+UBlackbirdTrackFollowingComponent* ABlackbirdShip::GetTrackFollowingComponent() const
+{
+	return TrackFollowingComponent;
 }

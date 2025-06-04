@@ -7,6 +7,7 @@
 #include "BlackbirdTrackFollowingComponent.generated.h"
 
 
+class UCharacterMovementComponent;
 class USplineComponent;
 class UTimelineComponent;
 class ABlackbirdTrack;
@@ -44,7 +45,9 @@ protected:
 	float Speed = 1000.f;
 
 private:
+	UPROPERTY()
+	TObjectPtr<APawn> OwnerPawn;
 	bool bActive = false;
 	float Time = 0.f;
-	void MoveAlongTrack() const;
+	void MoveAlongTrack(float DeltaTime) const;
 };

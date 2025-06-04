@@ -5,12 +5,12 @@
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 #include "Components/SplineComponent.h"
-#include "Track/BlackbirdCart.h"
 #include "Player/BlackbirdPlayerState.h"
 #include "Player/PlayerTargetingComponent.h"
 #include "Ship/MoveTarget.h"
 #include "Targeting/TargetingActorInterface.h"
-#include "Track/BlackbirdTrackFunctionLibrary.h"
+#include "Track/BlackbirdTrackFollowingComponent.h"
+#include "Track/TrackFollowingActorInterface.h"
 
 
 ABlackbirdPlayerController::ABlackbirdPlayerController()
@@ -90,9 +90,11 @@ void ABlackbirdPlayerController::OnPossess(APawn* InPawn)
 	{
 		return;
 	}
-	PlayerCart = UBlackbirdTrackFunctionLibrary::SpawnCart(GetTrack(), CartClass, false);
-	InPawn->AttachToActor(PlayerCart, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	PlayerCart->StartCart();
+	if (ITrackFollowingActorInterface* TrackFollowingPawn = Cast<ITrackFollowingActorInterface>(InPawn))
+	{
+		TrackFollowingPawn->GetTrackFollowingComponent()->SetTrack(Track);
+		TrackFollowingPawn->GetTrackFollowingComponent()->Activate(true);
+	}
 	if (const ITargetingActorInterface* TargetingActor = Cast<ITargetingActorInterface>(GetPawn()))
 	{
 		PlayerTargetingComponent = TargetingActor->GetTargetingComponent();
@@ -123,10 +125,10 @@ void ABlackbirdPlayerController::Move(const FInputActionValue& Value)
 
 void ABlackbirdPlayerController::EndMove(const FInputActionValue& InputActionValue)
 {
-	if (PlayerCart && GetPawn())
-	{
-		MoveTarget = FMoveTarget::GetReturnToRelativeOrigin(GetPawn(), ReturnToOriginDuration, ReturnToOriginDelay);
-	}
+	// if (PlayerCart && GetPawn())
+	// {
+	// 	MoveTarget = FMoveTarget::GetReturnToRelativeOrigin(GetPawn(), ReturnToOriginDuration, ReturnToOriginDelay);
+	// }
 }
 
 void ABlackbirdPlayerController::Look(const FInputActionValue& Value)

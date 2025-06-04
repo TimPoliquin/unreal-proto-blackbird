@@ -8,8 +8,10 @@
 #include "AbilitySystem/BlackbirdAbilitySystemDelegates.h"
 #include "AbilitySystem/Damage/DamageableInterface.h"
 #include "GameFramework/Character.h"
+#include "Track/TrackFollowingActorInterface.h"
 #include "BlackbirdShip.generated.h"
 
+class UBlackbirdTrackFollowingComponent;
 class UMVVM_ShipAttributes;
 class UGameplayEffect;
 class UBlackbirdAttributeSet;
@@ -22,7 +24,8 @@ class UBoxComponent;
 struct FBlackbirdAbilityAssignmentRow;
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdShip : public ACharacter, public IShipInterface, public IAbilitySystemInterface, public IDamageableInterface
+class BLACKBIRD_API ABlackbirdShip : public ACharacter, public IShipInterface, public IAbilitySystemInterface, public IDamageableInterface,
+                                     public ITrackFollowingActorInterface
 {
 	GENERATED_BODY()
 
@@ -53,6 +56,11 @@ public:
 	/** Start DamageableInterface **/
 	virtual FOnDamageSignature& GetOnDamageDelegate() override;
 	/** End DamageableInterface **/
+
+	/** Start TrackFollowingInterface **/
+	virtual UBlackbirdTrackFollowingComponent* GetTrackFollowingComponent() const override;
+	/** End TrackFollowingInterface **/
+
 	UPROPERTY(BlueprintAssignable)
 	FBlackbirdAbilitySystemReadySignature OnAbilitySystemReadyDelegate;
 
@@ -76,6 +84,8 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	TArray<TSubclassOf<UGameplayEffect>> PassiveEffects;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Movement")
+	TObjectPtr<UBlackbirdTrackFollowingComponent> TrackFollowingComponent;
 
 private:
 	FOnDamageSignature OnDamageDelegate;

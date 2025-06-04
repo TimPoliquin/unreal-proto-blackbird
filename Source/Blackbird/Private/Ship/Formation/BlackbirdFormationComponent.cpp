@@ -15,8 +15,6 @@ UBlackbirdFormationComponent::UBlackbirdFormationComponent()
 void UBlackbirdFormationComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	Enemies.Empty();
-	SpawnEnemies();
 }
 
 void UBlackbirdFormationComponent::SpawnEnemies()
@@ -27,7 +25,6 @@ void UBlackbirdFormationComponent::SpawnEnemies()
 	GetSpawnTransforms(SpawnTransforms);
 	for (int32 EnemyIdx = 0; EnemyIdx < EnemySpawns.Num(); EnemyIdx++)
 	{
-		EnemySpawns[EnemyIdx]->AttachToActor(GetOwner(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		EnemySpawns[EnemyIdx]->FinishSpawning(SpawnTransforms[EnemyIdx]);
 	}
 	Enemies.Append(EnemySpawns);

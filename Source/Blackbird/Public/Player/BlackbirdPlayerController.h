@@ -12,7 +12,6 @@
 
 class USplineComponent;
 class UPlayerTargetingComponent;
-class ABlackbirdCart;
 class ABlackbirdTrack;
 struct FInputActionValue;
 struct FGameplayTag;
@@ -44,10 +43,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Track")
 	TObjectPtr<USplineComponent> Track;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Track|Cart")
-	TSubclassOf<ABlackbirdCart> CartClass;
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Track|Cart")
-	TObjectPtr<ABlackbirdCart> PlayerCart;
 
 private:
 	UPROPERTY(EditAnywhere, Category="Input")
