@@ -6,6 +6,8 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -13,18 +15,23 @@
 #include "Targeting/TargetableInterface.h"
 #include "Targeting/TargetingActorInterface.h"
 
-void UBlackbirdProjectileAbility::SpawnProjectile(const FGameplayTag& SocketTag, const FVector& ImpactPoint, const AActor* HitActor)
+ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
+	const FGameplayTag& SocketTag,
+	const FVector& ImpactPoint,
+	const AActor* HitActor,
+	bool bInheritOwnerVelocity
+)
 {
 	AActor* OwningActor = GetAvatarActorFromActorInfo();
 	if (!OwningActor->HasAuthority())
 	{
 		// Do not execute on client - run on server only
-		return;
+		return nullptr;
 	}
 	check(ProjectileClass);
 	const FVector SpawnLocation = GetProjectileSpawnLocation(SocketTag);
 	const FRotator Rotation = GetProjectileSpawnRotation(SpawnLocation, ImpactPoint);
-	SpawnProjectile(SpawnLocation, Rotation, HitActor);
+	return SpawnProjectile(SpawnLocation, Rotation, HitActor, bInheritOwnerVelocity);
 }
 
 
@@ -46,6 +53,7 @@ ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
 	const FVector& SpawnLocation,
 	const FRotator& SpawnRotation,
 	const AActor* HitActor,
+	bool bInheritOwnerVelocity,
 	const FOnSpawnProjectileFinishedSignature* BeforeFinishSpawning
 ) const
 {
@@ -71,6 +79,11 @@ ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
 		BeforeFinishSpawning->ExecuteIfBound(SpawnedProjectile);
 	}
 	SpawnedProjectile->FinishSpawning(SpawnTransform);
+	// Spawned projectile's velocity is incorrect until after spawning is completed.
+	if (bInheritOwnerVelocity)
+	{
+		SpawnedProjectile->GetProjectileMovementComponent()->Velocity += GetAvatarActorFromActorInfo()->GetVelocity();
+	}
 	return SpawnedProjectile;
 }
 

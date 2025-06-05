@@ -20,7 +20,12 @@ class BLACKBIRD_API UBlackbirdProjectileAbility : public UBlackbirdDamageGamepla
 
 protected:
 	UFUNCTION(BlueprintCallable, Category ="Projectile")
-	void SpawnProjectile(const FGameplayTag& SocketTag, const FVector& ImpactPoint, const AActor* HitActor);
+	ABlackbirdProjectileActor* SpawnProjectile(
+		const FGameplayTag& SocketTag,
+		const FVector& ImpactPoint,
+		const AActor* HitActor,
+		bool bInheritOwnerVelocity = true
+	);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	TSubclassOf<ABlackbirdProjectileActor> ProjectileClass;
@@ -34,6 +39,7 @@ private:
 		const FVector& SpawnLocation,
 		const FRotator& SpawnRotation,
 		const AActor* HitActor,
+		bool bInheritOwnerVelocity,
 		const FOnSpawnProjectileFinishedSignature* BeforeFinishSpawning = nullptr
 	) const;
 };
