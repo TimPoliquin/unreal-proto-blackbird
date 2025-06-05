@@ -106,6 +106,16 @@ void ABlackbirdShip::SetFacingDirection(const FVector& Direction)
 {
 }
 
+void ABlackbirdShip::Mark_Implementation()
+{
+	ITargetableInterface::Mark_Implementation();
+}
+
+void ABlackbirdShip::Unmark_Implementation()
+{
+	ITargetableInterface::Unmark_Implementation();
+}
+
 FOnDamageSignature& ABlackbirdShip::GetOnDamageDelegate()
 {
 	return OnDamageDelegate;

@@ -8,15 +8,14 @@
 #include "BlackbirdEnemyShip.generated.h"
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdEnemyShip : public ABlackbirdShip, public ITargetableInterface
+class BLACKBIRD_API ABlackbirdEnemyShip : public ABlackbirdShip
 {
 	GENERATED_BODY()
 
 public:
 	ABlackbirdEnemyShip();
 	virtual void Tick(float DeltaTime) override;
-	virtual void Mark_Implementation() override;
-	virtual void Unmark_Implementation() override;
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void Attack();
 

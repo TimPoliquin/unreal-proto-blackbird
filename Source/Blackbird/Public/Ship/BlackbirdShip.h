@@ -8,6 +8,7 @@
 #include "AbilitySystem/BlackbirdAbilitySystemDelegates.h"
 #include "AbilitySystem/Damage/DamageableInterface.h"
 #include "GameFramework/Character.h"
+#include "Targeting/TargetableInterface.h"
 #include "Track/TrackFollowingActorInterface.h"
 #include "BlackbirdShip.generated.h"
 
@@ -25,7 +26,7 @@ struct FBlackbirdAbilityAssignmentRow;
 
 UCLASS()
 class BLACKBIRD_API ABlackbirdShip : public ACharacter, public IShipInterface, public IAbilitySystemInterface, public IDamageableInterface,
-                                     public ITrackFollowingActorInterface
+                                     public ITrackFollowingActorInterface, public ITargetableInterface
 {
 	GENERATED_BODY()
 
@@ -52,6 +53,11 @@ public:
 	/** Start ShipInterface **/
 	virtual void SetFacingDirection(const FVector& Direction) override;
 	/** End ShipInterface **/
+
+	/** Start ITargetableInterface **/
+	virtual void Mark_Implementation() override;
+	virtual void Unmark_Implementation() override;
+	/** End ITargetableInterface **/
 
 	/** Start DamageableInterface **/
 	virtual FOnDamageSignature& GetOnDamageDelegate() override;

@@ -59,7 +59,7 @@ void ABlackbirdProjectileActor::Tick(float DeltaTime)
 	if (ProjectileComponent && ProjectileComponent->bIsHomingProjectile)
 	{
 		Lifetime += DeltaTime;
-		if (Lifetime > HomingLifetime)
+		if (!FMath::IsNearlyZero(HomingLifetime) && Lifetime > HomingLifetime)
 		{
 			ProjectileComponent->bIsHomingProjectile = false;
 			SetActorTickEnabled(false);
