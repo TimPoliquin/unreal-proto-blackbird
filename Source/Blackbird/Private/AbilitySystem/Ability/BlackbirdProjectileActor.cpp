@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
+#include "AbilitySystem/Damage/DamageableInterface.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -140,9 +141,21 @@ void ABlackbirdProjectileActor::OnCollisionBeginOverlap(
 )
 {
 	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	// don't damage yourself with your own projectiles, dummy!
 	if (SourceAvatarActor == OtherActor)
 	{
 		return;
+	}
+	// don't damage your friends with your projectiles, dummy!
+	if (IDamageableInterface* DamageableInterface = Cast<IDamageableInterface>(OtherActor))
+	{
+		for (const FName& InstigatorTag : SourceAvatarActor->Tags)
+		{
+			if (!DamageableInterface->CanBeDamagedByInstigatorTag(InstigatorTag))
+			{
+				return;
+			}
+		}
 	}
 	PlayImpactEffect();
 	if (HasAuthority())

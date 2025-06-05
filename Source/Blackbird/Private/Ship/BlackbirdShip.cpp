@@ -111,6 +111,11 @@ FOnDamageSignature& ABlackbirdShip::GetOnDamageDelegate()
 	return OnDamageDelegate;
 }
 
+bool ABlackbirdShip::CanBeDamagedByInstigatorTag(const FName& InstigatorTag)
+{
+	return !IgnoreInstigatorTags.Contains(InstigatorTag);
+}
+
 UBlackbirdTrackFollowingComponent* ABlackbirdShip::GetTrackFollowingComponent() const
 {
 	return TrackFollowingComponent;

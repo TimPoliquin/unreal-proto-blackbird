@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/Attribute/BlackbirdAttributeSet.h"
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
+#include "Blackbird/Blackbird.h"
 
 
 // Sets default values
@@ -14,6 +15,7 @@ ABlackbirdEnemyShip::ABlackbirdEnemyShip()
 	PrimaryActorTick.bCanEverTick = true;
 	AbilitySystemComponent = CreateDefaultSubobject<UBlackbirdAbilitySystemComponent>(TEXT("Ability System Component"));
 	AttributeSet = CreateDefaultSubobject<UBlackbirdAttributeSet>(TEXT("Attribute Set"));
+	IgnoreInstigatorTags.Add(TAG_ENEMY);
 }
 
 // Called when the game starts or when spawned

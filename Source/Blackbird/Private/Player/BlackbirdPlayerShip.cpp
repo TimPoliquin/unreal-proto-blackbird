@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
+#include "Blackbird/Blackbird.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Player/BlackbirdPlayerState.h"
@@ -25,6 +26,7 @@ ABlackbirdPlayerShip::ABlackbirdPlayerShip()
 	Camera->SetupAttachment(SpringArm);
 	Camera->bUsePawnControlRotation = false;
 	TargetingComponent = CreateDefaultSubobject<UPlayerTargetingComponent>(TEXT("Targeting Component"));
+	IgnoreInstigatorTags.Add(TAG_PLAYER);
 }
 
 void ABlackbirdPlayerShip::BeginPlay()

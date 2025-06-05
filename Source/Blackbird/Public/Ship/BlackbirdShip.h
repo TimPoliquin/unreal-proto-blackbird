@@ -55,6 +55,7 @@ public:
 
 	/** Start DamageableInterface **/
 	virtual FOnDamageSignature& GetOnDamageDelegate() override;
+	virtual bool CanBeDamagedByInstigatorTag(const FName& InstigatorTag) override;;
 	/** End DamageableInterface **/
 
 	/** Start TrackFollowingInterface **/
@@ -86,6 +87,8 @@ protected:
 	TArray<TSubclassOf<UGameplayEffect>> PassiveEffects;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Movement")
 	TObjectPtr<UBlackbirdTrackFollowingComponent> TrackFollowingComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilities")
+	TArray<FName> IgnoreInstigatorTags;
 
 private:
 	FOnDamageSignature OnDamageDelegate;
