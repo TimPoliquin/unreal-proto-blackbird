@@ -6,6 +6,7 @@
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
 #include "AbilitySystem/Ability/BlackbirdAbilityAssignment.h"
+#include "AbilitySystem/Attribute/BlackbirdAttributeSet.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Track/BlackbirdTrackFollowingComponent.h"
@@ -106,14 +107,34 @@ void ABlackbirdShip::SetFacingDirection(const FVector& Direction)
 {
 }
 
+void ABlackbirdShip::Mark_Implementation()
+{
+	ITargetableInterface::Mark_Implementation();
+}
+
+void ABlackbirdShip::Unmark_Implementation()
+{
+	ITargetableInterface::Unmark_Implementation();
+}
+
 FOnDamageSignature& ABlackbirdShip::GetOnDamageDelegate()
 {
 	return OnDamageDelegate;
 }
 
-bool ABlackbirdShip::CanBeDamagedByInstigatorTag(const FName& InstigatorTag)
+bool ABlackbirdShip::CanBeDamagedByInstigatorTag(const FName& InstigatorTag) const
 {
 	return !IgnoreInstigatorTags.Contains(InstigatorTag);
+}
+
+bool ABlackbirdShip::IsAlive() const
+{
+	return GetBlackbirdAttributeSet()->IsAlive();
+}
+
+bool ABlackbirdShip::IsDead() const
+{
+	return GetBlackbirdAttributeSet()->IsDead();
 }
 
 UBlackbirdTrackFollowingComponent* ABlackbirdShip::GetTrackFollowingComponent() const

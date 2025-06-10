@@ -10,8 +10,8 @@
 #include "GameplayEffectExtension.h"
 #include "Abilities/GameplayAbility.h"
 #include "AbilitySystem/BlackbirdGameplayEffectContext.h"
-#include "AbilitySystem/Attribute/BlackbirdAttributeSet.h"
 #include "AbilitySystem/Attribute/BlackbirdAttributeTags.h"
+#include "AbilitySystem/Damage/DamageableInterface.h"
 
 void UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(
 	AActor* Actor,
@@ -138,30 +138,18 @@ UAbilitySystemComponent* UBlackbirdAbilitySystemLibrary::GetEffectTargetAbilityS
 
 bool UBlackbirdAbilitySystemLibrary::IsAlive(AActor* Actor)
 {
-	if (const UAbilitySystemComponent* AbilitySystemComponent =
-		UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
+	if (const IDamageableInterface* DamageableActor = Cast<IDamageableInterface>(Actor))
 	{
-		if (const UBlackbirdAttributeSet* AttributeSet = Cast<UBlackbirdAttributeSet>(
-			AbilitySystemComponent->GetAttributeSet(UBlackbirdAttributeSet::StaticClass())
-		))
-		{
-			return AttributeSet->IsAlive();
-		}
+		return DamageableActor->IsAlive();
 	}
 	return false;
 }
 
 bool UBlackbirdAbilitySystemLibrary::IsDead(AActor* Actor)
 {
-	if (const UAbilitySystemComponent* AbilitySystemComponent =
-		UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
+	if (const IDamageableInterface* DamageableActor = Cast<IDamageableInterface>(Actor))
 	{
-		if (const UBlackbirdAttributeSet* AttributeSet = Cast<UBlackbirdAttributeSet>(
-			AbilitySystemComponent->GetAttributeSet(UBlackbirdAttributeSet::StaticClass())
-		))
-		{
-			return AttributeSet->IsDead();
-		}
+		return DamageableActor->IsDead();
 	}
 	return true;
 }

@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
+#include "AbilitySystem/Attribute/BlackbirdAttributeSet.h"
 #include "AbilitySystem/Damage/DamageableInterface.h"
 #include "Net/UnrealNetwork.h"
 
@@ -59,7 +60,7 @@ void ABlackbirdProjectileActor::Tick(float DeltaTime)
 	if (ProjectileComponent && ProjectileComponent->bIsHomingProjectile)
 	{
 		Lifetime += DeltaTime;
-		if (Lifetime > HomingLifetime)
+		if (!FMath::IsNearlyZero(HomingLifetime) && Lifetime > HomingLifetime)
 		{
 			ProjectileComponent->bIsHomingProjectile = false;
 			SetActorTickEnabled(false);
@@ -147,7 +148,7 @@ void ABlackbirdProjectileActor::OnCollisionBeginOverlap(
 		return;
 	}
 	// don't damage your friends with your projectiles, dummy!
-	if (IDamageableInterface* DamageableInterface = Cast<IDamageableInterface>(OtherActor))
+	if (const IDamageableInterface* DamageableInterface = Cast<IDamageableInterface>(OtherActor))
 	{
 		for (const FName& InstigatorTag : SourceAvatarActor->Tags)
 		{
@@ -174,6 +175,9 @@ void ABlackbirdProjectileActor::OnCollisionBeginOverlap(
 			DamageEffectParams.TargetAbilitySystemComponent = OtherAbilitySystem;
 			UBlackbirdAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
 		}
-		Destroy();
+		if (!Implements<UDamageableInterface>())
+		{
+			Destroy();
+		}
 	}
 }
