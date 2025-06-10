@@ -72,44 +72,14 @@ void UTargetingUtils::FindActorTarget(AActor* Actor, FHitResult& OutHitResult, f
 	}
 }
 
-FVector UTargetingUtils::CalculateInterceptVector(const AActor* Instigator, const AActor* Target, const float Speed)
+FVector UTargetingUtils::CalculateInterceptVector(const AActor* Instigator, const AActor* Target, const float TimeToIntercept)
 {
-	const FVector ShooterLocation = Instigator->GetActorLocation();
-	const FVector TargetLocation = Target->GetActorLocation();
-	const FVector TargetVelocity = Target->GetVelocity();
-	const FVector ToTarget = TargetLocation - ShooterLocation;
+	// Calculate the future position of the target
+	const FVector FutureTargetPosition = Target->GetActorLocation() + (Target->GetVelocity() * TimeToIntercept);
 
-	// Calculate the relative velocity
-	const FVector RelativeVelocity = TargetVelocity;
+	// Calculate the required velocity to reach the future position in the given time
+	const FVector RequiredVelocity = (FutureTargetPosition - Instigator->GetActorLocation()) / TimeToIntercept;
 
-	// Quadratic equation coefficients
-	const float A = RelativeVelocity.SizeSquared() - FMath::Square(Speed);
-	const float B = 2.0f * FVector::DotProduct(RelativeVelocity, ToTarget);
-	const float C = ToTarget.SizeSquared();
-
-	// Solve the quadratic equation
-	const float Discriminant = FMath::Square(B) - 4.0f * A * C;
-
-	if (Discriminant < 0.0f)
-	{
-		// No solution, target cannot be hit
-		return FVector::ZeroVector;
-	}
-
-	// Calculate the time to impact
-	const float TimeToImpact = (-B - FMath::Sqrt(Discriminant)) / (2.0f * A);
-
-	if (TimeToImpact < 0.0f)
-	{
-		// Negative time, target cannot be hit
-		return FVector::ZeroVector;
-	}
-
-	// Calculate the intercept point
-	const FVector InterceptPoint = TargetLocation + TargetVelocity * TimeToImpact;
-
-	// Calculate the required velocity to hit the intercept point
-	const FVector RequiredVelocity = (InterceptPoint - ShooterLocation).GetSafeNormal() * Speed;
-
+	// Return the direction vector (normalized)
 	return RequiredVelocity;
 }

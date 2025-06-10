@@ -6,12 +6,14 @@
 #include "AbilitySystemInterface.h"
 #include "BlackbirdProjectileActor.h"
 #include "AbilitySystem/Damage/DamageableInterface.h"
+#include "Targeting/TargetableInterface.h"
 #include "BlackbirdDestructibleProjectileActor.generated.h"
 
 class UBlackbirdBasicAttributeSet;
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdDestructibleProjectileActor : public ABlackbirdProjectileActor, public IDamageableInterface, public IAbilitySystemInterface
+class BLACKBIRD_API ABlackbirdDestructibleProjectileActor : public ABlackbirdProjectileActor, public IDamageableInterface, public IAbilitySystemInterface,
+                                                            public ITargetableInterface
 {
 	GENERATED_BODY()
 
@@ -29,6 +31,17 @@ public:
 	virtual bool IsAlive() const override;
 	virtual bool IsDead() const override;
 	/** End IDamageableInterface **/
+
+	/** Start ITargetableInterface **/
+	virtual void Mark_Implementation() override
+	{
+	};
+
+	virtual void Unmark_Implementation() override
+	{
+	};
+	/** End ITargetableInterface **/
+
 
 	FOnDamageSignature OnDamageDelegate;
 

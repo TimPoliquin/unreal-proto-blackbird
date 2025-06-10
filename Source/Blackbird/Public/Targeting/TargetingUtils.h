@@ -23,5 +23,5 @@ public:
 		Category = "TargetingUtils",
 		meta=( DefaultToSelf="Instigator" )
 	)
-	static FVector CalculateInterceptVector(const AActor* Instigator, const AActor* Target, const float Speed);
+	static FVector CalculateInterceptVector(const AActor* Instigator, const AActor* Target, const float TimeToIntercept);
 };

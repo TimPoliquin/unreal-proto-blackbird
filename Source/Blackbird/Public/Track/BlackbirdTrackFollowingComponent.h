@@ -43,11 +43,14 @@ protected:
 	TObjectPtr<USplineComponent> Track;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Track", meta=(ExposeOnSpawn))
 	float Speed = 1000.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Track", meta=(ExposeOnSpawn))
+	float MaxDistanceFromSpline = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Debug", meta=(ExposeOnSpawn))
+	bool bDebug = false;
 
 private:
 	UPROPERTY()
 	TObjectPtr<APawn> OwnerPawn;
 	bool bActive = false;
-	float Time = 0.f;
 	void MoveAlongTrack(float DeltaTime) const;
 };

@@ -174,8 +174,9 @@ void ABlackbirdProjectileActor::OnCollisionBeginOverlap(
 			}
 			DamageEffectParams.TargetAbilitySystemComponent = OtherAbilitySystem;
 			UBlackbirdAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
+			Destroy();
 		}
-		if (!Implements<UDamageableInterface>())
+		else if (!Implements<UDamageableInterface>())
 		{
 			Destroy();
 		}

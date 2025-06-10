@@ -4,8 +4,6 @@
 #include "Track/BlackbirdTrackFollowingComponent.h"
 
 #include "Components/SplineComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/PawnMovementComponent.h"
 #include "Track/BlackbirdTrackFunctionLibrary.h"
 
 
@@ -42,11 +40,58 @@ void UBlackbirdTrackFollowingComponent::MoveAlongTrack(const float DeltaTime) co
 	if (!UBlackbirdTrackFunctionLibrary::HasMoreTrack(Track, Progress))
 	{
 		OnTrackCompleted.Broadcast(GetOwner(), Track, Track->GetSplineLength() - Progress);
+		return;
+	}
+	const FVector ForwardVector = UBlackbirdTrackFunctionLibrary::GetRotationOnTrack(Track, Progress).Vector().GetSafeNormal();
+	const FVector SplineLocation = Track->GetLocationAtDistanceAlongSpline(Progress, ESplineCoordinateSpace::World);
+	const float DistanceToSpline = FVector::Dist(SplineLocation, GetOwner()->GetActorLocation());
+	// slow down if you're approaching the allowed distance from the track
+	if (DistanceToSpline > MaxDistanceFromSpline * .75f)
+	{
+		const FVector TowardSpline = (SplineLocation - GetOwner()->GetActorLocation()).GetSafeNormal();
+		const FVector NewForwardVector = (ForwardVector * FMath::Max(0.f, 1.f - DistanceToSpline / MaxDistanceFromSpline) + TowardSpline * (DistanceToSpline /
+			MaxDistanceFromSpline)).GetSafeNormal();
+		if (bDebug)
+		{
+			DrawDebugDirectionalArrow(
+				GetWorld(),
+				GetOwner()->GetActorLocation(),
+				GetOwner()->GetActorLocation() + ForwardVector * 10.f,
+				1,
+				FColor::Blue,
+				false,
+				5,
+				0,
+				1
+			);
+			DrawDebugDirectionalArrow(
+				GetWorld(),
+				GetOwner()->GetActorLocation(),
+				GetOwner()->GetActorLocation() + TowardSpline * 10.f,
+				1,
+				FColor::Red,
+				false,
+				5,
+				0,
+				1
+			);
+			DrawDebugDirectionalArrow(
+				GetWorld(),
+				GetOwner()->GetActorLocation(),
+				GetOwner()->GetActorLocation() + NewForwardVector * 10.f,
+				1,
+				FColor::Purple,
+				false,
+				5,
+				0,
+				1
+			);
+		}
+		OwnerPawn->AddMovementInput(NewForwardVector, DeltaTime * Speed, false);
 	}
 	else
 	{
-		const FVector ForwardVector = UBlackbirdTrackFunctionLibrary::GetRotationOnTrack(Track, Progress).Vector();
-		OwnerPawn->AddMovementInput(ForwardVector, DeltaTime * Speed, true);
+		OwnerPawn->AddMovementInput(ForwardVector, DeltaTime * Speed, false);
 	}
 }
 
@@ -57,7 +102,6 @@ void UBlackbirdTrackFollowingComponent::TickComponent(float DeltaTime, ELevelTic
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (bActive)
 	{
-		Time += DeltaTime;
 		MoveAlongTrack(DeltaTime);
 	}
 }
@@ -76,10 +120,6 @@ void UBlackbirdTrackFollowingComponent::Activate(const bool bReset)
 {
 	Super::Activate(bReset);
 	bActive = true;
-	if (bReset)
-	{
-		Time = 0.f;
-	}
 }
 
 void UBlackbirdTrackFollowingComponent::Deactivate()
@@ -90,15 +130,11 @@ void UBlackbirdTrackFollowingComponent::Deactivate()
 
 void UBlackbirdTrackFollowingComponent::SwitchToTrack(USplineComponent* NewTrack)
 {
-	const float NewDistance = UBlackbirdTrackFunctionLibrary::GetClosestDistanceOnTrack(NewTrack, GetOwner()->GetActorLocation());
-	Time = NewDistance / Speed;
 	SetTrack(NewTrack);
 	MoveAlongTrack(0);
 }
 
 void UBlackbirdTrackFollowingComponent::ChangeSpeed(const float NewSpeed)
 {
-	const float Distance = Time * Speed;
 	Speed = NewSpeed;
-	Time = Distance / NewSpeed;
 }
