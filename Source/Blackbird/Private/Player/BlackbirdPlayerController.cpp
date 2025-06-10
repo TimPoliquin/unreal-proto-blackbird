@@ -115,7 +115,11 @@ void ABlackbirdPlayerController::SetTrack(USplineComponent* InTrack)
 void ABlackbirdPlayerController::Move(const FInputActionValue& Value)
 {
 	const FVector2D InputAxisVector = Value.Get<FVector2D>();
-	if (APawn* ControlledPawn = GetPawn<APawn>())
+	if (const ITrackFollowingActorInterface* TrackFollowingActor = Cast<ITrackFollowingActorInterface>(GetPawn()))
+	{
+		TrackFollowingActor->GetTrackFollowingComponent()->AddMovementInput(InputAxisVector);
+	}
+	else if (APawn* ControlledPawn = Cast<APawn>(GetPawn()))
 	{
 		ControlledPawn->AddMovementInput(ControlledPawn->GetActorUpVector(), InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(ControlledPawn->GetActorRightVector(), InputAxisVector.X);
@@ -125,10 +129,10 @@ void ABlackbirdPlayerController::Move(const FInputActionValue& Value)
 
 void ABlackbirdPlayerController::EndMove(const FInputActionValue& InputActionValue)
 {
-	// if (PlayerCart && GetPawn())
-	// {
-	// 	MoveTarget = FMoveTarget::GetReturnToRelativeOrigin(GetPawn(), ReturnToOriginDuration, ReturnToOriginDelay);
-	// }
+	if (const ITrackFollowingActorInterface* TrackFollowingActor = Cast<ITrackFollowingActorInterface>(GetPawn()))
+	{
+		TrackFollowingActor->GetTrackFollowingComponent()->ClearMovementInput();
+	}
 }
 
 void ABlackbirdPlayerController::Look(const FInputActionValue& Value)

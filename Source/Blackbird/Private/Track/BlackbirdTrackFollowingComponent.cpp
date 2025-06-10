@@ -4,6 +4,7 @@
 #include "Track/BlackbirdTrackFollowingComponent.h"
 
 #include "Components/SplineComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Track/BlackbirdTrackFunctionLibrary.h"
 
 
@@ -24,7 +25,7 @@ void UBlackbirdTrackFollowingComponent::BeginPlay()
 	MoveAlongTrack(0);
 }
 
-void UBlackbirdTrackFollowingComponent::MoveAlongTrack(const float DeltaTime) const
+void UBlackbirdTrackFollowingComponent::MoveAlongTrack(const float DeltaTime)
 {
 	if (!Track)
 	{
@@ -42,23 +43,41 @@ void UBlackbirdTrackFollowingComponent::MoveAlongTrack(const float DeltaTime) co
 		OnTrackCompleted.Broadcast(GetOwner(), Track, Track->GetSplineLength() - Progress);
 		return;
 	}
-	const FVector ForwardVector = UBlackbirdTrackFunctionLibrary::GetRotationOnTrack(Track, Progress).Vector().GetSafeNormal();
-	const FVector SplineLocation = Track->GetLocationAtDistanceAlongSpline(Progress, ESplineCoordinateSpace::World);
+	const FTransform SplineTransform = Track->GetTransformAtDistanceAlongSpline(Progress, ESplineCoordinateSpace::World);
+	const FVector SplineForwardVector = SplineTransform.Rotator().Vector().GetSafeNormal();
+	const FVector InputMovementVector = UKismetMathLibrary::InverseTransformDirection(
+		SplineTransform,
+		FVector::UpVector * MovementInput.Y + FVector::RightVector * MovementInput.X
+	);
+	const FVector SplineLocation = SplineTransform.GetLocation();
 	const float DistanceToSpline = FVector::Dist(SplineLocation, GetOwner()->GetActorLocation());
 	// slow down if you're approaching the allowed distance from the track
 	if (DistanceToSpline > MaxDistanceFromSpline * .75f)
 	{
 		const FVector TowardSpline = (SplineLocation - GetOwner()->GetActorLocation()).GetSafeNormal();
-		const FVector NewForwardVector = (ForwardVector * FMath::Max(0.f, 1.f - DistanceToSpline / MaxDistanceFromSpline) + TowardSpline * (DistanceToSpline /
+		const FVector NewForwardVector = (SplineForwardVector * FMath::Max(0.f, 1.f - DistanceToSpline / MaxDistanceFromSpline) + TowardSpline * (
+			DistanceToSpline /
 			MaxDistanceFromSpline)).GetSafeNormal();
 		if (bDebug)
 		{
+			DrawDebugSphere(GetWorld(), SplineLocation, MaxDistanceFromSpline, 12, FColor(255, 0, 0, 100), false, 0, 0, 1.f);
 			DrawDebugDirectionalArrow(
 				GetWorld(),
 				GetOwner()->GetActorLocation(),
-				GetOwner()->GetActorLocation() + ForwardVector * 10.f,
+				GetOwner()->GetActorLocation() + SplineForwardVector * 10.f,
 				1,
 				FColor::Blue,
+				false,
+				5,
+				0,
+				1
+			);
+			DrawDebugDirectionalArrow(
+				GetWorld(),
+				GetOwner()->GetActorLocation(),
+				GetOwner()->GetActorLocation() + InputMovementVector * 10.f,
+				1,
+				FColor::Green,
 				false,
 				5,
 				0,
@@ -89,10 +108,12 @@ void UBlackbirdTrackFollowingComponent::MoveAlongTrack(const float DeltaTime) co
 		}
 		OwnerPawn->AddMovementInput(NewForwardVector, DeltaTime * Speed, false);
 	}
-	else
+	else if (DistanceToSpline < MaxDistanceFromSpline)
 	{
+		const FVector ForwardVector = (SplineForwardVector + InputMovementVector).GetSafeNormal();
 		OwnerPawn->AddMovementInput(ForwardVector, DeltaTime * Speed, false);
 	}
+	MovementInput = FVector2D::ZeroVector;
 }
 
 
@@ -137,4 +158,14 @@ void UBlackbirdTrackFollowingComponent::SwitchToTrack(USplineComponent* NewTrack
 void UBlackbirdTrackFollowingComponent::ChangeSpeed(const float NewSpeed)
 {
 	Speed = NewSpeed;
+}
+
+void UBlackbirdTrackFollowingComponent::AddMovementInput(const FVector2D& InInputMovement)
+{
+	MovementInput += InInputMovement;
+}
+
+void UBlackbirdTrackFollowingComponent::ClearMovementInput()
+{
+	MovementInput = FVector2D::ZeroVector;
 }

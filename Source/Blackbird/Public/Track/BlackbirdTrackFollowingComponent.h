@@ -32,6 +32,8 @@ public:
 	void SwitchToTrack(USplineComponent* NewTrack);
 	UFUNCTION(BlueprintCallable)
 	void ChangeSpeed(const float NewSpeed);
+	void AddMovementInput(const FVector2D& InInputMovement);
+	void ClearMovementInput();
 
 	UPROPERTY(BlueprintAssignable)
 	FOnTrackCompleted OnTrackCompleted;
@@ -52,5 +54,6 @@ private:
 	UPROPERTY()
 	TObjectPtr<APawn> OwnerPawn;
 	bool bActive = false;
-	void MoveAlongTrack(float DeltaTime) const;
+	void MoveAlongTrack(float DeltaTime);
+	FVector2D MovementInput = FVector2D::ZeroVector;
 };
