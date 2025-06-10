@@ -5,51 +5,31 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "BlackbirdAttributeSetTypes.h"
+#include "BlackbirdBasicAttributeSet.h"
 #include "BlackbirdAttributeSet.generated.h"
 
-#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
-GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
-GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
-GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
-GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 struct FBlackbirdLevelUpAttributeValue;
 
-template <class T>
-using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReceivedDamageSignature, const float, DamageAmount, const bool, bFatal);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReceivedXPSignature, const float, XPAmount);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(
-	FOnAttributeChangedSignature,
-	const FGameplayAttribute&,
-	Attribute,
-	const FGameplayTag&,
-	AttributeTag,
-	const float,
-	NewValue
-);
 
 /**
  * 
  */
 UCLASS()
-class BLACKBIRD_API UBlackbirdAttributeSet : public UAttributeSet
+class BLACKBIRD_API UBlackbirdAttributeSet : public UBlackbirdBasicAttributeSet
 {
 	GENERATED_BODY()
 
 public:
 	UBlackbirdAttributeSet();
 
-	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, MaxEnergy);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, MaxHeat);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Strength);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Defense);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, HeatCooldown);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, CriticalChance);
-	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Energy);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, AvailableHeat);
 	ATTRIBUTE_ACCESSORS(UBlackbirdAttributeSet, Meta_IncomingDamage);
@@ -59,29 +39,13 @@ public:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
-	FGameplayAttribute GetAttributeByTag(const FGameplayTag& AttributeTag) const;
-
-	bool IsAlive() const;
-	bool IsDead() const;
 
 	void LevelUp(TArray<FBlackbirdLevelUpAttributeValue> LevelUpAttributeValues);
 
 	UPROPERTY(BlueprintAssignable)
-	FOnReceivedDamageSignature OnReceivedDamage;
-	UPROPERTY(BlueprintAssignable)
 	FOnReceivedXPSignature OnReceivedXP;
 
 	/** Primary Attributes **/
-	// Max Health
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Vital Attributes")
-	FGameplayAttributeData MaxHealth;
-
-	UFUNCTION()
-	FORCEINLINE void OnRep_MaxHealth(const FGameplayAttributeData& OldValue) const
-	{
-		GAMEPLAYATTRIBUTE_REPNOTIFY(UBlackbirdAttributeSet, MaxHealth, OldValue);
-	}
-
 	// Max Energy
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergy, Category = "Vital Attributes")
 	FGameplayAttributeData MaxEnergy;
@@ -137,15 +101,6 @@ public:
 	}
 
 	/** Dynamic Attributes **/
-	// Health - how much damage the owner can take before being destroyed
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Dynamic Attributes")
-	FGameplayAttributeData Health;
-	UFUNCTION()
-	FORCEINLINE void OnRep_Health(const FGameplayAttributeData& OldValue) const
-	{
-		GAMEPLAYATTRIBUTE_REPNOTIFY(UBlackbirdAttributeSet, Health, OldValue);
-	}
-
 	// Energy - available power to use special abilities 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Energy, Category = "Dynamic Attributes")
 	FGameplayAttributeData Energy;
@@ -167,25 +122,13 @@ public:
 	/**
 	 * Meta Attributes
 	 */
-	// IncomingDamage - used to track and modify incoming damage
-	UPROPERTY(BlueprintReadOnly, Category="Meta Attributes")
-	FGameplayAttributeData Meta_IncomingDamage;
 	// IncomingXP - used to track incoming xp
 	UPROPERTY(BlueprintReadOnly, Category="Meta Attributes")
 	FGameplayAttributeData Meta_IncomingXP;
 
 private:
-	void HandleIncomingDamage(const FGameplayEffectModCallbackData& Data);
 	void HandleIncomingXP(const FGameplayEffectModCallbackData& Data);
-	void InitializeMapsForAttributeAndTag(
-		const FGameplayTag& AttributeTag,
-		TStaticFuncPtr<FGameplayAttribute()> AttributeGetter
-	);
 
-	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> AttributesByTag;
-	TMap<FGameplayAttribute, FGameplayTag> TagsByAttribute;
-
-	bool bResetHealth = false;
 	bool bResetEnergy = false;
 	bool bResetAvailableHeat = false;
 };

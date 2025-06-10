@@ -61,7 +61,9 @@ public:
 
 	/** Start DamageableInterface **/
 	virtual FOnDamageSignature& GetOnDamageDelegate() override;
-	virtual bool CanBeDamagedByInstigatorTag(const FName& InstigatorTag) override;;
+	virtual bool CanBeDamagedByInstigatorTag(const FName& InstigatorTag) const override;
+	virtual bool IsAlive() const override;
+	virtual bool IsDead() const override;
 	/** End DamageableInterface **/
 
 	/** Start TrackFollowingInterface **/

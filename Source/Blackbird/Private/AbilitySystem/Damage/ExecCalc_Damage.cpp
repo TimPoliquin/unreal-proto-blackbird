@@ -71,7 +71,7 @@ void UExecCalc_Damage::Execute_Implementation(
 	}
 
 	const FGameplayModifierEvaluatedData EvaluatedData(
-		UBlackbirdAttributeSet::GetMeta_IncomingDamageAttribute(),
+		UBlackbirdBasicAttributeSet::GetMeta_IncomingDamageAttribute(),
 		EGameplayModOp::Additive,
 		Damage
 	);
