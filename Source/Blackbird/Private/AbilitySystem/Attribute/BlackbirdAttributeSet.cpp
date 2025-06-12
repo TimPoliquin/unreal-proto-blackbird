@@ -104,7 +104,7 @@ void UBlackbirdAttributeSet::LevelUp(TArray<FBlackbirdLevelUpAttributeValue> Lev
 
 void UBlackbirdAttributeSet::HandleIncomingDamage(const FGameplayEffectModCallbackData& Data)
 {
-	if (UBlackbirdAbilitySystemLibrary::IsShielded(&Data.Target))
+	if (UBlackbirdAbilitySystemLibrary::IsShielded(&Data.Target) && GetAvailableHeat() > 0)
 	{
 		// the owner is shielded, so convert the damage to heat
 		HandleIncomingDamageAsHeat(Data);
