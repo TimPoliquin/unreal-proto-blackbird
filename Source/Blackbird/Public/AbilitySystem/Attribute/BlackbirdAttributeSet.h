@@ -13,6 +13,10 @@ struct FBlackbirdLevelUpAttributeValue;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReceivedXPSignature, const float, XPAmount);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbsorbedDamageSignature, const float, DamageAmount);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTriggerOverheatSignature);
+
 /**
  * 
  */
@@ -44,6 +48,10 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnReceivedXPSignature OnReceivedXP;
+	UPROPERTY(BlueprintAssignable)
+	FOnTriggerOverheatSignature OnTriggerOverheat;
+	UPROPERTY(BlueprintAssignable)
+	FOnAbsorbedDamageSignature OnAbsorbedDamage;
 
 	/** Primary Attributes **/
 	// Max Energy
@@ -125,6 +133,10 @@ public:
 	// IncomingXP - used to track incoming xp
 	UPROPERTY(BlueprintReadOnly, Category="Meta Attributes")
 	FGameplayAttributeData Meta_IncomingXP;
+
+protected:
+	virtual void HandleIncomingDamage(const FGameplayEffectModCallbackData& Data) override;
+	void HandleIncomingDamageAsHeat(const FGameplayEffectModCallbackData& Data);
 
 private:
 	void HandleIncomingXP(const FGameplayEffectModCallbackData& Data);

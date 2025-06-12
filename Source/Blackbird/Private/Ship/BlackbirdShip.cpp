@@ -54,7 +54,7 @@ void ABlackbirdShip::InitDefaultAttributes()
 {
 	UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, DefaultPrimaryAttributes);
 	UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, DefaultVitalAttributes);
-	for (TSubclassOf<UGameplayEffect> PassiveEffect : PassiveEffects)
+	for (const TSubclassOf<UGameplayEffect> PassiveEffect : PassiveEffects)
 	{
 		UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, PassiveEffect);
 	}
@@ -64,6 +64,7 @@ void ABlackbirdShip::OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* Blac
 {
 	InitDefaultAbilities();
 	InitDefaultAttributes();
+	GetBlackbirdAttributeSet()->OnTriggerOverheat.AddDynamic(this, &ABlackbirdShip::OnTriggerOverheat);
 }
 
 void ABlackbirdShip::Tick(float DeltaTime)

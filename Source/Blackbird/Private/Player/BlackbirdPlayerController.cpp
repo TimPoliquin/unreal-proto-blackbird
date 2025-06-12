@@ -157,7 +157,7 @@ void ABlackbirdPlayerController::AbilityInputTagReleased(const FGameplayTag Inpu
 {
 	if (UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->GetBlackbirdAbilitySystemComponent())
 	{
-		BlackbirdAbilitySystemComponent->AbilityInputTagHeld(InputTag);
+		BlackbirdAbilitySystemComponent->AbilityInputTagReleased(InputTag);
 	}
 }
 
@@ -165,7 +165,7 @@ void ABlackbirdPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag
 {
 	if (UBlackbirdAbilitySystemComponent* LocalAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->GetBlackbirdAbilitySystemComponent())
 	{
-		LocalAbilitySystemComponent->AbilityInputTagReleased(InputTag);
+		LocalAbilitySystemComponent->AbilityInputTagHeld(InputTag);
 	}
 }
 

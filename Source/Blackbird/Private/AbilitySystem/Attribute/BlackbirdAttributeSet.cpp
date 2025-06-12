@@ -5,6 +5,7 @@
 
 #include "GameplayEffectExtension.h"
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
+#include "AbilitySystem/Ability/BlackbirdAbilitySystemTags.h"
 #include "AbilitySystem/Attribute/BlackbirdAttributeTags.h"
 #include "AbilitySystem/Attribute/BlackbirdLevelUpAttributeValue.h"
 #include "Net/UnrealNetwork.h"
@@ -98,6 +99,42 @@ void UBlackbirdAttributeSet::LevelUp(TArray<FBlackbirdLevelUpAttributeValue> Lev
 		float NewValue = AttributeValue.Value;
 		const FGameplayAttribute& Attribute = AttributesByTag[AttributeValue.AttributeTag]();
 		Attribute.SetNumericValueChecked(NewValue, this);
+	}
+}
+
+void UBlackbirdAttributeSet::HandleIncomingDamage(const FGameplayEffectModCallbackData& Data)
+{
+	if (UBlackbirdAbilitySystemLibrary::IsShielded(&Data.Target))
+	{
+		// the owner is shielded, so convert the damage to heat
+		HandleIncomingDamageAsHeat(Data);
+	}
+	else
+	{
+		Super::HandleIncomingDamage(Data);
+	}
+}
+
+void UBlackbirdAttributeSet::HandleIncomingDamageAsHeat(const FGameplayEffectModCallbackData& Data)
+{
+	const float IncomingDamageValue = GetMeta_IncomingDamage();
+	const float AvailableHeatValue = GetAvailableHeat();
+	SetMeta_IncomingDamage(0);
+	if (IncomingDamageValue > GetAvailableHeat())
+	{
+		// trigger an overheat
+		SetAvailableHeat(0);
+		if (AvailableHeatValue > 0)
+		{
+			OnAbsorbedDamage.Broadcast(AvailableHeatValue);
+		}
+		OnTriggerOverheat.Broadcast();
+	}
+	else
+	{
+		const float NewAvailableHeat = AvailableHeatValue - IncomingDamageValue;
+		SetAvailableHeat(FMath::Clamp(NewAvailableHeat, 0.f, GetMaxHeat()));
+		OnAbsorbedDamage.Broadcast(IncomingDamageValue);
 	}
 }
 
