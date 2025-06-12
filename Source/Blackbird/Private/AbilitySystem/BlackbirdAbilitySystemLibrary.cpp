@@ -10,12 +10,13 @@
 #include "GameplayEffectExtension.h"
 #include "Abilities/GameplayAbility.h"
 #include "AbilitySystem/BlackbirdGameplayEffectContext.h"
+#include "AbilitySystem/Ability/BlackbirdAbilitySystemTags.h"
 #include "AbilitySystem/Attribute/BlackbirdAttributeTags.h"
 #include "AbilitySystem/Damage/DamageableInterface.h"
 
 void UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(
 	AActor* Actor,
-	const TSubclassOf<UGameplayEffect>& Effect,
+	const TSubclassOf<UGameplayEffect> Effect,
 	const int32 Level
 )
 {
@@ -423,4 +424,9 @@ FBlackbirdDamageEffectParams UBlackbirdAbilitySystemLibrary::MakeCustomDamageEff
 		}
 	}
 	return DamageEffectParams;
+}
+
+bool UBlackbirdAbilitySystemLibrary::IsShielded(const UAbilitySystemComponent* Target)
+{
+	return Target->HasAllMatchingGameplayTags(FBlackbirdAbilitySystemTags::Get().Abilities_Effect_Shielded.GetSingleTagContainer());
 }

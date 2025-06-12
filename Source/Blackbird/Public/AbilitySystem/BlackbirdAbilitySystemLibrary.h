@@ -8,6 +8,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BlackbirdAbilitySystemLibrary.generated.h"
 
+class UBlackbirdAbilitySystemComponent;
 class UGameplayEffect;
 struct FGameplayEffectModCallbackData;
 struct FGameplayEffectContextHandle;
@@ -21,7 +22,6 @@ class BLACKBIRD_API UBlackbirdAbilitySystemLibrary : public UBlueprintFunctionLi
 	GENERATED_BODY()
 
 public:
-	static void ApplyEffectToSelf(AActor* Actor, const TSubclassOf<UGameplayEffect>& Effect, int32 Level = 1);
 	static FPredictionKey GetPredictionKeyFromAbilitySpec(const FGameplayAbilitySpec& AbilitySpec);
 
 	/** Attribute Manipulation **/
@@ -116,4 +116,14 @@ public:
 		bool bOverridePitch = false,
 		float PitchOverride = 0.f
 	);
+
+	/** Effects **/
+	UFUNCTION(BlueprintCallable, Category = "BlackbirdAbilitySystemLibrary|Effect", meta=( DefaultToSelf="Actor"))
+	static void ApplyEffectToSelf(
+		AActor* Actor,
+		TSubclassOf<UGameplayEffect> Effect,
+		int32 Level = 1
+	);
+	UFUNCTION(BlueprintCallable, Category="BlackbirdAbilitySystemLibrary|GameplayEffect")
+	static bool IsShielded(const UAbilitySystemComponent* Target);
 };

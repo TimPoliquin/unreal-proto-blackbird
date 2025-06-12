@@ -57,7 +57,7 @@ public:
 	FGameplayAttributeData Meta_IncomingDamage;
 
 protected:
-	void HandleIncomingDamage(const FGameplayEffectModCallbackData& Data);
+	virtual void HandleIncomingDamage(const FGameplayEffectModCallbackData& Data);
 
 	void InitializeMapsForAttributeAndTag(
 		const FGameplayTag& AttributeTag,

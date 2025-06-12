@@ -15,7 +15,9 @@ struct FBlackbirdAbilitySystemTags
 	FGameplayTag Abilities_Type_Active;
 	FGameplayTag Abilities_Type_Passive;
 	FGameplayTag Abilities_Effect;
-	
+	FGameplayTag Abilities_Effect_Overheated;
+	FGameplayTag Abilities_Effect_Shielded;
+
 	static FBlackbirdAbilitySystemTags& Get()
 	{
 		if (!Instance.bInitialized)
@@ -31,5 +33,4 @@ struct FBlackbirdAbilitySystemTags
 private:
 	bool bInitialized = false;
 	static FBlackbirdAbilitySystemTags Instance;
-	
 };

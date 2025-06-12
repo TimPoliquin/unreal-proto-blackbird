@@ -77,6 +77,8 @@ protected:
 	virtual void BeginPlay() override;
 	void InitAbilitySystem(AActor* OwnerActor, UBlackbirdAbilitySystemComponent* InAbilitySystemComponent);
 	void InitDefaultAbilities();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTriggerOverheat();
 	void InitDefaultAttributes();
 	UFUNCTION()
 	virtual void OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent);
