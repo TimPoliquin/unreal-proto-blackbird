@@ -37,7 +37,7 @@ void UMVVM_ShipAttributes::BindDependencies(const ABlackbirdShip* Owner)
 			InitializeValues(Owner, AttributeSet);
 			if (UBlackbirdAbilitySystemComponent* AbilitySystemComponent = Owner->GetBlackbirdAbilitySystemComponent())
 			{
-				for (TPair Pair : TagToAttributeSetterMap)
+				for (auto Pair : TagToAttributeSetterMap)
 				{
 					AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetAttributeByTag(Pair.Key)).AddLambda(
 						[Pair](const FOnAttributeChangeData& Data)

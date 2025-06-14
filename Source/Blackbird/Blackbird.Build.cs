@@ -11,7 +11,7 @@ public class Blackbird : ModuleRules
 		this.PublicDependencyModuleNames.AddRange(new[]
 		{
 			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "UMG",
-			"ModelViewViewModel", "GameplayTasks"
+			"GameplayTasks", "ModelViewViewModel"
 		});
 
 		this.PrivateDependencyModuleNames.AddRange(new[] { "GameplayTags", "Niagara" });

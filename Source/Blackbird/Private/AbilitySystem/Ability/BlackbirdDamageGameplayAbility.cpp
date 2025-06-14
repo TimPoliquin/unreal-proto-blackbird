@@ -42,7 +42,7 @@ float UBlackbirdDamageGameplayAbility::GetEnergyCost(const float InLevel) const
 {
 	if (GetCostGameplayEffect())
 	{
-		for (const FGameplayModifierInfo Mod : GetCostGameplayEffect()->Modifiers)
+		for (const FGameplayModifierInfo& Mod : GetCostGameplayEffect()->Modifiers)
 		{
 			if (Mod.Attribute == UBlackbirdAttributeSet::GetEnergyAttribute())
 			{
@@ -60,7 +60,7 @@ float UBlackbirdDamageGameplayAbility::GetHeatCost_Implementation(const float In
 {
 	if (GetCostGameplayEffect())
 	{
-		for (const FGameplayModifierInfo Mod : GetCostGameplayEffect()->Modifiers)
+		for (const FGameplayModifierInfo& Mod : GetCostGameplayEffect()->Modifiers)
 		{
 			if (Mod.Attribute == UBlackbirdAttributeSet::GetAvailableHeatAttribute())
 			{
