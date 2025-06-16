@@ -22,6 +22,7 @@ class BLACKBIRD_API UBlackbirdTrackFollowingComponent : public UActorComponent
 public:
 	UBlackbirdTrackFollowingComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	USplineComponent* GetTrack() const;
 	UFUNCTION(BlueprintCallable)
@@ -51,9 +52,11 @@ protected:
 	bool bDebug = false;
 
 private:
+	void MoveAlongTrack(float DeltaTime);
 	UPROPERTY()
 	TObjectPtr<APawn> OwnerPawn;
+	UPROPERTY(Replicated)
 	bool bActive = false;
-	void MoveAlongTrack(float DeltaTime);
+	UPROPERTY(Replicated)
 	FVector2D MovementInput = FVector2D::ZeroVector;
 };

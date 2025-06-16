@@ -141,9 +141,13 @@ void ABlackbirdProjectileActor::OnCollisionBeginOverlap(
 	const FHitResult& SweepResult
 )
 {
+	if (!HasAuthority())
+	{
+		return;
+	}
 	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
 	// don't damage yourself with your own projectiles, dummy!
-	if (SourceAvatarActor == OtherActor)
+	if (!IsValid(SourceAvatarActor) || !IsValid(OtherActor) || SourceAvatarActor == OtherActor)
 	{
 		return;
 	}

@@ -35,13 +35,17 @@ public:
 	USplineComponent* GetTrack() const;
 	UFUNCTION(BlueprintCallable)
 	void SetTrack(USplineComponent* InTrack);
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+	bool OnPossession_SetTrack(APawn* InPawn) const;
+	void OnPossession_SetupTargeting(APawn* InPawn);
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void AcknowledgePossession(class APawn* InPawn) override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Track")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Replicated, Category="Track")
 	TObjectPtr<USplineComponent> Track;
 
 private:

@@ -5,6 +5,7 @@
 
 #include "Components/SplineComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Net/UnrealNetwork.h"
 #include "Track/BlackbirdTrackFunctionLibrary.h"
 
 
@@ -14,6 +15,7 @@ UBlackbirdTrackFollowingComponent::UBlackbirdTrackFollowingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+	SetIsReplicatedByDefault(true);
 }
 
 
@@ -125,6 +127,14 @@ void UBlackbirdTrackFollowingComponent::TickComponent(float DeltaTime, ELevelTic
 	{
 		MoveAlongTrack(DeltaTime);
 	}
+}
+
+void UBlackbirdTrackFollowingComponent::GetLifetimeReplicatedProps(
+	TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UBlackbirdTrackFollowingComponent, bActive)
+	DOREPLIFETIME(UBlackbirdTrackFollowingComponent, MovementInput)
 }
 
 USplineComponent* UBlackbirdTrackFollowingComponent::GetTrack() const

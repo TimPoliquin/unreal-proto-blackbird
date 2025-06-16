@@ -26,7 +26,10 @@ void UBlackbirdTrackEventTriggerComponent::BeginPlay()
 	TriggerBox->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	TriggerBox->SetHiddenInGame(false);
 	TriggerBox->SetLineThickness(1.f);
-	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &UBlackbirdTrackEventTriggerComponent::OnTriggerBeginOverlap);
+	if (GetOwner()->HasAuthority())
+	{
+		TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &UBlackbirdTrackEventTriggerComponent::OnTriggerBeginOverlap);
+	}
 }
 
 void UBlackbirdTrackEventTriggerComponent::FireTrigger(AActor* Actor, const int32 InTriggerCount)
@@ -40,6 +43,10 @@ void UBlackbirdTrackEventTriggerComponent::FireTrigger(AActor* Actor, const int3
 
 bool UBlackbirdTrackEventTriggerComponent::CanTrigger() const
 {
+	if (!GetOwner()->HasAuthority())
+	{
+		return false;
+	}
 	return MaxTriggerCount > 0
 		       ? TriggerCount < MaxTriggerCount
 		       : true;
