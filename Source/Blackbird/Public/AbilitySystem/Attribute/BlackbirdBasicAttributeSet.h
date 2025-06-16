@@ -56,6 +56,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Meta Attributes")
 	FGameplayAttributeData Meta_IncomingDamage;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnAttributeChanged;
+
 protected:
 	virtual void HandleIncomingDamage(const FGameplayEffectModCallbackData& Data);
 

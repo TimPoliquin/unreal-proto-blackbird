@@ -14,7 +14,7 @@
 #include "AbilitySystem/Attribute/BlackbirdAttributeTags.h"
 #include "AbilitySystem/Damage/DamageableInterface.h"
 
-void UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(
+ FActiveGameplayEffectHandle UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(
 	AActor* Actor,
 	const TSubclassOf<UGameplayEffect> Effect,
 	const int32 Level
@@ -22,7 +22,7 @@ void UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(
 {
 	if (!IsValid(Actor))
 	{
-		return;
+		return FActiveGameplayEffectHandle();
 	}
 	if (!Effect)
 	{
@@ -32,6 +32,7 @@ void UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(
 			TEXT("[UBlackbirdAbilitySystemLibrary::ApplyToSelf] No effect class provided for [%s]"),
 			*Actor->GetName()
 		)
+		return FActiveGameplayEffectHandle();
 	}
 	if (UAbilitySystemComponent* AbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(
 		Actor
@@ -44,11 +45,12 @@ void UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(
 			Level,
 			EffectContextHandle
 		);
-		AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(
+		return AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(
 			*GameplayEffectSpec.Data.Get(),
 			AbilitySystemComponent
 		);
 	}
+ 	return FActiveGameplayEffectHandle();
 }
 
 FPredictionKey UBlackbirdAbilitySystemLibrary::GetPredictionKeyFromAbilitySpec(const FGameplayAbilitySpec& AbilitySpec)
