@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 #include "Components/SplineComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "Player/BlackbirdPlayerState.h"
 #include "Player/PlayerTargetingComponent.h"
 #include "Ship/MoveTarget.h"
@@ -83,23 +84,42 @@ void ABlackbirdPlayerController::SetupInputComponent()
 	}
 }
 
-void ABlackbirdPlayerController::OnPossess(APawn* InPawn)
+bool ABlackbirdPlayerController::OnPossession_SetTrack(APawn* InPawn) const
 {
-	Super::OnPossess(InPawn);
 	if (!IsValid(Track))
 	{
-		return;
+		return true;
 	}
-	if (ITrackFollowingActorInterface* TrackFollowingPawn = Cast<ITrackFollowingActorInterface>(InPawn))
+	if (const ITrackFollowingActorInterface* TrackFollowingPawn = Cast<ITrackFollowingActorInterface>(InPawn))
 	{
 		TrackFollowingPawn->GetTrackFollowingComponent()->SetTrack(Track);
 		TrackFollowingPawn->GetTrackFollowingComponent()->Activate(true);
 	}
-	if (const ITargetingActorInterface* TargetingActor = Cast<ITargetingActorInterface>(GetPawn()))
+	return false;
+}
+
+void ABlackbirdPlayerController::OnPossession_SetupTargeting(APawn* InPawn)
+{
+	if (const ITargetingActorInterface* TargetingActor = Cast<ITargetingActorInterface>(InPawn))
 	{
 		PlayerTargetingComponent = TargetingActor->GetTargetingComponent();
 		PlayerTargetingComponent->OnPlayerTargetingChangedDelegate.AddDynamic(this, &ABlackbirdPlayerController::OnPlayerTargetChanged);
 	}
+}
+
+void ABlackbirdPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	// NOTE: this is server-side only!
+	OnPossession_SetTrack(InPawn);
+	OnPossession_SetupTargeting(InPawn);
+}
+
+void ABlackbirdPlayerController::AcknowledgePossession(APawn* InPawn)
+{
+	Super::AcknowledgePossession(InPawn);
+	OnPossession_SetTrack(InPawn);
+	OnPossession_SetupTargeting(InPawn);
 }
 
 USplineComponent* ABlackbirdPlayerController::GetTrack() const
@@ -110,6 +130,12 @@ USplineComponent* ABlackbirdPlayerController::GetTrack() const
 void ABlackbirdPlayerController::SetTrack(USplineComponent* InTrack)
 {
 	Track = InTrack;
+}
+
+void ABlackbirdPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABlackbirdPlayerController, Track);
 }
 
 void ABlackbirdPlayerController::Move(const FInputActionValue& Value)
