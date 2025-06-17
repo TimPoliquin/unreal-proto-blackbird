@@ -93,7 +93,7 @@ void ABlackbirdProjectileActor::Repel_Implementation(AActor* NewOwner, const FHi
 		ProjectileComponent->bIsHomingProjectile = false;
 		ProjectileComponent->HomingTargetComponent = nullptr;
 		ProjectileComponent->HomingAccelerationMagnitude = 0.f;
-		ProjectileComponent->Velocity = OwnerToProjectile.GetSafeNormal() * -2 * ProjectileComponent->Velocity.Length() + NewOwner->GetVelocity();
+		ProjectileComponent->Velocity = OwnerToProjectile.GetSafeNormal() * -1 * ProjectileComponent->MaxSpeed + NewOwner->GetVelocity();
 	}
 	SetLifeSpan(5.f);
 }
