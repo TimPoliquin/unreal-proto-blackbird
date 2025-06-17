@@ -83,3 +83,13 @@ FVector UTargetingUtils::CalculateInterceptVector(const AActor* Instigator, cons
 	// Return the direction vector (normalized)
 	return RequiredVelocity;
 }
+
+float UTargetingUtils::CalculateAngleBetweenVectors(const FVector& VectorA, const FVector& VectorB)
+{
+	const FVector NormalizedA = VectorA.GetSafeNormal();
+	const FVector NormalizedB = VectorB.GetSafeNormal();
+	const float DotProduct = FMath::Clamp(FVector::DotProduct(NormalizedA, NormalizedB), -1.f, 1.f);
+	const float AngleRadians = FMath::Acos(DotProduct);
+	const float AngleDegrees = FMath::RadiansToDegrees(AngleRadians);
+	return AngleDegrees;
+}

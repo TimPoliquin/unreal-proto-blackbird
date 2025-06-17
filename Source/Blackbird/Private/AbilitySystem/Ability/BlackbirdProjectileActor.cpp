@@ -11,10 +11,11 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
-#include "AbilitySystem/Attribute/BlackbirdAttributeSet.h"
 #include "AbilitySystem/Damage/DamageableInterface.h"
 #include "Net/UnrealNetwork.h"
+#include "Targeting/TargetingUtils.h"
 
 
 // Sets default values
@@ -49,7 +50,7 @@ void ABlackbirdProjectileActor::SetDamageEffectParams(FBlackbirdDamageEffectPara
 	DamageEffectParams = Params;
 }
 
-UProjectileMovementComponent* ABlackbirdProjectileActor::GetProjectileMovementComponent() const
+UProjectileMovementComponent* ABlackbirdProjectileActor::GetProjectileMovementComponent_Implementation() const
 {
 	return ProjectileComponent;
 }
@@ -66,6 +67,35 @@ void ABlackbirdProjectileActor::Tick(float DeltaTime)
 			SetActorTickEnabled(false);
 		}
 	}
+}
+
+void ABlackbirdProjectileActor::Repel_Implementation(AActor* NewOwner, const FHitResult& NewTarget, const float RepelAngle, const float BaseDamageMultiplier)
+{
+	SetOwner(NewOwner);
+	SetInstigator(Cast<APawn>(NewOwner));
+	DamageEffectParams.SourceAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(NewOwner);
+	DamageEffectParams.BaseDamage *= BaseDamageMultiplier;
+	const FVector OwnerToProjectile = NewOwner->GetActorLocation() - GetActorLocation();
+	const FVector OwnerToTarget = NewOwner->GetActorLocation() - NewTarget.ImpactPoint;
+	const float AngleToProjectile = UTargetingUtils::CalculateAngleBetweenVectors(OwnerToProjectile, OwnerToTarget); 
+	if (AngleToProjectile <= RepelAngle)
+	{
+		// projectile should be repelled toward the cursor target
+		UE_LOG(LogTemp, Display, TEXT("[%s] Projectile repelled to target. [%f] <= [%f]"), *GetName(), AngleToProjectile, RepelAngle);
+		ProjectileComponent->bIsHomingProjectile = NewTarget.bBlockingHit;
+		ProjectileComponent->HomingTargetComponent = NewTarget.bBlockingHit ? NewTarget.GetActor()->GetRootComponent() : nullptr;
+		ProjectileComponent->HomingAccelerationMagnitude = NewTarget.bBlockingHit ? 1000.f : 0.f;
+		ProjectileComponent->Velocity = ((NewTarget.ImpactPoint - GetActorLocation()).GetSafeNormal()) * ProjectileComponent->MaxSpeed + NewOwner->GetVelocity();
+	} else
+	{
+		// projectile direction should be reversed
+		UE_LOG(LogTemp, Display, TEXT("[%s] Projectile reversed. [%f] <= [%f]"), *GetName(), AngleToProjectile, RepelAngle);
+		ProjectileComponent->bIsHomingProjectile = false;
+		ProjectileComponent->HomingTargetComponent = nullptr;
+		ProjectileComponent->HomingAccelerationMagnitude = 0.f;
+		ProjectileComponent->Velocity = OwnerToProjectile.GetSafeNormal() * -2 * ProjectileComponent->Velocity.Length() + NewOwner->GetVelocity();
+	}
+	SetLifeSpan(5.f);
 }
 
 // Called when the game starts or when spawned
@@ -178,10 +208,12 @@ void ABlackbirdProjectileActor::OnCollisionBeginOverlap(
 			}
 			DamageEffectParams.TargetAbilitySystemComponent = OtherAbilitySystem;
 			UBlackbirdAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
+			UE_LOG(LogTemp, Warning, TEXT("[%s] Destroyed on collision with %s (AS)"), *GetName(), *OtherActor->GetName())
 			Destroy();
 		}
 		else if (!Implements<UDamageableInterface>())
 		{
+			UE_LOG(LogTemp, Warning, TEXT("[%s] Destroyed on collision with %s (!Damageable)"), *GetName(), *OtherActor->GetName())
 			Destroy();
 		}
 	}
