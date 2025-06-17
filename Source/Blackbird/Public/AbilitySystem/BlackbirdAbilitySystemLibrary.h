@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ActiveGameplayEffectHandle.h"
 #include "GameplayPrediction.h"
 #include "Ability/BlackbirdProjectileActor.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -119,7 +120,7 @@ public:
 
 	/** Effects **/
 	UFUNCTION(BlueprintCallable, Category = "BlackbirdAbilitySystemLibrary|Effect", meta=( DefaultToSelf="Actor"))
-	static void ApplyEffectToSelf(
+	static FActiveGameplayEffectHandle ApplyEffectToSelf(
 		AActor* Actor,
 		TSubclassOf<UGameplayEffect> Effect,
 		int32 Level = 1

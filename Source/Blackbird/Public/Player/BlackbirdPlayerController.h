@@ -53,8 +53,6 @@ private:
 	TObjectPtr<UBlackbirdInputConfiguration> InputConfig;
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputMappingContext> InputContext;
-	UPROPERTY(EditAnywhere, Category="Input|Combat")
-	TObjectPtr<UInputAction> BasicAttackAction;
 	UPROPERTY(EditAnywhere, Category="Input|Camera")
 	TObjectPtr<UInputAction> LookAction;
 	UPROPERTY(EditAnywhere, Category="Input|Movement")

@@ -65,6 +65,10 @@ void UBlackbirdAttributeSet::PostAttributeChange(const FGameplayAttribute& Attri
 		SetAvailableHeat(GetMaxHeat());
 		bResetAvailableHeat = false;
 	}
+	if (TagsByAttribute.Contains(Attribute))
+	{
+		OnAttributeChanged.Broadcast(Attribute, TagsByAttribute[Attribute], NewValue);
+	}
 }
 
 void UBlackbirdAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)

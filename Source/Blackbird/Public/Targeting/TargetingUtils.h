@@ -24,4 +24,7 @@ public:
 		meta=( DefaultToSelf="Instigator" )
 	)
 	static FVector CalculateInterceptVector(const AActor* Instigator, const AActor* Target, const float TimeToIntercept);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "TargetingUtils")
+	static float CalculateAngleBetweenVectors(const FVector& VectorA, const FVector& VectorB);
 };

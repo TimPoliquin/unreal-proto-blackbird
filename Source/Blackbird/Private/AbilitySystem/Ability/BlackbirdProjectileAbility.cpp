@@ -68,9 +68,10 @@ ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
 		Cast<APawn>(GetAvatarActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 	);
-	if (SpawnedProjectile->GetProjectileMovementComponent()->bIsHomingProjectile && ITargetableInterface::IsTargetable(HitActor))
+	UProjectileMovementComponent* ProjectileMovementComponent = IProjectileInterface::GetProjectileMovementComponent(SpawnedProjectile);
+	if (ProjectileMovementComponent && ProjectileMovementComponent->bIsHomingProjectile && ITargetableInterface::IsTargetable(HitActor))
 	{
-		SpawnedProjectile->GetProjectileMovementComponent()->HomingTargetComponent = HitActor->GetRootComponent();
+		ProjectileMovementComponent->HomingTargetComponent = HitActor->GetRootComponent();
 	}
 	FBlackbirdDamageEffectParams DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 	SpawnedProjectile->SetDamageEffectParams(DamageEffectParams);
@@ -80,9 +81,9 @@ ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
 	}
 	SpawnedProjectile->FinishSpawning(SpawnTransform);
 	// Spawned projectile's velocity is incorrect until after spawning is completed.
-	if (bInheritOwnerVelocity)
+	if (bInheritOwnerVelocity && ProjectileMovementComponent)
 	{
-		SpawnedProjectile->GetProjectileMovementComponent()->Velocity += GetAvatarActorFromActorInfo()->GetVelocity();
+		ProjectileMovementComponent->Velocity += GetAvatarActorFromActorInfo()->GetVelocity();
 	}
 	return SpawnedProjectile;
 }

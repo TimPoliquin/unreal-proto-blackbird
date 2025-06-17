@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProjectileInterface.h"
 #include "AbilitySystem/Effect/BlackbirdDamageEffectParams.h"
 #include "BlackbirdProjectileActor.generated.h"
 
@@ -13,7 +14,7 @@ class UNiagaraSystem;
 
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdProjectileActor : public AActor
+class BLACKBIRD_API ABlackbirdProjectileActor : public AActor, public IProjectileInterface
 {
 	GENERATED_BODY()
 
@@ -21,9 +22,15 @@ public:
 	ABlackbirdProjectileActor();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	void SetDamageEffectParams(FBlackbirdDamageEffectParams& Params);
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	UProjectileMovementComponent* GetProjectileMovementComponent() const;
 	virtual void Tick(float DeltaTime) override;
+	/**
+	 * Start IProjectileInterface
+	 */
+	virtual UProjectileMovementComponent* GetProjectileMovementComponent_Implementation() const override;
+	virtual void Repel_Implementation(AActor* NewOwner, const FHitResult& NewTarget, const float RepelAngle = 90.f, const float BaseDamageMultiplier = 1.f) override;
+	/**
+	 * End IProjectileInterface
+	 */
 
 protected:
 	virtual void BeginPlay() override;
