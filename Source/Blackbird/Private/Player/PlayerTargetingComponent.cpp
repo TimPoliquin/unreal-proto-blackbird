@@ -18,7 +18,8 @@ void UPlayerTargetingComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UPlayerTargetingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UPlayerTargetingComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                              FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
@@ -51,6 +52,11 @@ void UPlayerTargetingComponent::CursorTrace(const APlayerController* PlayerContr
 bool UPlayerTargetingComponent::HasTarget() const
 {
 	return CursorTraceHit.bBlockingHit;
+}
+
+FVector UPlayerTargetingComponent::GetLookAtLocation() const
+{
+	return CursorTraceHit.ImpactPoint;
 }
 
 

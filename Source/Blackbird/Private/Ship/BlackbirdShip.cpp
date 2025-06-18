@@ -8,6 +8,7 @@
 #include "AbilitySystem/Ability/BlackbirdAbilityAssignment.h"
 #include "AbilitySystem/Attribute/BlackbirdAttributeSet.h"
 #include "Components/CapsuleComponent.h"
+#include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Track/BlackbirdTrackFollowingComponent.h"
 
@@ -141,4 +142,22 @@ bool ABlackbirdShip::IsDead() const
 UBlackbirdTrackFollowingComponent* ABlackbirdShip::GetTrackFollowingComponent() const
 {
 	return TrackFollowingComponent;
+}
+
+FVector ABlackbirdShip::GetSocketLocation(const FGameplayTag& SocketTag) const
+{
+	if (TagToSockets.Contains(SocketTag))
+	{
+		return GetMesh()->GetSocketByName(TagToSockets[SocketTag])->GetSocketLocation(GetMesh());
+	}
+	return GetActorLocation();
+}
+
+FRotator ABlackbirdShip::GetSocketRotation(const FGameplayTag& SocketTag) const
+{
+	if (TagToSockets.Contains(SocketTag))
+	{
+		return GetMesh()->GetSocketByName(TagToSockets[SocketTag])->GetSocketTransform(GetMesh()).Rotator();
+	}
+	return GetActorRotation();
 }
