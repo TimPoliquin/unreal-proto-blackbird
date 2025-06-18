@@ -89,7 +89,7 @@ void ABlackbirdProjectileActor::Repel_Implementation(AActor* NewOwner, const FHi
 	} else
 	{
 		// projectile direction should be reversed
-		UE_LOG(LogTemp, Display, TEXT("[%s] Projectile reversed. [%f] <= [%f]"), *GetName(), AngleToProjectile, RepelAngle);
+		UE_LOG(LogTemp, Display, TEXT("[%s] Projectile reversed. [%f] > [%f]"), *GetName(), AngleToProjectile, RepelAngle);
 		ProjectileComponent->bIsHomingProjectile = false;
 		ProjectileComponent->HomingTargetComponent = nullptr;
 		ProjectileComponent->HomingAccelerationMagnitude = 0.f;
