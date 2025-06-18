@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "ShipInterface.h"
 #include "AbilitySystemInterface.h"
+#include "SocketInterface.h"
+#include "GameplayTagContainer.h"
 #include "AbilitySystem/BlackbirdAbilitySystemDelegates.h"
 #include "AbilitySystem/Damage/DamageableInterface.h"
 #include "GameFramework/Character.h"
@@ -26,7 +28,7 @@ struct FBlackbirdAbilityAssignmentRow;
 
 UCLASS()
 class BLACKBIRD_API ABlackbirdShip : public ACharacter, public IShipInterface, public IAbilitySystemInterface, public IDamageableInterface,
-                                     public ITrackFollowingActorInterface, public ITargetableInterface
+                                     public ITrackFollowingActorInterface, public ITargetableInterface, public ISocketInterface
 {
 	GENERATED_BODY()
 
@@ -70,6 +72,11 @@ public:
 	virtual UBlackbirdTrackFollowingComponent* GetTrackFollowingComponent() const override;
 	/** End TrackFollowingInterface **/
 
+	/** Start ISocketInterface **/
+	virtual FVector GetSocketLocation(const FGameplayTag& SocketTag) const;
+	virtual FRotator GetSocketRotation(const FGameplayTag& SocketTag) const;
+	/** End ISocketInterface **/
+
 	UPROPERTY(BlueprintAssignable)
 	FBlackbirdAbilitySystemReadySignature OnAbilitySystemReadyDelegate;
 
@@ -99,6 +106,8 @@ protected:
 	TObjectPtr<UBlackbirdTrackFollowingComponent> TrackFollowingComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilities")
 	TArray<FName> IgnoreInstigatorTags;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilities")
+	TMap<FGameplayTag, FName> TagToSockets;
 
 private:
 	FOnDamageSignature OnDamageDelegate;

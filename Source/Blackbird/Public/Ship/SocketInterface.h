@@ -24,5 +24,5 @@ class BLACKBIRD_API ISocketInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual FVector GetSocketLocation(const FGameplayTag& SocketTag) const = 0;
-	virtual FRotator GetSocketRotation(FGameplayTag SocketTag) const = 0;
+	virtual FRotator GetSocketRotation(const FGameplayTag& SocketTag) const = 0;
 };

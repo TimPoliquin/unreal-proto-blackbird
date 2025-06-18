@@ -8,6 +8,8 @@
 #include "Blackbird/Blackbird.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Player/BlackbirdPlayerState.h"
 #include "Player/PlayerTargetingComponent.h"
 

@@ -15,7 +15,8 @@ enum class ETargetingStatus : uint8
 	TargetingOther,
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerTargetingChangedSignature, const AActor*, Target, const ETargetingStatus&, Status);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerTargetingChangedSignature, const AActor*, Target,
+                                             const ETargetingStatus&, Status);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BLACKBIRD_API UPlayerTargetingComponent : public UActorComponent
@@ -24,7 +25,8 @@ class BLACKBIRD_API UPlayerTargetingComponent : public UActorComponent
 
 public:
 	UPlayerTargetingComponent();
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void Activate(bool bReset = false) override;
 	virtual void Deactivate() override;
@@ -32,6 +34,8 @@ public:
 	void CursorTrace(const APlayerController* PlayerController);
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player Targeting")
 	bool HasTarget() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player Targeting")
+	FVector GetLookAtLocation() const;
 
 	UPROPERTY(BlueprintAssignable, Category="Player Targeting")
 	FOnPlayerTargetingChangedSignature OnPlayerTargetingChangedDelegate;
