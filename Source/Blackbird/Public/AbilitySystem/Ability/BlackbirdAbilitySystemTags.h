@@ -21,6 +21,7 @@ struct FBlackbirdAbilitySystemTags
 	FGameplayTag Abilities_Effect_Repel;
 	FGameplayTag Abilities_Effect_Shielded;
 	FGameplayTag Abilities_Effect_Venting;
+	FGameplayTag Abilities_Effect_Magnitude;
 
 	static FBlackbirdAbilitySystemTags& Get()
 	{

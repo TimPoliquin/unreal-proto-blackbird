@@ -122,8 +122,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BlackbirdAbilitySystemLibrary|Effect", meta=( DefaultToSelf="Actor"))
 	static FActiveGameplayEffectHandle ApplyEffectToSelf(
 		AActor* Actor,
-		TSubclassOf<UGameplayEffect> Effect,
-		int32 Level = 1
+		const TSubclassOf<UGameplayEffect> Effect,
+		const int32 Level = 1,
+		const float Magnitude = 0.f
 	);
 	UFUNCTION(BlueprintCallable, Category="BlackbirdAbilitySystemLibrary|GameplayEffect")
 	static bool IsShielded(const UAbilitySystemComponent* Target);

@@ -28,6 +28,7 @@ void FBlackbirdAbilitySystemTags::Initialize()
 	Instance.Abilities_Effect_Overheated = TagManager.AddNativeGameplayTag(FName("Abilities.Effect.Overheated"));
 	Instance.Abilities_Effect_Shielded = TagManager.AddNativeGameplayTag(FName("Abilities.Effect.Shielded"));
 	Instance.Abilities_Effect_Venting = TagManager.AddNativeGameplayTag(FName("Abilities.Effect.Venting"));
+	Instance.Abilities_Effect_Magnitude = TagManager.AddNativeGameplayTag(FName("Abilities.Effect.Magnitude"));
 
 	Instance.bInitialized = true;
 }

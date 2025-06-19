@@ -14,10 +14,11 @@
 #include "AbilitySystem/Attribute/BlackbirdAttributeTags.h"
 #include "AbilitySystem/Damage/DamageableInterface.h"
 
- FActiveGameplayEffectHandle UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(
+FActiveGameplayEffectHandle UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(
 	AActor* Actor,
 	const TSubclassOf<UGameplayEffect> Effect,
-	const int32 Level
+	const int32 Level,
+	const float Magnitude
 )
 {
 	if (!IsValid(Actor))
@@ -45,12 +46,14 @@
 			Level,
 			EffectContextHandle
 		);
+		GameplayEffectSpec.Data->SetSetByCallerMagnitude(FBlackbirdAbilitySystemTags::Get().Abilities_Effect_Magnitude,
+		                                                 Magnitude);
 		return AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(
 			*GameplayEffectSpec.Data.Get(),
 			AbilitySystemComponent
 		);
 	}
- 	return FActiveGameplayEffectHandle();
+	return FActiveGameplayEffectHandle();
 }
 
 FPredictionKey UBlackbirdAbilitySystemLibrary::GetPredictionKeyFromAbilitySpec(const FGameplayAbilitySpec& AbilitySpec)
@@ -159,7 +162,8 @@ bool UBlackbirdAbilitySystemLibrary::IsDead(AActor* Actor)
 
 bool UBlackbirdAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const
+		FBlackbirdGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		return BlackbirdEffectContext->IsBlockedHit();
 	}
@@ -171,7 +175,8 @@ void UBlackbirdAbilitySystemLibrary::SetIsBlockedHit(
 	const bool InIsBlocked
 )
 {
-	if (FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(Context.Get()))
+	if (FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(Context.
+		Get()))
 	{
 		BlackbirdEffectContext->SetIsBlockedHit(InIsBlocked);
 	}
@@ -179,7 +184,8 @@ void UBlackbirdAbilitySystemLibrary::SetIsBlockedHit(
 
 bool UBlackbirdAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const
+		FBlackbirdGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		return BlackbirdEffectContext->IsCriticalHit();
 	}
@@ -188,7 +194,8 @@ bool UBlackbirdAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextH
 
 void UBlackbirdAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& Context, bool InIsCriticalHit)
 {
-	if (FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(Context.Get()))
+	if (FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(Context.
+		Get()))
 	{
 		BlackbirdEffectContext->SetIsCriticalHit(InIsCriticalHit);
 	}
@@ -196,7 +203,8 @@ void UBlackbirdAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHand
 
 bool UBlackbirdAbilitySystemLibrary::IsRadialDamage(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const
+		FBlackbirdGameplayEffectContext*>(
 		EffectContextHandle.Get()))
 	{
 		return BlackbirdEffectContext->IsRadialDamage();
@@ -204,9 +212,11 @@ bool UBlackbirdAbilitySystemLibrary::IsRadialDamage(const FGameplayEffectContext
 	return false;
 }
 
-float UBlackbirdAbilitySystemLibrary::GetRadialDamageInnerRadius(const FGameplayEffectContextHandle& EffectContextHandle)
+float UBlackbirdAbilitySystemLibrary::GetRadialDamageInnerRadius(
+	const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const
+		FBlackbirdGameplayEffectContext*>(
 		EffectContextHandle.Get()))
 	{
 		return BlackbirdEffectContext->GetRadialDamageInnerRadius();
@@ -214,9 +224,11 @@ float UBlackbirdAbilitySystemLibrary::GetRadialDamageInnerRadius(const FGameplay
 	return 0.f;
 }
 
-float UBlackbirdAbilitySystemLibrary::GetRadialDamageOuterRadius(const FGameplayEffectContextHandle& EffectContextHandle)
+float UBlackbirdAbilitySystemLibrary::GetRadialDamageOuterRadius(
+	const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const
+		FBlackbirdGameplayEffectContext*>(
 		EffectContextHandle.Get()))
 	{
 		return BlackbirdEffectContext->GetRadialDamageOuterRadius();
@@ -226,7 +238,8 @@ float UBlackbirdAbilitySystemLibrary::GetRadialDamageOuterRadius(const FGameplay
 
 FVector UBlackbirdAbilitySystemLibrary::GetRadialDamageOrigin(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const FBlackbirdGameplayEffectContext*>(
+	if (const FBlackbirdGameplayEffectContext* BlackbirdEffectContext = static_cast<const
+		FBlackbirdGameplayEffectContext*>(
 		EffectContextHandle.Get()))
 	{
 		return BlackbirdEffectContext->GetRadialDamageOrigin();
@@ -292,7 +305,8 @@ FVector UBlackbirdAbilitySystemLibrary::GetDeathImpulse(const FGameplayEffectCon
 	return FVector::ZeroVector;
 }
 
-void UBlackbirdAbilitySystemLibrary::SetDeathImpulse(FGameplayEffectContextHandle& EffectContextHandle, const FVector& InDeathImpulse)
+void UBlackbirdAbilitySystemLibrary::SetDeathImpulse(FGameplayEffectContextHandle& EffectContextHandle,
+                                                     const FVector& InDeathImpulse)
 {
 	if (FBlackbirdGameplayEffectContext* AuraEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(
 		EffectContextHandle.Get()))
@@ -311,7 +325,8 @@ FVector UBlackbirdAbilitySystemLibrary::GetKnockbackVector(const FGameplayEffect
 	return FVector::ZeroVector;
 }
 
-void UBlackbirdAbilitySystemLibrary::SetKnockbackVector(FGameplayEffectContextHandle& EffectContextHandle, const FVector& InKnockbackVector)
+void UBlackbirdAbilitySystemLibrary::SetKnockbackVector(FGameplayEffectContextHandle& EffectContextHandle,
+                                                        const FVector& InKnockbackVector)
 {
 	if (FBlackbirdGameplayEffectContext* AuraEffectContext = static_cast<FBlackbirdGameplayEffectContext*>(
 		EffectContextHandle.Get()))
@@ -321,7 +336,8 @@ void UBlackbirdAbilitySystemLibrary::SetKnockbackVector(FGameplayEffectContextHa
 }
 
 
-FGameplayEffectContextHandle UBlackbirdAbilitySystemLibrary::ApplyDamageEffect(const FBlackbirdDamageEffectParams& DamageEffectParams)
+FGameplayEffectContextHandle UBlackbirdAbilitySystemLibrary::ApplyDamageEffect(
+	const FBlackbirdDamageEffectParams& DamageEffectParams)
 {
 	const FBlackbirdAttributeTags& GameplayTags = FBlackbirdAttributeTags::Get();
 	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
@@ -430,5 +446,6 @@ FBlackbirdDamageEffectParams UBlackbirdAbilitySystemLibrary::MakeCustomDamageEff
 
 bool UBlackbirdAbilitySystemLibrary::IsShielded(const UAbilitySystemComponent* Target)
 {
-	return Target->HasAllMatchingGameplayTags(FBlackbirdAbilitySystemTags::Get().Abilities_Effect_Shielded.GetSingleTagContainer());
+	return Target->HasAllMatchingGameplayTags(
+		FBlackbirdAbilitySystemTags::Get().Abilities_Effect_Shielded.GetSingleTagContainer());
 }
