@@ -7,7 +7,7 @@
 #include "Game/BlackbirdPlayerStart.h"
 #include "GameFramework/PlayerController.h"
 #include "Input/BlackbirdInputConfiguration.h"
-#include "Ship/MoveTarget.h"
+#include "Character/MoveTarget.h"
 #include "BlackbirdPlayerController.generated.h"
 
 class USplineComponent;
@@ -119,7 +119,8 @@ void ABlackbirdPlayerController::BindAbilityActions(
 			}
 			if (ReleasedFunc)
 			{
-				EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, Object, ReleasedFunc, InputTag);
+				EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, Object, ReleasedFunc,
+				                                   InputTag);
 			}
 			if (HeldFunc)
 			{

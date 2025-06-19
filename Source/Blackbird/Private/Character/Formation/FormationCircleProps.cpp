@@ -1,7 +1,7 @@
 ﻿// Copyright Alien Shores 2025
 
 
-#include "Ship/Formation/FormationCircleProps.h"
+#include "Character/Formation/FormationCircleProps.h"
 
 void FFormationCircleProps::GetSpawnTransforms(const int32 SpawnCount, TArray<FTransform>& OutSpawnTransforms) const
 {

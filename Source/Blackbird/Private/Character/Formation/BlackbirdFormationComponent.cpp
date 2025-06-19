@@ -1,10 +1,10 @@
 ﻿// Copyright Alien Shores 2025
 
 
-#include "Ship/Formation/BlackbirdFormationComponent.h"
+#include "Character/Formation/BlackbirdFormationComponent.h"
 
 #include "Kismet/KismetMathLibrary.h"
-#include "Ship/BlackbirdEnemyShip.h"
+#include "Character/BlackbirdEnemy.h"
 #include "Utils/ArrayUtils.h"
 
 
@@ -19,7 +19,7 @@ void UBlackbirdFormationComponent::BeginPlay()
 
 void UBlackbirdFormationComponent::SpawnEnemies()
 {
-	TArray<ABlackbirdEnemyShip*> EnemySpawns;
+	TArray<ABlackbirdEnemy*> EnemySpawns;
 	TArray<FTransform> SpawnTransforms;
 	CreateEnemies(EnemySpawns);
 	GetSpawnTransforms(SpawnTransforms);
@@ -30,7 +30,7 @@ void UBlackbirdFormationComponent::SpawnEnemies()
 	Enemies.Append(EnemySpawns);
 }
 
-void UBlackbirdFormationComponent::CreateEnemies(TArray<ABlackbirdEnemyShip*>& OutEnemies) const
+void UBlackbirdFormationComponent::CreateEnemies(TArray<ABlackbirdEnemy*>& OutEnemies) const
 {
 	for (int32 EnemyIdx = 0; EnemyIdx < EnemySpawnCount; EnemyIdx++)
 	{
@@ -38,7 +38,7 @@ void UBlackbirdFormationComponent::CreateEnemies(TArray<ABlackbirdEnemyShip*>& O
 		SpawnTransform.SetLocation(GetOwner()->GetActorLocation());
 		SpawnTransform.SetRotation(GetOwner()->GetActorRotation().Quaternion());
 		OutEnemies.Add(
-			GetWorld()->SpawnActorDeferred<ABlackbirdEnemyShip>(
+			GetWorld()->SpawnActorDeferred<ABlackbirdEnemy>(
 				UArrayUtils::GetRandomElement(EnemyClasses),
 				SpawnTransform,
 				GetOwner(),
@@ -64,11 +64,12 @@ void UBlackbirdFormationComponent::GetSpawnTransforms(TArray<FTransform>& OutSpa
 	for (FTransform& SpawnTransform : OutSpawnTransforms)
 	{
 		SpawnTransform.SetLocation(UKismetMathLibrary::TransformLocation(RootTransform, SpawnTransform.GetLocation()));
-		SpawnTransform.SetRotation(UKismetMathLibrary::TransformRotation(RootTransform, SpawnTransform.GetRotation().Rotator()).Quaternion());
+		SpawnTransform.SetRotation(
+			UKismetMathLibrary::TransformRotation(RootTransform, SpawnTransform.GetRotation().Rotator()).Quaternion());
 	}
 }
 
-TArray<ABlackbirdEnemyShip*> UBlackbirdFormationComponent::GetEnemies() const
+TArray<ABlackbirdEnemy*> UBlackbirdFormationComponent::GetEnemies() const
 {
 	return Enemies;
 }

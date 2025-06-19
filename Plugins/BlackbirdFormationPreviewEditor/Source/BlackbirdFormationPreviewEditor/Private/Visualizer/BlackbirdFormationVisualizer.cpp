@@ -1,8 +1,9 @@
 ﻿#include "Visualizer/BlackbirdFormationVisualizer.h"
 
-#include "Ship/Formation/BlackbirdFormationComponent.h"
+#include "Character/Formation/BlackbirdFormationComponent.h"
 
-void FBlackbirdFormationVisualizer::DrawVisualization(const UActorComponent* Component, const FSceneView* View, FPrimitiveDrawInterface* PDI)
+void FBlackbirdFormationVisualizer::DrawVisualization(const UActorComponent* Component, const FSceneView* View,
+                                                      FPrimitiveDrawInterface* PDI)
 {
 	FComponentVisualizer::DrawVisualization(Component, View, PDI);
 

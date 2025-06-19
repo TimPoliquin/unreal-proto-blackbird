@@ -3,15 +3,15 @@
 
 #include "UI/BlackbirdHUD.h"
 
-#include "Player/BlackbirdPlayerShip.h"
-#include "Ship/BlackbirdShip.h"
+#include "Player/BlackbirdPlayerCharacter.h"
+#include "Character/BlackbirdCharacter.h"
 #include "UI/ViewModel/MVVM_PlayerTargeting.h"
-#include "UI/ViewModel/MVVM_ShipAttributes.h"
+#include "UI/ViewModel/MVVM_Attributes.h"
 #include "UI/Widget/HUD/BlackbirdGameHUDWidget.h"
 
-UMVVM_ShipAttributes* ABlackbirdHUD::GetShipAttributesViewModel() const
+UMVVM_Attributes* ABlackbirdHUD::GetAttributesViewModel() const
 {
-	return ShipAttributesViewModel;
+	return AttributesViewModel;
 }
 
 UMVVM_PlayerTargeting* ABlackbirdHUD::GetPlayerTargetingViewModel() const
@@ -22,34 +22,34 @@ UMVVM_PlayerTargeting* ABlackbirdHUD::GetPlayerTargetingViewModel() const
 void ABlackbirdHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	checkf(ShipAttributesViewModelClass, TEXT("[%s] ShipAttributesViewModelClass must be specified"), *GetName());
+	checkf(AttributesViewModelClass, TEXT("[%s] AttributesViewModelClass must be specified"), *GetName());
 	checkf(PlayerTargetingViewModelClass, TEXT("[%s] PlayerTargetingViewModelClass must be specified"), *GetName());
 	checkf(GameHUDWidgetClass, TEXT("[%s] GameHUDWidgetClass must be specified"), *GetName());
-	ShipAttributesViewModel = NewObject<UMVVM_ShipAttributes>(this, ShipAttributesViewModelClass);
+	AttributesViewModel = NewObject<UMVVM_Attributes>(this, AttributesViewModelClass);
 	PlayerTargetingViewModel = NewObject<UMVVM_PlayerTargeting>(this, PlayerTargetingViewModelClass);
 	GameHUDWidget = CreateWidget<UBlackbirdGameHUDWidget>(GetWorld(), GameHUDWidgetClass);
 	GameHUDWidget->AddToViewport();
-	if (ABlackbirdShip* PlayerShip = Cast<ABlackbirdShip>(GetOwningPawn()))
+	if (ABlackbirdCharacter* PlayerCharacter = Cast<ABlackbirdCharacter>(GetOwningPawn()))
 	{
-		if (PlayerShip->IsAbilitySystemReady())
+		if (PlayerCharacter->IsAbilitySystemReady())
 		{
-			OnAbilitySystemReady(PlayerShip->GetBlackbirdAbilitySystemComponent());
+			OnAbilitySystemReady(PlayerCharacter->GetBlackbirdAbilitySystemComponent());
 		}
 		else
 		{
-			PlayerShip->OnAbilitySystemReadyDelegate.AddDynamic(this, &ABlackbirdHUD::OnAbilitySystemReady);
+			PlayerCharacter->OnAbilitySystemReadyDelegate.AddDynamic(this, &ABlackbirdHUD::OnAbilitySystemReady);
 		}
 	}
 }
 
 void ABlackbirdHUD::OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent)
 {
-	if (const ABlackbirdShip* PlayerShip = Cast<ABlackbirdShip>(GetOwningPawn()))
+	if (const ABlackbirdCharacter* BlackbirdCharacter = Cast<ABlackbirdCharacter>(GetOwningPawn()))
 	{
-		ShipAttributesViewModel->BindDependencies(PlayerShip);
+		AttributesViewModel->BindDependencies(BlackbirdCharacter);
 	}
-	if (const ABlackbirdPlayerShip* PlayerShip = Cast<ABlackbirdPlayerShip>(GetOwningPawn()))
+	if (const ABlackbirdPlayerCharacter* PlayerCharacter = Cast<ABlackbirdPlayerCharacter>(GetOwningPawn()))
 	{
-		PlayerTargetingViewModel->BindDependencies(PlayerShip);
+		PlayerTargetingViewModel->BindDependencies(PlayerCharacter);
 	}
 }

@@ -8,7 +8,7 @@
 #include "Net/UnrealNetwork.h"
 #include "Player/BlackbirdPlayerState.h"
 #include "Player/PlayerTargetingComponent.h"
-#include "Ship/MoveTarget.h"
+#include "Character/MoveTarget.h"
 #include "Targeting/TargetingActorInterface.h"
 #include "Track/BlackbirdTrackFollowingComponent.h"
 #include "Track/TrackFollowingActorInterface.h"
@@ -70,9 +70,12 @@ void ABlackbirdPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	{
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABlackbirdPlayerController::Move);
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &ABlackbirdPlayerController::EndMove);
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABlackbirdPlayerController::Look);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this,
+		                                   &ABlackbirdPlayerController::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this,
+		                                   &ABlackbirdPlayerController::EndMove);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this,
+		                                   &ABlackbirdPlayerController::Look);
 		BindAbilityActions(
 			InputConfig,
 			EnhancedInputComponent,
@@ -103,7 +106,8 @@ void ABlackbirdPlayerController::OnPossession_SetupTargeting(APawn* InPawn)
 	if (const ITargetingActorInterface* TargetingActor = Cast<ITargetingActorInterface>(InPawn))
 	{
 		PlayerTargetingComponent = TargetingActor->GetTargetingComponent();
-		PlayerTargetingComponent->OnPlayerTargetingChangedDelegate.AddDynamic(this, &ABlackbirdPlayerController::OnPlayerTargetChanged);
+		PlayerTargetingComponent->OnPlayerTargetingChangedDelegate.AddDynamic(
+			this, &ABlackbirdPlayerController::OnPlayerTargetChanged);
 	}
 }
 
@@ -173,7 +177,8 @@ void ABlackbirdPlayerController::Look(const FInputActionValue& Value)
 
 void ABlackbirdPlayerController::AbilityInputTagPressed(const FGameplayTag InputTag)
 {
-	if (UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->GetBlackbirdAbilitySystemComponent())
+	if (UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->
+		GetBlackbirdAbilitySystemComponent())
 	{
 		BlackbirdAbilitySystemComponent->AbilityInputTagPressed(InputTag);
 	}
@@ -181,7 +186,8 @@ void ABlackbirdPlayerController::AbilityInputTagPressed(const FGameplayTag Input
 
 void ABlackbirdPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 {
-	if (UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->GetBlackbirdAbilitySystemComponent())
+	if (UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->
+		GetBlackbirdAbilitySystemComponent())
 	{
 		BlackbirdAbilitySystemComponent->AbilityInputTagReleased(InputTag);
 	}
@@ -189,7 +195,8 @@ void ABlackbirdPlayerController::AbilityInputTagReleased(const FGameplayTag Inpu
 
 void ABlackbirdPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 {
-	if (UBlackbirdAbilitySystemComponent* LocalAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->GetBlackbirdAbilitySystemComponent())
+	if (UBlackbirdAbilitySystemComponent* LocalAbilitySystemComponent = GetPlayerState<ABlackbirdPlayerState>()->
+		GetBlackbirdAbilitySystemComponent())
 	{
 		LocalAbilitySystemComponent->AbilityInputTagHeld(InputTag);
 	}

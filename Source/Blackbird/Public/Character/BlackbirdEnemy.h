@@ -3,17 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BlackbirdShip.h"
-#include "Targeting/TargetableInterface.h"
-#include "BlackbirdEnemyShip.generated.h"
+#include "BlackbirdCharacter.h"
+#include "BlackbirdEnemy.generated.h"
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdEnemyShip : public ABlackbirdShip
+class BLACKBIRD_API ABlackbirdEnemy : public ABlackbirdCharacter
 {
 	GENERATED_BODY()
 
 public:
-	ABlackbirdEnemyShip();
+	ABlackbirdEnemy();
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)

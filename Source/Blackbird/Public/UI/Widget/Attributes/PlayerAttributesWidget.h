@@ -5,14 +5,14 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/BlackbirdHUD.h"
-#include "PlayerShipAttributesWidget.generated.h"
+#include "PlayerAttributesWidget.generated.h"
 
-class UMVVM_ShipAttributes;
+class UMVVM_Attributes;
 /**
  * 
  */
 UCLASS()
-class BLACKBIRD_API UPlayerShipAttributesWidget : public UUserWidget
+class BLACKBIRD_API UPlayerAttributesWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -20,5 +20,5 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	ABlackbirdHUD* GetHUD() const;
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	UMVVM_ShipAttributes* GetShipAttributesViewModel() const;
+	UMVVM_Attributes* GetAttributesViewModel() const;
 };

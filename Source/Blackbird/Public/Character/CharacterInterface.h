@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "ShipInterface.generated.h"
+#include "CharacterInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE()
-class UShipInterface : public UInterface
+class UCharacterInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,7 +16,7 @@ class UShipInterface : public UInterface
 /**
  * 
  */
-class BLACKBIRD_API IShipInterface
+class BLACKBIRD_API ICharacterInterface
 {
 	GENERATED_BODY()
 

@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Player/BlackbirdPlayerShip.h"
+#include "Player/BlackbirdPlayerCharacter.h"
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
@@ -15,7 +15,7 @@
 
 
 // Sets default values
-ABlackbirdPlayerShip::ABlackbirdPlayerShip()
+ABlackbirdPlayerCharacter::ABlackbirdPlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm Component"));
@@ -31,50 +31,50 @@ ABlackbirdPlayerShip::ABlackbirdPlayerShip()
 	IgnoreInstigatorTags.Add(TAG_PLAYER);
 }
 
-void ABlackbirdPlayerShip::BeginPlay()
+void ABlackbirdPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
 
-void ABlackbirdPlayerShip::Tick(float DeltaTime)
+void ABlackbirdPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void ABlackbirdPlayerShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ABlackbirdPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ABlackbirdPlayerShip::OnRep_PlayerState()
+void ABlackbirdPlayerCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	InitAbilityActorInfo();
 }
 
-void ABlackbirdPlayerShip::PossessedBy(AController* NewController)
+void ABlackbirdPlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitAbilityActorInfo();
 }
 
-UBlackbirdAbilitySystemComponent* ABlackbirdPlayerShip::GetBlackbirdAbilitySystemComponent() const
+UBlackbirdAbilitySystemComponent* ABlackbirdPlayerCharacter::GetBlackbirdAbilitySystemComponent() const
 {
 	return Cast<UBlackbirdAbilitySystemComponent>(AbilitySystemComponent);
 }
 
-ABlackbirdPlayerState* ABlackbirdPlayerShip::GetBlackbirdPlayerState() const
+ABlackbirdPlayerState* ABlackbirdPlayerCharacter::GetBlackbirdPlayerState() const
 {
 	return Cast<ABlackbirdPlayerState>(GetPlayerState());
 }
 
-UPlayerTargetingComponent* ABlackbirdPlayerShip::GetTargetingComponent() const
+UPlayerTargetingComponent* ABlackbirdPlayerCharacter::GetTargetingComponent() const
 {
 	return TargetingComponent;
 }
 
-void ABlackbirdPlayerShip::InitAbilityActorInfo()
+void ABlackbirdPlayerCharacter::InitAbilityActorInfo()
 {
 	if (ABlackbirdPlayerState* BlackbirdPlayerState = Cast<ABlackbirdPlayerState>(GetPlayerState()))
 	{

@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ship/BlackbirdShip.h"
+#include "Character/BlackbirdCharacter.h"
 #include "Targeting/TargetingActorInterface.h"
-#include "BlackbirdPlayerShip.generated.h"
+#include "BlackbirdPlayerCharacter.generated.h"
 
 class UPlayerTargetingComponent;
 class ABlackbirdPlayerState;
@@ -13,12 +13,12 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdPlayerShip : public ABlackbirdShip, public ITargetingActorInterface
+class BLACKBIRD_API ABlackbirdPlayerCharacter : public ABlackbirdCharacter, public ITargetingActorInterface
 {
 	GENERATED_BODY()
 
 public:
-	ABlackbirdPlayerShip();
+	ABlackbirdPlayerCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void OnRep_PlayerState() override;

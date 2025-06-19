@@ -3,7 +3,7 @@
 
 #include "UI/ViewModel/MVVM_PlayerTargeting.h"
 
-#include "Player/BlackbirdPlayerShip.h"
+#include "Player/BlackbirdPlayerCharacter.h"
 #include "Player/PlayerTargetingComponent.h"
 
 bool UMVVM_PlayerTargeting::GetHasTarget() const
@@ -28,9 +28,10 @@ void UMVVM_PlayerTargeting::SetHasTarget(const bool InHasTarget)
 	}
 }
 
-void UMVVM_PlayerTargeting::BindDependencies(const ABlackbirdPlayerShip* PlayerShip)
+void UMVVM_PlayerTargeting::BindDependencies(const ABlackbirdPlayerCharacter* PlayerCharacter)
 {
-	PlayerShip->GetTargetingComponent()->OnPlayerTargetingChangedDelegate.AddDynamic(this, &UMVVM_PlayerTargeting::OnPlayerTargetChanged);
+	PlayerCharacter->GetTargetingComponent()->OnPlayerTargetingChangedDelegate.AddDynamic(
+		this, &UMVVM_PlayerTargeting::OnPlayerTargetChanged);
 }
 
 void UMVVM_PlayerTargeting::OnPlayerTargetChanged(const AActor* Target, const ETargetingStatus& Status)

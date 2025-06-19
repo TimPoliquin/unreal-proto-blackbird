@@ -8,7 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "BlackbirdFormationComponent.generated.h"
 
-class ABlackbirdEnemyShip;
+class ABlackbirdEnemy;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BLACKBIRD_API UBlackbirdFormationComponent : public UActorComponent
@@ -17,10 +17,10 @@ class BLACKBIRD_API UBlackbirdFormationComponent : public UActorComponent
 
 public:
 	UBlackbirdFormationComponent();
-	void CreateEnemies(TArray<ABlackbirdEnemyShip*>& OutEnemies) const;
+	void CreateEnemies(TArray<ABlackbirdEnemy*>& OutEnemies) const;
 	void GetSpawnTransforms(TArray<FTransform>& OutSpawnTransforms) const;
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	TArray<ABlackbirdEnemyShip*> GetEnemies() const;
+	TArray<ABlackbirdEnemy*> GetEnemies() const;
 	UFUNCTION(BlueprintCallable)
 	void SpawnEnemies();
 
@@ -28,15 +28,16 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Formation")
-	TArray<TSubclassOf<ABlackbirdEnemyShip>> EnemyClasses;
+	TArray<TSubclassOf<ABlackbirdEnemy>> EnemyClasses;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Formation")
 	int32 EnemySpawnCount = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Formation")
 	EFormationShape Shape = EFormationShape::Circle;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Formation", meta=(EditCondition="Shape == EFormationShape::Circle", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Formation",
+		meta=(EditCondition="Shape == EFormationShape::Circle", EditConditionHides))
 	FFormationCircleProps CircleProps;
 
 private:
 	UPROPERTY()
-	TArray<ABlackbirdEnemyShip*> Enemies;
+	TArray<ABlackbirdEnemy*> Enemies;
 };

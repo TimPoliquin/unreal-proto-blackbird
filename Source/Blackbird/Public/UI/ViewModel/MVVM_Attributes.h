@@ -6,24 +6,24 @@
 #include "AttributeSet.h"
 #include "MVVMViewModelBase.h"
 #include "GameplayTagContainer.h"
-#include "MVVM_ShipAttributes.generated.h"
+#include "MVVM_Attributes.generated.h"
 
 struct FGameplayTag;
 class UBlackbirdAttributeSet;
-class ABlackbirdShip;
+class ABlackbirdCharacter;
 /**
  * 
  */
 UCLASS()
-class BLACKBIRD_API UMVVM_ShipAttributes : public UMVVMViewModelBase
+class BLACKBIRD_API UMVVM_Attributes : public UMVVMViewModelBase
 {
 	GENERATED_BODY()
 
 public:
-	UMVVM_ShipAttributes();
+	UMVVM_Attributes();
 
 	UFUNCTION(BlueprintCallable)
-	void BindDependencies(const ABlackbirdShip* Owner);
+	void BindDependencies(const ABlackbirdCharacter* Owner);
 	float GetHealth() const;
 	void SetHealth(const float InHealth);
 	float GetMaxHealth() const;
@@ -64,9 +64,9 @@ private:
 	void OnReceivedDamage(const float DamageAmount, const bool bFatal);
 	void AddTagToAttributeSetterMap(
 		const FGameplayTag& Tag,
-		TFunction<void(UMVVM_ShipAttributes*, const float)> Setter
+		TFunction<void(UMVVM_Attributes*, const float)> Setter
 	);
-	void InitializeValues(const ABlackbirdShip* Owner, const UBlackbirdAttributeSet* AttributeSet);
+	void InitializeValues(const ABlackbirdCharacter* Owner, const UBlackbirdAttributeSet* AttributeSet);
 
 	TMap<FGameplayTag, TFunction<void(const float)>> TagToAttributeSetterMap;
 };

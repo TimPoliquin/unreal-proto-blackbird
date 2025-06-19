@@ -7,7 +7,7 @@
 #include "Player/PlayerTargetingComponent.h"
 #include "MVVM_PlayerTargeting.generated.h"
 
-class ABlackbirdPlayerShip;
+class ABlackbirdPlayerCharacter;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerTargetingViewModelTargetChangedSignature);
 
 /**
@@ -22,7 +22,7 @@ public:
 	bool GetHasTarget() const;
 	void SetHasTarget(const bool InHasTarget);
 
-	void BindDependencies(const ABlackbirdPlayerShip* PlayerShip);
+	void BindDependencies(const ABlackbirdPlayerCharacter* PlayerCharacter);
 
 	UPROPERTY(BlueprintAssignable)
 	FPlayerTargetingViewModelTargetChangedSignature OnTargetAcquired;

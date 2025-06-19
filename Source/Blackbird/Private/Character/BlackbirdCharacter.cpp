@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Ship/BlackbirdShip.h"
+#include "Character/BlackbirdCharacter.h"
 
 #include "AbilitySystem/BlackbirdAbilitySystemComponent.h"
 #include "AbilitySystem/BlackbirdAbilitySystemLibrary.h"
@@ -13,22 +13,23 @@
 #include "Track/BlackbirdTrackFollowingComponent.h"
 
 
-ABlackbirdShip::ABlackbirdShip()
+ABlackbirdCharacter::ABlackbirdCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
 	CharacterMovementComponent->GravityScale = 0.f;
 	CharacterMovementComponent->SetMovementMode(MOVE_Flying);
-	TrackFollowingComponent = CreateDefaultSubobject<UBlackbirdTrackFollowingComponent>(TEXT("Track Following Component"));
+	TrackFollowingComponent = CreateDefaultSubobject<UBlackbirdTrackFollowingComponent>(
+		TEXT("Track Following Component"));
 }
 
-void ABlackbirdShip::BeginPlay()
+void ABlackbirdCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-void ABlackbirdShip::InitAbilitySystem(
+void ABlackbirdCharacter::InitAbilitySystem(
 	AActor* OwnerActor,
 	UBlackbirdAbilitySystemComponent* InAbilitySystemComponent
 )
@@ -40,7 +41,7 @@ void ABlackbirdShip::InitAbilitySystem(
 	OnAbilitySystemReadyDelegate.Broadcast(InAbilitySystemComponent);
 }
 
-void ABlackbirdShip::InitDefaultAbilities()
+void ABlackbirdCharacter::InitDefaultAbilities()
 {
 	if (StartingAbilities == nullptr)
 	{
@@ -51,7 +52,7 @@ void ABlackbirdShip::InitDefaultAbilities()
 	GetBlackbirdAbilitySystemComponent()->AddAbilities(StartingAbilities->GetAbilityAssignments());
 }
 
-void ABlackbirdShip::InitDefaultAttributes()
+void ABlackbirdCharacter::InitDefaultAttributes()
 {
 	UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, DefaultPrimaryAttributes);
 	UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, DefaultVitalAttributes);
@@ -61,90 +62,91 @@ void ABlackbirdShip::InitDefaultAttributes()
 	}
 }
 
-void ABlackbirdShip::OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent)
+void ABlackbirdCharacter::OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent)
 {
 	InitDefaultAbilities();
 	InitDefaultAttributes();
-	GetBlackbirdAttributeSet()->OnTriggerOverheat.AddDynamic(this, &ABlackbirdShip::OnTriggerOverheat);
+	GetBlackbirdAttributeSet()->OnTriggerOverheat.AddDynamic(this, &ABlackbirdCharacter::OnTriggerOverheat);
 }
 
-void ABlackbirdShip::Tick(float DeltaTime)
+void ABlackbirdCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void ABlackbirdShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ABlackbirdCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-float ABlackbirdShip::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+float ABlackbirdCharacter::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent, AController* EventInstigator,
+                                      AActor* DamageCauser)
 {
 	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	OnDamageDelegate.Broadcast(Damage);
 	return Damage;
 }
 
-UAbilitySystemComponent* ABlackbirdShip::GetAbilitySystemComponent() const
+UAbilitySystemComponent* ABlackbirdCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
 }
 
-UBlackbirdAbilitySystemComponent* ABlackbirdShip::GetBlackbirdAbilitySystemComponent() const
+UBlackbirdAbilitySystemComponent* ABlackbirdCharacter::GetBlackbirdAbilitySystemComponent() const
 {
 	return Cast<UBlackbirdAbilitySystemComponent>(AbilitySystemComponent);
 }
 
-UBlackbirdAttributeSet* ABlackbirdShip::GetBlackbirdAttributeSet() const
+UBlackbirdAttributeSet* ABlackbirdCharacter::GetBlackbirdAttributeSet() const
 {
 	return AttributeSet;
 }
 
-bool ABlackbirdShip::IsAbilitySystemReady() const
+bool ABlackbirdCharacter::IsAbilitySystemReady() const
 {
 	return bIsAbilitySystemReady;
 }
 
-void ABlackbirdShip::SetFacingDirection(const FVector& Direction)
+void ABlackbirdCharacter::SetFacingDirection(const FVector& Direction)
 {
 }
 
-void ABlackbirdShip::Mark_Implementation()
+void ABlackbirdCharacter::Mark_Implementation()
 {
 	ITargetableInterface::Mark_Implementation();
 }
 
-void ABlackbirdShip::Unmark_Implementation()
+void ABlackbirdCharacter::Unmark_Implementation()
 {
 	ITargetableInterface::Unmark_Implementation();
 }
 
-FOnDamageSignature& ABlackbirdShip::GetOnDamageDelegate()
+FOnDamageSignature& ABlackbirdCharacter::GetOnDamageDelegate()
 {
 	return OnDamageDelegate;
 }
 
-bool ABlackbirdShip::CanBeDamagedByInstigatorTag(const FName& InstigatorTag) const
+bool ABlackbirdCharacter::CanBeDamagedByInstigatorTag(const FName& InstigatorTag) const
 {
 	return !IgnoreInstigatorTags.Contains(InstigatorTag);
 }
 
-bool ABlackbirdShip::IsAlive() const
+bool ABlackbirdCharacter::IsAlive() const
 {
 	return GetBlackbirdAttributeSet()->IsAlive();
 }
 
-bool ABlackbirdShip::IsDead() const
+bool ABlackbirdCharacter::IsDead() const
 {
 	return GetBlackbirdAttributeSet()->IsDead();
 }
 
-UBlackbirdTrackFollowingComponent* ABlackbirdShip::GetTrackFollowingComponent() const
+UBlackbirdTrackFollowingComponent* ABlackbirdCharacter::GetTrackFollowingComponent() const
 {
 	return TrackFollowingComponent;
 }
 
-FVector ABlackbirdShip::GetSocketLocation(const FGameplayTag& SocketTag) const
+FVector ABlackbirdCharacter::GetSocketLocation(const FGameplayTag& SocketTag) const
 {
 	if (TagToSockets.Contains(SocketTag))
 	{
@@ -153,7 +155,7 @@ FVector ABlackbirdShip::GetSocketLocation(const FGameplayTag& SocketTag) const
 	return GetActorLocation();
 }
 
-FRotator ABlackbirdShip::GetSocketRotation(const FGameplayTag& SocketTag) const
+FRotator ABlackbirdCharacter::GetSocketRotation(const FGameplayTag& SocketTag) const
 {
 	if (TagToSockets.Contains(SocketTag))
 	{

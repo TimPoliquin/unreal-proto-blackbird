@@ -5,7 +5,7 @@
 #include "Modules/ModuleInterface.h"
 #include "Modules/ModuleManager.h"
 #include "UnrealEd.h"
-#include "Ship/Formation/BlackbirdFormationComponent.h"
+#include "Character/Formation/BlackbirdFormationComponent.h"
 #include "Visualizer/BlackbirdFormationVisualizer.h"
 
 #define LOCTEXT_NAMESPACE "FBlackbirdFormationPreviewEditorModule"
@@ -15,7 +15,8 @@ void FBlackbirdFormationPreviewEditorModule::StartupModule()
 	if (GUnrealEd != nullptr)
 	{
 		TSharedPtr<FComponentVisualizer> FormationVisualizer = MakeShareable(new FBlackbirdFormationVisualizer);
-		GUnrealEd->RegisterComponentVisualizer(UBlackbirdFormationComponent::StaticClass()->GetFName(), FormationVisualizer);
+		GUnrealEd->RegisterComponentVisualizer(UBlackbirdFormationComponent::StaticClass()->GetFName(),
+		                                       FormationVisualizer);
 	}
 }
 

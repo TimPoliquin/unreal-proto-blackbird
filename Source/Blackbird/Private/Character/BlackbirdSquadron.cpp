@@ -4,8 +4,8 @@
 #include "BlackbirdSquadron.h"
 
 #include "Components/SplineComponent.h"
-#include "Ship/BlackbirdEnemyShip.h"
-#include "Ship/Formation/BlackbirdFormationComponent.h"
+#include "Character/BlackbirdEnemy.h"
+#include "Character/Formation/BlackbirdFormationComponent.h"
 #include "Track/BlackbirdTrackFollowingComponent.h"
 
 
@@ -42,12 +42,12 @@ void ABlackbirdSquadron::Spawn() const
 
 void ABlackbirdSquadron::SetTrackOnChildren() const
 {
-	for (const ABlackbirdEnemyShip* Ship : FormationComponent->GetEnemies())
+	for (const ABlackbirdEnemy* Enemy : FormationComponent->GetEnemies())
 	{
-		Ship->GetTrackFollowingComponent()->SetTrack(Track);
+		Enemy->GetTrackFollowingComponent()->SetTrack(Track);
 		if (Track != nullptr)
 		{
-			Ship->GetTrackFollowingComponent()->Activate(true);
+			Enemy->GetTrackFollowingComponent()->Activate(true);
 		}
 	}
 }

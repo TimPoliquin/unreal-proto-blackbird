@@ -11,7 +11,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Ship/SocketInterface.h"
+#include "Character/SocketInterface.h"
 #include "Targeting/TargetableInterface.h"
 #include "Targeting/TargetingActorInterface.h"
 
@@ -44,7 +44,8 @@ FVector UBlackbirdProjectileAbility::GetProjectileSpawnLocation(const FGameplayT
 	return GetAvatarActorFromActorInfo()->GetActorLocation();
 }
 
-FRotator UBlackbirdProjectileAbility::GetProjectileSpawnRotation(const FVector& SpawnLocation, const FVector& ImpactPoint) const
+FRotator UBlackbirdProjectileAbility::GetProjectileSpawnRotation(const FVector& SpawnLocation,
+                                                                 const FVector& ImpactPoint) const
 {
 	return UKismetMathLibrary::FindLookAtRotation(SpawnLocation, ImpactPoint);
 }
@@ -68,8 +69,10 @@ ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
 		Cast<APawn>(GetAvatarActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 	);
-	UProjectileMovementComponent* ProjectileMovementComponent = IProjectileInterface::GetProjectileMovementComponent(SpawnedProjectile);
-	if (ProjectileMovementComponent && ProjectileMovementComponent->bIsHomingProjectile && ITargetableInterface::IsTargetable(HitActor))
+	UProjectileMovementComponent* ProjectileMovementComponent = IProjectileInterface::GetProjectileMovementComponent(
+		SpawnedProjectile);
+	if (ProjectileMovementComponent && ProjectileMovementComponent->bIsHomingProjectile &&
+		ITargetableInterface::IsTargetable(HitActor))
 	{
 		ProjectileMovementComponent->HomingTargetComponent = HitActor->GetRootComponent();
 	}
@@ -88,7 +91,8 @@ ABlackbirdProjectileActor* UBlackbirdProjectileAbility::SpawnProjectile(
 	return SpawnedProjectile;
 }
 
-FGameplayEffectSpecHandle UBlackbirdProjectileAbility::MakeDamageEffectSpecHandle(AActor* SourceObject, const FVector& TargetLocation) const
+FGameplayEffectSpecHandle UBlackbirdProjectileAbility::MakeDamageEffectSpecHandle(
+	AActor* SourceObject, const FVector& TargetLocation) const
 {
 	const UAbilitySystemComponent* SourceAbilitySystem = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(
 		GetAvatarActorFromActorInfo()

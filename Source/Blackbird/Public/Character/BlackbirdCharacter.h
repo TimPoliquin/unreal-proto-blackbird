@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ShipInterface.h"
+#include "CharacterInterface.h"
 #include "AbilitySystemInterface.h"
 #include "SocketInterface.h"
 #include "GameplayTagContainer.h"
@@ -12,34 +12,34 @@
 #include "GameFramework/Character.h"
 #include "Targeting/TargetableInterface.h"
 #include "Track/TrackFollowingActorInterface.h"
-#include "BlackbirdShip.generated.h"
+#include "BlackbirdCharacter.generated.h"
 
 class UBlackbirdTrackFollowingComponent;
-class UMVVM_ShipAttributes;
 class UGameplayEffect;
 class UBlackbirdAttributeSet;
 class UBlackbirdAbilitySystemComponent;
 class UAbilitySystemComponent;
-class UBlackbirdShipMovementComponent;
 class UBlackbirdAbilityAssignment;
-class UFloatingPawnMovement;
-class UBoxComponent;
-struct FBlackbirdAbilityAssignmentRow;
+class UInputComponent;
+struct FDamageEvent;
+
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdShip : public ACharacter, public IShipInterface, public IAbilitySystemInterface, public IDamageableInterface,
-                                     public ITrackFollowingActorInterface, public ITargetableInterface, public ISocketInterface
+class BLACKBIRD_API ABlackbirdCharacter : public ACharacter, public ICharacterInterface, public IAbilitySystemInterface,
+                                          public IDamageableInterface,
+                                          public ITrackFollowingActorInterface, public ITargetableInterface,
+                                          public ISocketInterface
 {
 	GENERATED_BODY()
 
 public:
-	ABlackbirdShip();
+	ABlackbirdCharacter();
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	virtual float TakeDamage(
 		float DamageAmount,
-		const struct FDamageEvent& DamageEvent,
-		class AController* EventInstigator,
+		const FDamageEvent& DamageEvent,
+		AController* EventInstigator,
 		AActor* DamageCauser
 	) override;
 
@@ -52,9 +52,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsAbilitySystemReady() const;
 
-	/** Start ShipInterface **/
+	/** Start CharacterInterface **/
 	virtual void SetFacingDirection(const FVector& Direction) override;
-	/** End ShipInterface **/
+	/** End CharacterInterface **/
 
 	/** Start ITargetableInterface **/
 	virtual void Mark_Implementation() override;
@@ -73,8 +73,8 @@ public:
 	/** End TrackFollowingInterface **/
 
 	/** Start ISocketInterface **/
-	virtual FVector GetSocketLocation(const FGameplayTag& SocketTag) const;
-	virtual FRotator GetSocketRotation(const FGameplayTag& SocketTag) const;
+	virtual FVector GetSocketLocation(const FGameplayTag& SocketTag) const override;
+	virtual FRotator GetSocketRotation(const FGameplayTag& SocketTag) const override;
 	/** End ISocketInterface **/
 
 	UPROPERTY(BlueprintAssignable)
