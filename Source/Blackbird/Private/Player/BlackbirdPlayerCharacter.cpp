@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Player/BlackbirdPlayerCamera.h"
 #include "Player/BlackbirdPlayerState.h"
 #include "Player/PlayerTargetingComponent.h"
 
@@ -18,15 +19,6 @@
 ABlackbirdPlayerCharacter::ABlackbirdPlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm Component"));
-	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-	SpringArm->bInheritPitch = false;
-	SpringArm->bInheritYaw = true;
-	SpringArm->bInheritRoll = false;
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
-	Camera->SetupAttachment(SpringArm);
-	Camera->bUsePawnControlRotation = false;
 	TargetingComponent = CreateDefaultSubobject<UPlayerTargetingComponent>(TEXT("Targeting Component"));
 	IgnoreInstigatorTags.Add(TAG_PLAYER);
 }
@@ -69,9 +61,19 @@ ABlackbirdPlayerState* ABlackbirdPlayerCharacter::GetBlackbirdPlayerState() cons
 	return Cast<ABlackbirdPlayerState>(GetPlayerState());
 }
 
+void ABlackbirdPlayerCharacter::SetPlayerCamera(ABlackbirdPlayerCamera* InPlayerCamera)
+{
+	PlayerCamera = InPlayerCamera;
+}
+
 UPlayerTargetingComponent* ABlackbirdPlayerCharacter::GetTargetingComponent() const
 {
 	return TargetingComponent;
+}
+
+UCameraComponent* ABlackbirdPlayerCharacter::GetCameraComponent() const
+{
+	return PlayerCamera ? PlayerCamera->GetCameraComponent() : nullptr;
 }
 
 void ABlackbirdPlayerCharacter::InitAbilityActorInfo()
