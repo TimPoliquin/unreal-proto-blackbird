@@ -12,7 +12,8 @@ class USplineComponent;
 class UTimelineComponent;
 class ABlackbirdTrack;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnTrackCompleted, AActor*, Cart, const USplineComponent*, Track, const float, Overflow);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnTrackCompleted, AActor*, Cart, const USplineComponent*, Track,
+                                               const float, Overflow);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BLACKBIRD_API UBlackbirdTrackFollowingComponent : public UActorComponent
@@ -21,7 +22,8 @@ class BLACKBIRD_API UBlackbirdTrackFollowingComponent : public UActorComponent
 
 public:
 	UBlackbirdTrackFollowingComponent();
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	USplineComponent* GetTrack() const;
@@ -35,6 +37,8 @@ public:
 	void ChangeSpeed(const float NewSpeed);
 	void AddMovementInput(const FVector2D& InInputMovement);
 	void ClearMovementInput();
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	float GetTrackDistance() const;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnTrackCompleted OnTrackCompleted;
@@ -59,4 +63,5 @@ private:
 	bool bActive = false;
 	UPROPERTY(Replicated)
 	FVector2D MovementInput = FVector2D::ZeroVector;
+	float DistanceOnTrack = 0.f;
 };

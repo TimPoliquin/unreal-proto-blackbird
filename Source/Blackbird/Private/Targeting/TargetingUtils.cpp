@@ -5,6 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Player/PlayerInterface.h"
 
 class UCameraComponent;
 
@@ -12,7 +13,7 @@ void UTargetingUtils::FindActorTarget(AActor* Actor, FHitResult& OutHitResult, f
 {
 	FVector StartingLocation;
 	FVector EndingLocation;
-	if (const UCameraComponent* Camera = Actor->FindComponentByClass<UCameraComponent>())
+	if (const UCameraComponent* Camera = IPlayerInterface::GetCameraComponent(Actor))
 	{
 		if (bDebug)
 		{
@@ -64,7 +65,9 @@ void UTargetingUtils::FindActorTarget(AActor* Actor, FHitResult& OutHitResult, f
 			UE_LOG(
 				LogTemp,
 				Warning,
-				TEXT("[UTargetingUtils] No actors found on line trace for %s. Setting impact point to line trace end location."),
+				TEXT(
+					"[UTargetingUtils] No actors found on line trace for %s. Setting impact point to line trace end location."
+				),
 				*Actor->GetName()
 			)
 		}
@@ -72,7 +75,8 @@ void UTargetingUtils::FindActorTarget(AActor* Actor, FHitResult& OutHitResult, f
 	}
 }
 
-FVector UTargetingUtils::CalculateInterceptVector(const AActor* Instigator, const AActor* Target, const float TimeToIntercept)
+FVector UTargetingUtils::CalculateInterceptVector(const AActor* Instigator, const AActor* Target,
+                                                  const float TimeToIntercept)
 {
 	// Calculate the future position of the target
 	const FVector FutureTargetPosition = Target->GetActorLocation() + (Target->GetVelocity() * TimeToIntercept);

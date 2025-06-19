@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerStart.h"
 #include "BlackbirdPlayerStart.generated.h"
 
+class ABlackbirdPlayerCamera;
 class ABlackbirdTrackEventSpline;
 class USplineComponent;
 class ITrackInterface;
@@ -21,8 +22,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	USplineComponent* GetTrack() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	ABlackbirdPlayerCamera* GetCameraActor() const;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Track")
 	TObjectPtr<ABlackbirdTrackEventSpline> Track;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Track")
+	TObjectPtr<ABlackbirdPlayerCamera> CameraActor;
 };

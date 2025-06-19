@@ -16,3 +16,8 @@ USplineComponent* ABlackbirdPlayerStart::GetTrack() const
 {
 	return Track->GetTrack();
 }
+
+ABlackbirdPlayerCamera* ABlackbirdPlayerStart::GetCameraActor() const
+{
+	return CameraActor;
+}

@@ -4,6 +4,7 @@
 #include "Game/BlackbirdGameModeBase.h"
 
 #include "Game/BlackbirdPlayerStart.h"
+#include "Player/BlackbirdPlayerCamera.h"
 #include "Player/BlackbirdPlayerController.h"
 
 void ABlackbirdGameModeBase::InitStartSpot_Implementation(AActor* StartSpot, AController* NewPlayer)
@@ -14,6 +15,8 @@ void ABlackbirdGameModeBase::InitStartSpot_Implementation(AActor* StartSpot, ACo
 		if (ABlackbirdPlayerController* PlayerController = Cast<ABlackbirdPlayerController>(NewPlayer))
 		{
 			PlayerController->SetTrack(PlayerStart->GetTrack());
+			PlayerController->SetViewTargetWithBlend(PlayerStart->GetCameraActor(), 0);
+			PlayerStart->GetCameraActor()->SetFollowActor(PlayerController->GetPawn());
 		}
 	}
 }
