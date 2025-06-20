@@ -8,7 +8,11 @@
 
 bool FBlackbirdDropDefinition::RollForDrop() const
 {
-	return FMath::RandRange(0.f, 1.f) <= DropChance;
+	if (DropType == EBlackbirdDropType::ChanceToDrop)
+	{
+		return FMath::RandRange(0.f, 1.f) <= DropChance;
+	}
+	return true;
 }
 
 UBlackbirdDropPickupComponent::UBlackbirdDropPickupComponent()
@@ -19,9 +23,8 @@ UBlackbirdDropPickupComponent::UBlackbirdDropPickupComponent()
 TArray<ABlackbirdPickup*> UBlackbirdDropPickupComponent::Drop() const
 {
 	TArray<ABlackbirdPickup*> Drops;
-	for (int32 Idx = 0; Idx < NumDrops; Idx++)
+	for (const FBlackbirdDropDefinition& DropDef : DropClasses)
 	{
-		const FBlackbirdDropDefinition& DropDef = UArrayUtils::GetRandomElement(DropClasses);
 		if (DropDef.RollForDrop())
 		{
 			ABlackbirdPickup* Drop = GetWorld()->SpawnActorDeferred<ABlackbirdPickup>(

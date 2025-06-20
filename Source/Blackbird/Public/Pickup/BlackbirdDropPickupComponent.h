@@ -9,13 +9,25 @@
 
 class ABlackbirdPickup;
 
+UENUM(BlueprintType)
+enum class EBlackbirdDropType : uint8
+{
+	AlwaysDrop,
+	ChanceToDrop
+};
+
 USTRUCT(BlueprintType)
 struct FBlackbirdDropDefinition
 {
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ABlackbirdPickup> DropClass;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0.f, ClampMax = 1.f, UIMin = 0.f, UIMax = 1.f))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	EBlackbirdDropType DropType = EBlackbirdDropType::ChanceToDrop;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (
+		ClampMin = 0.f, ClampMax = 1.f, UIMin = 0.f, UIMax = 1.f,
+		EditCondition="DropType == EBlackbirdDropType::ChanceToDrop", EditConditionHides
+	))
 	float DropChance = 1.f;
 
 	bool RollForDrop() const;
@@ -35,6 +47,4 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drops")
 	TArray<FBlackbirdDropDefinition> DropClasses;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Drops", meta = (ClampMin = 0, UIMin = 0))
-	int32 NumDrops = 1;
 };
