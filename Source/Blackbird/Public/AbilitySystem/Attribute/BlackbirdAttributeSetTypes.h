@@ -13,8 +13,23 @@ GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 template <class T>
 using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
 
+USTRUCT()
+struct FOnReceivedDamagePayload
+{
+	GENERATED_BODY()
+	float DamageAmount = 0.f;
+	bool bFatal = false;
+	UPROPERTY()
+	TObjectPtr<AActor> DamagedBy = nullptr;
+
+	bool IsFatal() const
+	{
+		return bFatal;
+	}
+};
+
 UDELEGATE()
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReceivedDamageSignature, const float, DamageAmount, const bool, bFatal);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReceivedDamageSignature, const FOnReceivedDamagePayload&, Payload);
 
 UDELEGATE()
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(

@@ -12,7 +12,8 @@
 class UBlackbirdBasicAttributeSet;
 
 UCLASS()
-class BLACKBIRD_API ABlackbirdDestructibleProjectileActor : public ABlackbirdProjectileActor, public IDamageableInterface, public IAbilitySystemInterface,
+class BLACKBIRD_API ABlackbirdDestructibleProjectileActor : public ABlackbirdProjectileActor,
+                                                            public IDamageableInterface, public IAbilitySystemInterface,
                                                             public ITargetableInterface
 {
 	GENERATED_BODY()
@@ -60,5 +61,5 @@ protected:
 private:
 	void InitializeAbilitySystem();
 	UFUNCTION()
-	void OnReceivedDamage(const float DamageAmount, const bool BFatal);
+	void OnReceivedDamage(const FOnReceivedDamagePayload& Payload);
 };

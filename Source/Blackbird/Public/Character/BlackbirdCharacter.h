@@ -8,6 +8,7 @@
 #include "SocketInterface.h"
 #include "GameplayTagContainer.h"
 #include "AbilitySystem/BlackbirdAbilitySystemDelegates.h"
+#include "AbilitySystem/Attribute/BlackbirdAttributeSetTypes.h"
 #include "AbilitySystem/Damage/DamageableInterface.h"
 #include "GameFramework/Character.h"
 #include "Targeting/TargetableInterface.h"
@@ -88,7 +89,11 @@ protected:
 	void OnTriggerOverheat();
 	void InitDefaultAttributes();
 	UFUNCTION()
+	virtual void OnReceivedDamage(const FOnReceivedDamagePayload& Payload);
+	UFUNCTION()
 	virtual void OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent);
+	UFUNCTION(BlueprintImplementableEvent)
+	void Die();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilities")
 	TObjectPtr<UBlackbirdAbilityAssignment> StartingAbilities;

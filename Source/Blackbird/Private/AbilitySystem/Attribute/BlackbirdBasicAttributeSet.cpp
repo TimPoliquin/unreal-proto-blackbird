@@ -42,7 +42,8 @@ void UBlackbirdBasicAttributeSet::PreAttributeChange(const FGameplayAttribute& A
 	}
 }
 
-void UBlackbirdBasicAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+void UBlackbirdBasicAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue,
+                                                      float NewValue)
 {
 	Super::PostAttributeChange(Attribute, OldValue, NewValue);
 	if (Attribute == GetMaxHealthAttribute() && bResetHealth)
@@ -83,11 +84,16 @@ void UBlackbirdBasicAttributeSet::HandleIncomingDamage(const FGameplayEffectModC
 	{
 		const float NewHealth = GetHealth() - IncomingDamage;
 		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-		OnReceivedDamage.Broadcast(IncomingDamage, NewHealth <= 0);
+		FOnReceivedDamagePayload OnReceivedDamagePayload;
+		OnReceivedDamagePayload.bFatal = NewHealth <= 0;
+		OnReceivedDamagePayload.DamageAmount = IncomingDamage;
+		OnReceivedDamagePayload.DamagedBy = UBlackbirdAbilitySystemLibrary::GetEffectSourceAvatarActor(Data);
+		OnReceivedDamage.Broadcast(OnReceivedDamagePayload);
 	}
 }
 
-void UBlackbirdBasicAttributeSet::InitializeMapsForAttributeAndTag(const FGameplayTag& AttributeTag, TStaticFuncPtr<FGameplayAttribute()> AttributeGetter)
+void UBlackbirdBasicAttributeSet::InitializeMapsForAttributeAndTag(const FGameplayTag& AttributeTag,
+                                                                   TStaticFuncPtr<FGameplayAttribute()> AttributeGetter)
 {
 	AttributesByTag.Add(AttributeTag, AttributeGetter);
 	TagsByAttribute.Add(AttributeGetter(), AttributeTag);

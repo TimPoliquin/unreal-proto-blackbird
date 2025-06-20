@@ -6,6 +6,9 @@
 #include "BlackbirdCharacter.h"
 #include "BlackbirdEnemy.generated.h"
 
+class ABlackbirdPickup;
+class UBlackbirdDropPickupComponent;
+
 UCLASS()
 class BLACKBIRD_API ABlackbirdEnemy : public ABlackbirdCharacter
 {
@@ -20,4 +23,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UBlackbirdDropPickupComponent> DropComponent;
+	virtual void OnReceivedDamage(const FOnReceivedDamagePayload& Payload) override;
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDrop(ABlackbirdPickup* Pickup);
 };
