@@ -62,11 +62,20 @@ void ABlackbirdCharacter::InitDefaultAttributes()
 	}
 }
 
+void ABlackbirdCharacter::OnReceivedDamage(const FOnReceivedDamagePayload& Payload)
+{
+	if (Payload.bFatal)
+	{
+		Die();
+	}
+}
+
 void ABlackbirdCharacter::OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent)
 {
 	InitDefaultAbilities();
 	InitDefaultAttributes();
 	GetBlackbirdAttributeSet()->OnTriggerOverheat.AddDynamic(this, &ABlackbirdCharacter::OnTriggerOverheat);
+	GetBlackbirdAttributeSet()->OnReceivedDamage.AddDynamic(this, &ABlackbirdCharacter::OnReceivedDamage);
 }
 
 void ABlackbirdCharacter::Tick(float DeltaTime)

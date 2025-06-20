@@ -58,15 +58,15 @@ void ABlackbirdDestructibleProjectileActor::InitializeAbilitySystem()
 	UBlackbirdAbilitySystemLibrary::ApplyEffectToSelf(this, SetupInitialAttributes);
 }
 
-void ABlackbirdDestructibleProjectileActor::OnReceivedDamage(const float DamageAmount, const bool BFatal)
+void ABlackbirdDestructibleProjectileActor::OnReceivedDamage(const FOnReceivedDamagePayload& Payload)
 {
-	if (BFatal)
+	if (Payload.bFatal)
 	{
 		Explode();
 		Destroy();
 	}
 	else
 	{
-		OnDamageDelegate.Broadcast(DamageAmount);
+		OnDamageDelegate.Broadcast(Payload.DamageAmount);
 	}
 }

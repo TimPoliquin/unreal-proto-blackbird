@@ -79,8 +79,6 @@ private:
 	void AbilityInputTagHeld(const FGameplayTag InputTag);
 
 	void InitializeCursor();
-	UFUNCTION()
-	void OnPlayerTargetChanged(const AActor* Target, const ETargetingStatus& Status);
 
 	template <
 		class UserClass,

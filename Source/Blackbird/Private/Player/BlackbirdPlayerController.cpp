@@ -106,8 +106,6 @@ void ABlackbirdPlayerController::OnPossession_SetupTargeting(APawn* InPawn)
 	if (const ITargetingActorInterface* TargetingActor = Cast<ITargetingActorInterface>(InPawn))
 	{
 		PlayerTargetingComponent = TargetingActor->GetTargetingComponent();
-		PlayerTargetingComponent->OnPlayerTargetingChangedDelegate.AddDynamic(
-			this, &ABlackbirdPlayerController::OnPlayerTargetChanged);
 	}
 }
 
@@ -199,19 +197,5 @@ void ABlackbirdPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag
 		GetBlackbirdAbilitySystemComponent())
 	{
 		LocalAbilitySystemComponent->AbilityInputTagHeld(InputTag);
-	}
-}
-
-
-void ABlackbirdPlayerController::OnPlayerTargetChanged(const AActor* Target, const ETargetingStatus& Status)
-{
-	switch (Status)
-	{
-	case ETargetingStatus::TargetingEnemy:
-		CurrentMouseCursor = EMouseCursor::Type::Crosshairs;
-		break;
-	default:
-		CurrentMouseCursor = EMouseCursor::Type::Default;
-		break;
 	}
 }
