@@ -93,6 +93,8 @@ protected:
 	UFUNCTION()
 	virtual void OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent);
 	UFUNCTION(BlueprintImplementableEvent)
+	void HitReact(const FVector& ReactionDirection);
+	UFUNCTION(BlueprintImplementableEvent)
 	void Die();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilities")

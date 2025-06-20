@@ -68,6 +68,13 @@ void ABlackbirdCharacter::OnReceivedDamage(const FOnReceivedDamagePayload& Paylo
 	{
 		Die();
 	}
+	else
+	{
+		const FVector& Direction = Payload.DamagedBy
+			                           ? (GetActorLocation() - Payload.DamagedBy->GetActorLocation()).GetSafeNormal()
+			                           : FVector::ZeroVector;
+		HitReact(Direction);
+	}
 }
 
 void ABlackbirdCharacter::OnAbilitySystemReady(UBlackbirdAbilitySystemComponent* BlackbirdAbilitySystemComponent)

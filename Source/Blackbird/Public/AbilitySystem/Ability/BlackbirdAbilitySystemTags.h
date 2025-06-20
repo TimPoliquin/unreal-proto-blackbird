@@ -6,6 +6,7 @@ struct FBlackbirdAbilitySystemTags
 	FGameplayTag Abilities;
 	FGameplayTag Abilities_Ability;
 	FGameplayTag Abilities_Ability_BasicAttack;
+	FGameplayTag Abilities_Ability_HitReact;
 	FGameplayTag Abilities_Ability_Repel;
 	FGameplayTag Abilities_Ability_Shield;
 	FGameplayTag Abilities_Ability_VentHeat;
@@ -17,6 +18,7 @@ struct FBlackbirdAbilitySystemTags
 	FGameplayTag Abilities_Type_Active;
 	FGameplayTag Abilities_Type_Passive;
 	FGameplayTag Abilities_Effect;
+	FGameplayTag Abilities_Effect_HitReact;
 	FGameplayTag Abilities_Effect_Overheated;
 	FGameplayTag Abilities_Effect_Repel;
 	FGameplayTag Abilities_Effect_Shielded;
